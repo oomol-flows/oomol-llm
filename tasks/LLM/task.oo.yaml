@@ -1,0 +1,28 @@
+title: LLM
+icon: ":fa6-solid:message:#F7B500:"
+executor:
+  name: nodejs
+  options:
+    entry: ./bundled/main.js
+inputs_def:
+  - handle: input
+    nullable: true
+    json_schema:
+      type: string
+  - handle: model
+    json_schema:
+      ui:widget: self::model
+      ui:options:
+        title: Model
+  - handle: prompt
+    json_schema:
+      type: string
+      ui:widget: self::prompt
+      ui:options:
+        title: Prompt
+    description: "{{input}} will be replaced by the data from input handle."
+outputs_def:
+  - handle: output
+    json_schema:
+      type: string
+input_render: inputRender.js

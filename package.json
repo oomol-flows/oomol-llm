@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "devDependencies": {
+    "@ai-sdk/openai-compatible": "^0.1.12",
+    "@oomol/types": "^0.0.9",
+    "ai": "^4.1.47"
+  }
+}
