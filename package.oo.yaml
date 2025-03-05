@@ -2,4 +2,4 @@ name: llm
 version: 0.0.2
 description: LLM
 scripts: {}
-icon: ":fa6-solid:message:#F7B500:"
+icon: "./icon.png"
