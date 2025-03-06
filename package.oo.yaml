@@ -1,7 +1,8 @@
 name: llm
 displayName: LLM
-version: 0.0.5
+version: 0.1.0
 description: LLM
 scripts:
   {}
 icon: "./icon.png"
+repository: https://github.com/oomol/oomol-llm
