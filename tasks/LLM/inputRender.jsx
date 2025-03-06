@@ -127,35 +127,35 @@ export function model(dom, context) {
                   </div>
                   {expanded && (
                     <div style={{ display: 'flex', flexDirection: "column", gap: '5px', paddingTop: '10px' }}>
-                      <div style={{ display: 'flex', flexDirection: "column", gap: '8px' }}>
-                          <label style={{ paddingLeft: '0.375em' }}>Temperature:</label>
-                          <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', flexDirection: "column", gap: '4px' }}>
+                          <label>Temperature:</label>
+                          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                             <input
                                 type="range"
                                 min="0"
-                                max="2"
+                                max="1"
                                 step="0.01"
                                 value={temperature}
                                 onChange={(e) => setTemperature(parseFloat(e.target.value))}
-                                style={{ flex: 1, padding: 0, margin: 0, border: 'none' }}
+                                style={{ height: '4px', flex: 1, padding: 0, margin: 0, border: 'none' }}
                             />
                           <input
                                 type="number"
                                 min="0"
-                                max="2"
+                                max="1"
                                 step="0.1"
                                 value={temperature}
                                 onChange={(e) => {
                                     const value = parseFloat(e.target.value);
-                                    setTemperature(Math.min(value, 2));
+                                    setTemperature(Math.min(value, 1));
                                 }}
                                 style={{ width:'52px', margin: 0, border: 'none' }}
                             />
                           </div>
 
                       </div> 
-                      <div style={{ display: 'flex', flexDirection: "column", gap: '5px' }}>
-                          <label style={{ paddingLeft: '0.375em' }}>Top P:</label>
+                      <div style={{ display: 'flex', flexDirection: "column", gap: '4px' }}>
+                          <label>Top P:</label>
                           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                             <input
                                 type="range"
@@ -164,7 +164,7 @@ export function model(dom, context) {
                                 step="0.01"
                                 value={topP}
                                 onChange={(e) => setTopP(parseFloat(e.target.value))}
-                                style={{ flex: 1, margin: 0, border: 'none', padding: 0 }}
+                                style={{ height: '4px',flex: 1, margin: 0, border: 'none', padding: 0 }}
                             />
                             <input
                                 type="number"
@@ -180,9 +180,9 @@ export function model(dom, context) {
                             />
                           </div>
                       </div>
-                      <div style={{ display: 'flex', flexDirection: "column", gap: '5px' }}>
-                          <label style={{ paddingLeft: '0.375em' }}>Max Tokens:</label>
-                          <div style={{ display: 'flex', gap: '8px' }}>
+                      <div style={{ display: 'flex', flexDirection: "column", gap: '4px' }}>
+                          <label>Max Tokens:</label>
+                          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                             <input
                                   type="range"
                                   min="1"
@@ -190,7 +190,7 @@ export function model(dom, context) {
                                   step="1"
                                   value={maxTokens}
                                   onChange={(e) => setMaxTokens(parseInt(e.target.value))}
-                                  style={{ flex: 1,padding: 0, margin: 0, border: 'none' }}
+                                  style={{ height: '4px',flex: 1,padding: 0, margin: 0, border: 'none' }}
                               />
                             <input
                                 type="number"
