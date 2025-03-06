@@ -28,6 +28,9 @@ export default async function (
     const { text } = await generateText({
         model: createOpenAICompatible({ name: 'oomol', baseURL, apiKey }).chatModel(model),
         prompt: prompt,
+        temperature: params.model.temperature,
+        topP: params.model.top_p,
+        maxTokens: params.model.max_tokens
     });
 
     return { output: text }
@@ -35,5 +38,7 @@ export default async function (
 
 interface IModelOptions {
     model?: string
-    temperature?: number // 0-2
+    temperature?: number // 0-1
+    top_p?: number // 0-1
+    max_tokens?: number // 1-4096
 }
