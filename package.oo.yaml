@@ -1,6 +1,7 @@
 name: llm
 displayName: LLM
-version: 0.0.4
+version: 0.0.5
 description: LLM
-scripts: {}
+scripts:
+  {}
 icon: "./icon.png"

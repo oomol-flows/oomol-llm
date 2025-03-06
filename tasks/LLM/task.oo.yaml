@@ -1,5 +1,5 @@
 title: LLM
-icon: ":fa6-solid:message:#F7B500:"
+icon: "../../icon.png"
 executor:
   name: nodejs
   options:
