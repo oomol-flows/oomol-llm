@@ -1,3 +1,7 @@
+import React, { useEffect, useState, useMemo, useRef } from 'react';
+import { createRoot } from 'react-dom/client';
+import Select, { components } from 'react-select';
+import clsx from 'clsx';
 /**
  * TODO: publish @oomol/types/inputRender
  * @typedef {{
@@ -14,72 +18,203 @@
  * @param {InputRenderContext} context
  */
 export function model(dom, context) {
-    const firstRow = dom.appendChild(document.createElement('div'))
-    firstRow.style.display = 'flex'
-    firstRow.style.gap = '5px'
-    firstRow.style.alignItems = 'center'
+    const customComponents = {
+      Menu: (props) => (<components.Menu {...props} className={clsx(props.className, "nowheel")}>
+      {props.children}
+    </components.Menu>),
+    }
 
-    const select = firstRow.appendChild(document.createElement('select'))
-    select.style.borderColor = 'transparent'
-    select.style.flex = '1'
-    const opt = select.appendChild(document.createElement('option'))
-    opt.textContent = 'Default'
-    opt.value = 'oomol-chat'
-    context.postMessage('getLLMModels', (models) => {
-        if (models?.length) {
-            select.textContent = ''
-            for (const model of models) {
-                const opt = select.appendChild(document.createElement('option'))
-                opt.value = model
-                opt.textContent = model
-            }
+    const LLM_STYLE = `
+      .llm-container {
+        .react-select-container {
+          flex: 1;
         }
-    })
-    select.onchange = updateValue
-    select.value = context.store.value$.value?.model
 
-    const button = firstRow.appendChild(document.createElement('button'))
-    const icon = button.appendChild(document.createElement('i'))
-    icon.className = 'codicon codicon-gear'
-    let expanded = false
-    button.onclick = function toggle() {
-        expanded = !expanded
-        secondRow.style.display = expanded ? 'flex' : 'none'
-    }
+        .react-select__control {
+          min-height: 24px;
+        }
+      }
+    `
 
-    const secondRow = dom.appendChild(document.createElement('div'))
-    secondRow.style.display = 'none'
-    secondRow.style.gap = '5px'
-    secondRow.style.alignItems = 'center'
-    secondRow.style.paddingTop = '5px'
+      function ModelComponent() {
+          const [models, setModels] = useState([]);
+          const [expanded, setExpanded] = useState(false);
+          const [selectedModel, setSelectedModel] = useState(context.store.value$.value?.model || 'oomol-chat');
+          const [temperature, setTemperature] = useState(context.store.value$.value?.temperature || 0);
+          const [topP, setTopP] = useState(context.store.value$.value?.top_p ?? 0.5);
+          const [maxTokens, setMaxTokens] = useState(context.store.value$.value?.max_tokens || 4096);
 
-    const label = secondRow.appendChild(document.createElement('label'))
-    label.textContent = 'Temperature:'
-    label.style.paddingLeft = '0.375em'
-    const range = secondRow.appendChild(document.createElement('input'))
-    range.type = 'range'
-    range.min = '0'
-    range.max = '2'
-    range.step = '0.01'
-    range.value = context.store.value$.value?.temperature || '0'
-    range.style.padding = '0'
-    range.style.margin = '0'
-    range.style.border = 'none'
-    range.onchange = updateValue
-    const temperature = secondRow.appendChild(document.createElement('span'))
-    temperature.textContent = range.value
-    temperature.style.width = '36px'
-    temperature.style.textAlign = 'center'
-    range.oninput = function preview() {
-        temperature.textContent = range.value
-    }
+          useEffect(() => {
+            let style = document.head.querySelector('#llm-container-style');
+            if (!style) {
+                style = document.createElement('style');
+                style.textContent = LLM_STYLE;
+                style.id = 'llm-container-style';
+                document.head.appendChild(style);
+            }
+        }, []);
 
-    function updateValue() {
-        context.store.value$.set({
-            model: select.value,
-            temperature: range.valueAsNumber || undefined
-        })
-    }
+        const [menuWidth, setMenuWidth] = useState(0);
+        const innerRef = useRef(null);
+
+        useEffect(() => {
+          if (innerRef.current?.controlRef) {
+            let timer = 0;
+            const observer = new ResizeObserver(entries => {
+              const width = entries[0].borderBoxSize[0].inlineSize;
+              clearTimeout(timer);
+              timer = window.setTimeout(() => setMenuWidth(width), 0);
+            });
+            observer.observe(innerRef.current.controlRef);
+            return () => {
+              clearTimeout(timer);
+              observer.disconnect();
+            };
+          }
+        }, []);
+  
+          useEffect(() => {
+              context.postMessage('getLLMModels', (models) => {
+                  if (models?.length) {
+                      setModels(models);
+                  }
+              });
+          }, []);
+  
+          useEffect(() => {
+              context.store.value$.set({
+                  model: selectedModel,
+                  temperature: temperature,
+                  top_p: topP,
+                  max_tokens: maxTokens
+              });
+          }, [selectedModel, temperature, topP, maxTokens]);
+
+
+          const options = useMemo(() => {
+              return models.map((model) => ({
+                  value: model,
+                  label: model
+              }));
+          }
+          , [models]);
+          
+          return (
+              <div id="llm-container-style" className="llm-container" style={{ ['--menu-width']: `${menuWidth}px` }}>
+                  <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+                      <Select
+                          ref={innerRef}
+                          defaultValue={{ value: "oomol-chat", label: "Default" }}
+                          options={options}
+                          className='react-select-container'
+                          classNamePrefix="react-select"
+                          onChange={(selectedOption) => setSelectedModel(selectedOption.value)}
+                          unstyled
+                          components={customComponents}
+                          styles={
+                            {
+                              menu: (base) => ({
+                                ...base,
+                                width: 'var(--menu-width)',
+                              }),
+                            }
+                          }
+                      />
+
+                      <button onClick={() => setExpanded(!expanded)}>
+                          <i className="codicon codicon-settings" />
+                      </button>
+                  </div>
+                  {expanded && (
+                    <div style={{ display: 'flex', flexDirection: "column", gap: '5px', paddingTop: '10px' }}>
+                      <div style={{ display: 'flex', flexDirection: "column", gap: '4px' }}>
+                          <label>Temperature:</label>
+                          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                            <input
+                                type="range"
+                                min="0"
+                                max="1"
+                                step="0.01"
+                                value={temperature}
+                                onChange={(e) => setTemperature(parseFloat(e.target.value))}
+                                style={{ height: '4px', flex: 1, padding: 0, margin: 0, border: 'none' }}
+                            />
+                          <input
+                                type="number"
+                                min="0"
+                                max="1"
+                                step="0.1"
+                                value={temperature}
+                                onChange={(e) => {
+                                    const value = parseFloat(e.target.value);
+                                    setTemperature(Math.min(value, 1));
+                                }}
+                                style={{ width:'52px', margin: 0, border: 'none' }}
+                            />
+                          </div>
+
+                      </div> 
+                      <div style={{ display: 'flex', flexDirection: "column", gap: '4px' }}>
+                          <label>Top P:</label>
+                          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                            <input
+                                type="range"
+                                min="0"
+                                max="1"
+                                step="0.01"
+                                value={topP}
+                                onChange={(e) => setTopP(parseFloat(e.target.value))}
+                                style={{ height: '4px',flex: 1, margin: 0, border: 'none', padding: 0 }}
+                            />
+                            <input
+                                type="number"
+                                min="0"
+                                max="1"
+                                step="0.1"
+                                value={topP}
+                                onChange={(e) => {
+                                    const value = parseFloat(e.target.value);
+                                    setTopP(Math.min(value, 1));
+                                }}
+                                style={{ width:'52px',  margin: 0, border: 'none' }}
+                            />
+                          </div>
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: "column", gap: '4px' }}>
+                          <label>Max Tokens:</label>
+                          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                            <input
+                                  type="range"
+                                  min="1"
+                                  max="4096"
+                                  step="1"
+                                  value={maxTokens}
+                                  onChange={(e) => setMaxTokens(parseInt(e.target.value))}
+                                  style={{ height: '4px',flex: 1,padding: 0, margin: 0, border: 'none' }}
+                              />
+                            <input
+                                type="number"
+                                min="1"
+                                max="4096"
+                                value={maxTokens}
+                                onChange={(e) => {
+                                    const value = parseInt(e.target.value);
+                                    setMaxTokens(Math.min(value, 4096));
+                                }}
+                                style={{ width:'60px',  margin: 0, border: 'none' }}
+                            />
+                          </div>
+                      </div>
+                  </div>
+                )}
+              </div>
+          );
+      }
+  
+      const root = createRoot(dom);
+      root.render(<ModelComponent />);
+      
+      return () => root.unmount();
 }
 
 /**
