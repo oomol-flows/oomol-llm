@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import Select, { components } from 'react-select';
 import clsx from 'clsx';
+
 /**
  * TODO: publish @oomol/types/inputRender
  * @typedef {{
@@ -18,203 +19,191 @@ import clsx from 'clsx';
  * @param {InputRenderContext} context
  */
 export function model(dom, context) {
-    const customComponents = {
-      Menu: (props) => (<components.Menu {...props} className={clsx(props.className, "nowheel")}>
-      {props.children}
-    </components.Menu>),
+  const customComponents = {
+    Menu: (props) => (
+      <components.Menu {...props} className={clsx(props.className, "nowheel")}>
+        {props.children}
+      </components.Menu>
+    ),
+  }
+
+  const LLM_STYLE = `
+    .llm-container {
+      .react-select-container {
+        flex: 1;
+      }
+
+      .react-select__control {
+        min-height: 24px;
+      }
     }
+  `;
 
-    const LLM_STYLE = `
-      .llm-container {
-        .react-select-container {
-          flex: 1;
-        }
+  function ModelComponent() {
+    const [models, setModels] = useState([]);
+    const [expanded, setExpanded] = useState(false);
+    const [selectedModel, setSelectedModel] = useState(context.store.value$.value?.model || 'oomol-chat');
+    const [temperature, setTemperature] = useState(context.store.value$.value?.temperature || 0);
+    const [topP, setTopP] = useState(context.store.value$.value?.top_p ?? 0.5);
+    const [maxTokens, setMaxTokens] = useState(context.store.value$.value?.max_tokens || 4096);
 
-        .react-select__control {
-          min-height: 24px;
-        }
+    useEffect(() => {
+      let style = document.head.querySelector('#llm-container-style');
+      if (!style) {
+        style = document.createElement('style');
+        style.textContent = LLM_STYLE;
+        style.id = 'llm-container-style';
+        document.head.appendChild(style);
       }
-    `
+    }, []);
 
-      function ModelComponent() {
-          const [models, setModels] = useState([]);
-          const [expanded, setExpanded] = useState(false);
-          const [selectedModel, setSelectedModel] = useState(context.store.value$.value?.model || 'oomol-chat');
-          const [temperature, setTemperature] = useState(context.store.value$.value?.temperature || 0);
-          const [topP, setTopP] = useState(context.store.value$.value?.top_p ?? 0.5);
-          const [maxTokens, setMaxTokens] = useState(context.store.value$.value?.max_tokens || 4096);
+    const [menuWidth, setMenuWidth] = useState(0);
+    const innerRef = useRef(null);
 
-          useEffect(() => {
-            let style = document.head.querySelector('#llm-container-style');
-            if (!style) {
-                style = document.createElement('style');
-                style.textContent = LLM_STYLE;
-                style.id = 'llm-container-style';
-                document.head.appendChild(style);
-            }
-        }, []);
+    useEffect(() => {
+      if (innerRef.current?.controlRef) {
+        let timer = 0;
+        const observer = new ResizeObserver(entries => {
+          const width = entries[0].borderBoxSize[0].inlineSize;
+          clearTimeout(timer);
+          timer = window.setTimeout(() => setMenuWidth(width), 0);
+        });
+        observer.observe(innerRef.current.controlRef);
+        return () => {
+          clearTimeout(timer);
+          observer.disconnect();
+        };
+      }
+    }, []);
 
-        const [menuWidth, setMenuWidth] = useState(0);
-        const innerRef = useRef(null);
+    useEffect(() => {
+      context.postMessage('getLLMModels', (models) => {
+        if (models?.length) {
+          setModels(models);
+        }
+      });
+    }, []);
 
-        useEffect(() => {
-          if (innerRef.current?.controlRef) {
-            let timer = 0;
-            const observer = new ResizeObserver(entries => {
-              const width = entries[0].borderBoxSize[0].inlineSize;
-              clearTimeout(timer);
-              timer = window.setTimeout(() => setMenuWidth(width), 0);
-            });
-            observer.observe(innerRef.current.controlRef);
-            return () => {
-              clearTimeout(timer);
-              observer.disconnect();
-            };
-          }
-        }, []);
-  
-          useEffect(() => {
-              context.postMessage('getLLMModels', (models) => {
-                  if (models?.length) {
-                      setModels(models);
-                  }
-              });
-          }, []);
-  
-          useEffect(() => {
-              context.store.value$.set({
-                  model: selectedModel,
-                  temperature: temperature,
-                  top_p: topP,
-                  max_tokens: maxTokens
-              });
-          }, [selectedModel, temperature, topP, maxTokens]);
+    useEffect(() => {
+      context.store.value$.set({
+        model: selectedModel,
+        temperature: temperature,
+        top_p: topP,
+        max_tokens: maxTokens
+      });
+    }, [selectedModel, temperature, topP, maxTokens]);
 
 
-          const options = useMemo(() => {
-              return models.map((model) => ({
-                  value: model,
-                  label: model
-              }));
-          }
-          , [models]);
-          
-          return (
-              <div id="llm-container-style" className="llm-container" style={{ ['--menu-width']: `${menuWidth}px` }}>
-                  <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
-                      <Select
-                          ref={innerRef}
-                          defaultValue={{ value: "oomol-chat", label: "Default" }}
-                          options={options}
-                          className='react-select-container'
-                          classNamePrefix="react-select"
-                          onChange={(selectedOption) => setSelectedModel(selectedOption.value)}
-                          unstyled
-                          components={customComponents}
-                          styles={
-                            {
-                              menu: (base) => ({
-                                ...base,
-                                width: 'var(--menu-width)',
-                              }),
-                            }
-                          }
-                      />
+    const options = useMemo(() => {
+      return models.map((model) => ({
+        value: model,
+        label: model
+      }));
+    }
+      , [models]);
 
-                      <button onClick={() => setExpanded(!expanded)}>
-                          <i className="codicon codicon-settings" />
-                      </button>
-                  </div>
-                  {expanded && (
-                    <div style={{ display: 'flex', flexDirection: "column", gap: '5px', paddingTop: '10px' }}>
-                      <div style={{ display: 'flex', flexDirection: "column", gap: '4px' }}>
-                          <label>Temperature:</label>
-                          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                            <input
-                                type="range"
-                                min="0"
-                                max="1"
-                                step="0.01"
-                                value={temperature}
-                                onChange={(e) => setTemperature(parseFloat(e.target.value))}
-                                style={{ height: '4px', flex: 1, padding: 0, margin: 0, border: 'none' }}
-                            />
-                          <input
-                                type="number"
-                                min="0"
-                                max="1"
-                                step="0.1"
-                                value={temperature}
-                                onChange={(e) => {
-                                    const value = parseFloat(e.target.value);
-                                    setTemperature(Math.min(value, 1));
-                                }}
-                                style={{ width:'52px', margin: 0, border: 'none' }}
-                            />
-                          </div>
+    return (
+      <div id="llm-container-style" className="llm-container" style={{ ['--menu-width']: `${menuWidth}px` }}>
+        <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+          <Select
+            ref={innerRef}
+            defaultValue={{ value: "oomol-chat", label: "Default" }}
+            options={options}
+            className='react-select-container'
+            classNamePrefix="react-select"
+            onChange={(selectedOption) => setSelectedModel(selectedOption.value)}
+            unstyled
+            components={customComponents}
+            styles={{ menu: (base) => ({ ...base, width: 'var(--menu-width)' }) }}
+          />
 
-                      </div> 
-                      <div style={{ display: 'flex', flexDirection: "column", gap: '4px' }}>
-                          <label>Top P:</label>
-                          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                            <input
-                                type="range"
-                                min="0"
-                                max="1"
-                                step="0.01"
-                                value={topP}
-                                onChange={(e) => setTopP(parseFloat(e.target.value))}
-                                style={{ height: '4px',flex: 1, margin: 0, border: 'none', padding: 0 }}
-                            />
-                            <input
-                                type="number"
-                                min="0"
-                                max="1"
-                                step="0.1"
-                                value={topP}
-                                onChange={(e) => {
-                                    const value = parseFloat(e.target.value);
-                                    setTopP(Math.min(value, 1));
-                                }}
-                                style={{ width:'52px',  margin: 0, border: 'none' }}
-                            />
-                          </div>
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: "column", gap: '4px' }}>
-                          <label>Max Tokens:</label>
-                          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                            <input
-                                  type="range"
-                                  min="1"
-                                  max="4096"
-                                  step="1"
-                                  value={maxTokens}
-                                  onChange={(e) => setMaxTokens(parseInt(e.target.value))}
-                                  style={{ height: '4px',flex: 1,padding: 0, margin: 0, border: 'none' }}
-                              />
-                            <input
-                                type="number"
-                                min="1"
-                                max="4096"
-                                value={maxTokens}
-                                onChange={(e) => {
-                                    const value = parseInt(e.target.value);
-                                    setMaxTokens(Math.min(value, 4096));
-                                }}
-                                style={{ width:'60px',  margin: 0, border: 'none' }}
-                            />
-                          </div>
-                      </div>
-                  </div>
-                )}
+          <button onClick={() => setExpanded(!expanded)}>
+            <i className="codicon codicon-settings" />
+          </button>
+        </div>
+        {expanded && (
+          <div style={{ display: 'flex', flexDirection: "column", gap: '5px', paddingTop: '10px' }}>
+            <div style={{ display: 'flex', flexDirection: "column", gap: '4px' }}>
+              <label>Temperature:</label>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={temperature}
+                  onChange={(e) => setTemperature(parseFloat(e.target.value))}
+                  style={{ height: '4px', flex: 1, padding: 0, margin: 0, border: 'none' }}
+                />
+                <input
+                  type="number"
+                  min="0"
+                  max="1"
+                  step="0.1"
+                  value={temperature}
+                  onChange={(e) => setTemperature(Math.min(parseFloat(e.target.value), 1))}
+                  style={{ width: '52px', margin: 0, border: 'none' }}
+                />
               </div>
-          );
-      }
-  
-      const root = createRoot(dom);
-      root.render(<ModelComponent />);
-      
-      return () => root.unmount();
+            </div>
+            <div style={{ display: 'flex', flexDirection: "column", gap: '4px' }}>
+              <label>Top P:</label>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={topP}
+                  onChange={(e) => setTopP(parseFloat(e.target.value))}
+                  style={{ height: '4px', flex: 1, margin: 0, border: 'none', padding: 0 }}
+                />
+                <input
+                  type="number"
+                  min="0"
+                  max="1"
+                  step="0.1"
+                  value={topP}
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value);
+                    setTopP(Math.min(value, 1));
+                  }}
+                  style={{ width: '52px', margin: 0, border: 'none' }}
+                />
+              </div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: "column", gap: '4px' }}>
+              <label>Max Tokens:</label>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <input
+                  type="range"
+                  min="1"
+                  max="4096"
+                  step="1"
+                  value={maxTokens}
+                  onChange={(e) => setMaxTokens(parseInt(e.target.value))}
+                  style={{ height: '4px', flex: 1, padding: 0, margin: 0, border: 'none' }}
+                />
+                <input
+                  type="number"
+                  min="1"
+                  max="4096"
+                  value={maxTokens}
+                  onChange={(e) => setMaxTokens(Math.min(parseInt(e.target.value), 4096))}
+                  style={{ width: '60px', margin: 0, border: 'none' }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  const root = createRoot(dom);
+  root.render(<ModelComponent />);
+
+  return () => root.unmount();
 }
 
 /**
@@ -222,25 +211,25 @@ export function model(dom, context) {
  * @param {InputRenderContext} context
  */
 export function prompt(dom, context) {
-    let style = document.head.querySelector('#highlight-in-textarea')
-    if (!style) {
-        style = document.createElement('style')
-        style.textContent = HL_STYLE
-        style.id = 'highlight-in-textarea'
-        document.head.appendChild(style)
-    }
-    const textarea = dom.appendChild(document.createElement('textarea'))
-    textarea.value = context.store.value$.value || ''
-    textarea.placeholder = context.store.description$.value
-    textarea.style.minHeight = '100px'
-    textarea.style.resize = 'vertical'
-    textarea.onchange = function update() {
-        context.store.value$.set(this.value)
-    }
-    const hit = new HighlightInTextarea(textarea, {
-        highlight: '{{input}}'
-    })
-    return () => hit.destroy()
+  let style = document.head.querySelector('#highlight-in-textarea')
+  if (!style) {
+    style = document.createElement('style')
+    style.textContent = HL_STYLE
+    style.id = 'highlight-in-textarea'
+    document.head.appendChild(style)
+  }
+  const textarea = dom.appendChild(document.createElement('textarea'))
+  textarea.value = context.store.value$.value || ''
+  textarea.placeholder = context.store.description$.value
+  textarea.style.minHeight = '100px'
+  textarea.style.resize = 'vertical'
+  textarea.onchange = function update() {
+    context.store.value$.set(this.value)
+  }
+  const hit = new HighlightInTextarea(textarea, {
+    highlight: '{{input}}'
+  })
+  return () => hit.destroy()
 }
 
 // From npm:highlight-in-textarea
@@ -299,18 +288,18 @@ const HL_STYLE = `
 }
 `
 
-const HighlightInTextarea = function(el, config) {
+const HighlightInTextarea = function (el, config) {
   this.init(el, config);
 };
 
-HighlightInTextarea.instance = function(el, config) {
+HighlightInTextarea.instance = function (el, config) {
   return new HighlightInTextarea(el, config);
 };
 
 HighlightInTextarea.prototype = {
   ID: 'hit',
 
-  init: function(el, config) {
+  init: function (el, config) {
 
     if (typeof el === 'string') {
       this.el = document.querySelector(el);
@@ -327,13 +316,13 @@ HighlightInTextarea.prototype = {
   },
 
   // returns identifier strings that aren't necessarily "real" JavaScript types
-  getType: function(instance) {
+  getType: function (instance) {
     let type = typeof instance;
     if (!instance) {
       return 'falsey';
     } else if (Array.isArray(instance)) {
       if (instance.length === 2 && typeof instance[0] === 'number' &&
-          typeof instance[1] === 'number') {
+        typeof instance[1] === 'number') {
         return 'range';
       } else {
         return 'array';
@@ -351,7 +340,7 @@ HighlightInTextarea.prototype = {
     return 'other';
   },
 
-  generate: function() {
+  generate: function () {
     this.el.classList.add(this.ID + '-input', this.ID + '-content');
 
     this.el.addEventListener('input', this.handleInput.bind(this));
@@ -359,7 +348,7 @@ HighlightInTextarea.prototype = {
 
     this.highlights = document.createElement('div');
     this.highlights.classList.add(this.ID + '-highlights',
-        this.ID + '-content');
+      this.ID + '-content');
 
     this.backdrop = document.createElement('div');
     this.backdrop.classList.add(this.ID + '-backdrop');
@@ -373,7 +362,7 @@ HighlightInTextarea.prototype = {
     this.container.append(this.backdrop);
 
     this.container.addEventListener('scroll',
-        this.blockContainerScroll.bind(this));
+      this.blockContainerScroll.bind(this));
 
     this.browser = this.detectBrowser();
     switch (this.browser) {
@@ -391,14 +380,14 @@ HighlightInTextarea.prototype = {
 
   // browser sniffing sucks, but there are browser-specific quirks to handle
   // that are not a matter of feature detection
-  detectBrowser: function() {
+  detectBrowser: function () {
     let ua = window.navigator.userAgent.toLowerCase();
     if (ua.indexOf('firefox') !== -1) {
       return 'firefox';
     } else if (!!ua.match(/msie|trident\/7|edge/)) {
       return 'ie';
     } else if (!!ua.match(/ipad|iphone|ipod/) &&
-        ua.indexOf('windows phone') === -1) {
+      ua.indexOf('windows phone') === -1) {
       // Windows Phone flags itself as "like iPhone", thus the extra check
       return 'ios';
     } else {
@@ -408,7 +397,7 @@ HighlightInTextarea.prototype = {
 
   // Firefox doesn't show text that scrolls into the padding of a textarea, so
   // rearrange a couple box models to make highlights behave the same way
-  fixFirefox: function() {
+  fixFirefox: function () {
 
     const hl = window.getComputedStyle(this.highlights, null);
     // take padding and border pixels from highlights div
@@ -423,7 +412,7 @@ HighlightInTextarea.prototype = {
       'border-top-width': parseInt(hl.getPropertyValue('border-top-width')),
       'border-right-width': parseInt(hl.getPropertyValue('border-right-width')),
       'border-bottom-width': parseInt(
-          hl.getPropertyValue('border-bottom-width')),
+        hl.getPropertyValue('border-bottom-width')),
       'border-left-width': parseInt(hl.getPropertyValue('border-left-width')),
     };
 
@@ -433,30 +422,30 @@ HighlightInTextarea.prototype = {
     const bdStyle = window.getComputedStyle(this.backdrop, null);
 
     const bdMarginTopOldValue = parseInt(
-        bdStyle.getPropertyValue('margin-top'));
+      bdStyle.getPropertyValue('margin-top'));
     const bdMarginRightOldValue = parseInt(
-        bdStyle.getPropertyValue('margin-right'));
+      bdStyle.getPropertyValue('margin-right'));
     const bdMarginBottomOldValue = parseInt(
-        bdStyle.getPropertyValue('margin-bottom'));
+      bdStyle.getPropertyValue('margin-bottom'));
     const bdMarginLeftOldValue = parseInt(
-        bdStyle.getPropertyValue('margin-left'));
+      bdStyle.getPropertyValue('margin-left'));
 
     this.backdrop.style.marginTop = bdMarginTopOldValue +
-        padding['padding-top'] + border['border-top-width'] + 'px';
+      padding['padding-top'] + border['border-top-width'] + 'px';
 
     this.backdrop.style.marginRight = bdMarginRightOldValue +
-        padding['padding-right'] + border['border-right-width'] + 'px';
+      padding['padding-right'] + border['border-right-width'] + 'px';
 
     this.backdrop.style.marginBottom = bdMarginBottomOldValue +
-        padding['padding-bottom'] + border['border-bottom-width'] + 'px';
+      padding['padding-bottom'] + border['border-bottom-width'] + 'px';
 
     this.backdrop.style.marginLeft = bdMarginLeftOldValue +
-        padding['padding-left'] + border['border-left-width'] + 'px';
+      padding['padding-left'] + border['border-left-width'] + 'px';
   },
 
   // iOS adds 3px of (unremovable) padding to the left and right of a textarea,
   // so adjust highlights div to match
-  fixIOS: function() {
+  fixIOS: function () {
     const paddingLeftOldValue = parseInt(this.highlights.style.paddingLeft);
     this.highlights.style.paddingLeft = (paddingLeftOldValue + 3) + 'px';
 
@@ -464,7 +453,7 @@ HighlightInTextarea.prototype = {
     this.highlights.style.paddingRight = (paddingRightOldValue + 3) + 'px';
   },
 
-  handleInput: function() {
+  handleInput: function () {
     let input = this.el.value;
     let ranges = this.getRanges(input, this.highlight);
     let unstaggeredRanges = this.removeStaggeredRanges(ranges);
@@ -472,7 +461,7 @@ HighlightInTextarea.prototype = {
     this.renderMarks(boundaries);
   },
 
-  getRanges: function(input, highlight) {
+  getRanges: function (input, highlight) {
     let type = this.getType(highlight);
     switch (type) {
       case 'array':
@@ -497,16 +486,16 @@ HighlightInTextarea.prototype = {
     }
   },
 
-  getArrayRanges: function(input, arr) {
+  getArrayRanges: function (input, arr) {
     let ranges = arr.map(this.getRanges.bind(this, input));
     return Array.prototype.concat.apply([], ranges);
   },
 
-  getFunctionRanges: function(input, func) {
+  getFunctionRanges: function (input, func) {
     return this.getRanges(input, func(input));
   },
 
-  getRegExpRanges: function(input, regex) {
+  getRegExpRanges: function (input, regex) {
     let ranges = [];
     let match;
     while (match = regex.exec(input), match !== null) {
@@ -520,7 +509,7 @@ HighlightInTextarea.prototype = {
     return ranges;
   },
 
-  getStringRanges: function(input, str) {
+  getStringRanges: function (input, str) {
     let ranges = [];
     let inputLower = input.toLowerCase();
     let strLower = str.toLowerCase();
@@ -532,14 +521,14 @@ HighlightInTextarea.prototype = {
     return ranges;
   },
 
-  getRangeRanges: function(input, range) {
+  getRangeRanges: function (input, range) {
     return [range];
   },
 
-  getCustomRanges: function(input, custom) {
+  getCustomRanges: function (input, custom) {
     let ranges = this.getRanges(input, custom.highlight);
     if (custom.className) {
-      ranges.forEach(function(range) {
+      ranges.forEach(function (range) {
         // persist class name as a property of the array
         if (range.className) {
           range.className = custom.className + ' ' + range.className;
@@ -552,14 +541,14 @@ HighlightInTextarea.prototype = {
   },
 
   // prevent staggered overlaps (clean nesting is fine)
-  removeStaggeredRanges: function(ranges) {
+  removeStaggeredRanges: function (ranges) {
     let unstaggeredRanges = [];
-    ranges.forEach(function(range) {
-      let isStaggered = unstaggeredRanges.some(function(unstaggeredRange) {
+    ranges.forEach(function (range) {
+      let isStaggered = unstaggeredRanges.some(function (unstaggeredRange) {
         let isStartInside = range[0] > unstaggeredRange[0] && range[0] <
-            unstaggeredRange[1];
+          unstaggeredRange[1];
         let isStopInside = range[1] > unstaggeredRange[0] && range[1] <
-            unstaggeredRange[1];
+          unstaggeredRange[1];
         return isStartInside !== isStopInside; // xor
       });
       if (!isStaggered) {
@@ -569,9 +558,9 @@ HighlightInTextarea.prototype = {
     return unstaggeredRanges;
   },
 
-  getBoundaries: function(ranges) {
+  getBoundaries: function (ranges) {
     let boundaries = [];
-    ranges.forEach(function(range) {
+    ranges.forEach(function (range) {
       boundaries.push({
         type: 'start',
         index: range[0],
@@ -587,9 +576,9 @@ HighlightInTextarea.prototype = {
     return boundaries;
   },
 
-  sortBoundaries: function(boundaries) {
+  sortBoundaries: function (boundaries) {
     // backwards sort (since marks are inserted right to left)
-    boundaries.sort(function(a, b) {
+    boundaries.sort(function (a, b) {
       if (a.index !== b.index) {
         return b.index - a.index;
       } else if (a.type === 'stop' && b.type === 'start') {
@@ -602,9 +591,9 @@ HighlightInTextarea.prototype = {
     });
   },
 
-  renderMarks: function(boundaries) {
+  renderMarks: function (boundaries) {
     let input = this.el.value;
-    boundaries.forEach(function(boundary, index) {
+    boundaries.forEach(function (boundary, index) {
       let markup;
       if (boundary.type === 'start') {
         markup = '{{hit-mark-start|' + index + '}}';
@@ -612,7 +601,7 @@ HighlightInTextarea.prototype = {
         markup = '{{hit-mark-stop}}';
       }
       input = input.slice(0, boundary.index) + markup +
-          input.slice(boundary.index);
+        input.slice(boundary.index);
     });
 
     // this keeps scrolling aligned when input ends with a newline
@@ -628,14 +617,14 @@ HighlightInTextarea.prototype = {
 
     // replace start tokens with opening <mark> tags with class name
     input = input.replace(/{{hit-mark-start\|(\d+)}}/g,
-        function(match, subMatch) {
-          const className = boundaries[+subMatch].className;
-          if (className) {
-            return '<mark class="' + className + '">';
-          } else {
-            return '<mark>';
-          }
-        });
+      function (match, subMatch) {
+        const className = boundaries[+subMatch].className;
+        if (className) {
+          return '<mark class="' + className + '">';
+        } else {
+          return '<mark>';
+        }
+      });
 
     // replace stop tokens with closing </mark> tags
     input = input.replace(/{{hit-mark-stop}}/g, '</mark>');
@@ -643,7 +632,7 @@ HighlightInTextarea.prototype = {
     this.highlights.innerHTML = input;
   },
 
-  handleScroll: function() {
+  handleScroll: function () {
     this.backdrop.scrollTop = this.el.scrollTop;
 
     // Chrome and Safari won't break long strings of spaces, which can cause
@@ -660,11 +649,11 @@ HighlightInTextarea.prototype = {
 
   // in Chrome, page up/down in the textarea will shift stuff within the
   // container (despite the CSS), this immediately reverts the shift
-  blockContainerScroll: function() {
+  blockContainerScroll: function () {
     this.container.scrollLeft = 0;
   },
 
-  destroy: function() {
+  destroy: function () {
     this.container.parentElement.replaceChild(this.el, this.container);
     this.el.classList.remove(this.ID + '-content', this.ID + '-input');
   },
