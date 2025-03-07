@@ -11,6 +11,9 @@ nodes:
       - handle: model
         value:
           model: oomol-chat
+          temperature: 0
+          top_p: 0.5
+          max_tokens: 4096
       - handle: prompt
         value: |-
           数一下单词 {{input}} 里有多少个 r，直接说结论，不要任何解释
@@ -24,21 +27,7 @@ nodes:
         value:
           model: google/gemini-2.0-flash-001
           temperature: 1.82
+          top_p: 0.5
+          max_tokens: 4096
       - handle: prompt
         value: 给我随机生成一个英文单词，只输出单词，不要输出任何其他东西
-  - task: oomol-preview::markdown_text_preview
-    title: "Markdown preview #1"
-    node_id: markdown_text_preview#1
-    inputs_from:
-      - handle: text
-        from_node:
-          - node_id: LLM#2
-            output_handle: output
-  - task: oomol-preview::markdown_text_preview
-    title: "Markdown preview #2"
-    node_id: markdown_text_preview#2
-    inputs_from:
-      - handle: text
-        from_node:
-          - node_id: LLM#1
-            output_handle: output
