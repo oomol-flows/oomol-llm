@@ -304,9 +304,7 @@ function RangeSlider({ label, value, min, max, step, onChange, defaultValue }) {
             onChange(newValue);
           }}
           onBlur={(e) => {
-            console.log("blur", e.target.value);
             if (e.target.value === "" || isNaN(Number(e.target.value))) {
-              console.log("run here", defaultValue);
               onChange(defaultValue);
             } else {
               onChange(Math.min(Math.max(Number(e.target.value), min), max));
