@@ -163,34 +163,12 @@ function labelOfModel(model) {
  * @param {HTMLElement} dom
  * @param {InputRenderContext} context
  */
-export function prompt(dom, context) {
-  injectStyles()
-
-  const textarea = dom.appendChild(document.createElement('textarea'))
-  textarea.value = context.store.value$.value || ''
-  textarea.placeholder = context.store.description$.value
-  textarea.style.minHeight = '100px'
-  textarea.style.resize = 'vertical'
-  textarea.onchange = function update() {
-    context.store.value$.set(this.value)
-  }
-  const hit = new HighlightInTextarea(textarea, {
-    highlight: '{{input}}'
-  })
-  return () => hit.destroy()
-}
-
-/**
- * @param {HTMLElement} dom
- * @param {InputRenderContext} context
- */
 export function messages(dom, context) {
   injectStyles()
 
   const Role = ['system', 'user', 'assistant']
   const initialMessages = parseMessages(context.store.value$.value)
   function MessagesComponent() {
-    // TODO: context.store.value$ :: { role: system | user | assistant, content: string }[]
     const [messages, setMessages] = useState(initialMessages)
 
     const updateRole = useCallback((index, role) => {
