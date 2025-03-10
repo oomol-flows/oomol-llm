@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useMemo, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
-import Select, { components } from 'react-select';
+import Select, { components, SelectInstance } from 'react-select';
 import Editor from 'react-simple-code-editor';
 import clsx from 'clsx';
 
@@ -19,7 +19,16 @@ import clsx from 'clsx';
  * @param {HTMLElement} dom
  * @param {InputRenderContext} context
  */
-export function model(dom, context) {
+
+interface InputRenderContext {
+  store: {
+    value$: { value: any; set(v: any): void };
+    description$: { value: string };
+  };
+  postMessage: (message: any, ...args: any[]) => void;
+}
+
+export function model(dom: HTMLElement, context: InputRenderContext) {
   injectStyles()
 
   function ModelComponent() {
@@ -60,78 +69,45 @@ export function model(dom, context) {
           </button>
         </div>
         {expanded && (
-          <div style={{ display: 'flex', flexDirection: "column", gap: '5px', paddingTop: '10px' }}>
-            <div style={{ display: 'flex', flexDirection: "column", gap: '4px' }}>
-              <label>Temperature:</label>
-              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.01"
-                  value={temperature}
-                  onChange={(e) => setTemperature(parseFloat(e.target.value))}
-                  style={{ height: '4px', flex: 1, padding: 0, margin: 0, border: 'none' }}
-                />
-                <input
-                  type="number"
-                  min="0"
-                  max="1"
-                  step="0.1"
-                  value={temperature}
-                  onChange={(e) => setTemperature(Math.min(parseFloat(e.target.value), 1))}
-                  style={{ width: '52px', margin: 0, border: 'none' }}
-                />
-              </div>
-            </div>
-            <div style={{ display: 'flex', flexDirection: "column", gap: '4px' }}>
-              <label>Top P:</label>
-              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.01"
-                  value={topP}
-                  onChange={(e) => setTopP(parseFloat(e.target.value))}
-                  style={{ height: '4px', flex: 1, margin: 0, border: 'none', padding: 0 }}
-                />
-                <input
-                  type="number"
-                  min="0"
-                  max="1"
-                  step="0.1"
-                  value={topP}
-                  onChange={(e) => {
-                    const value = parseFloat(e.target.value);
-                    setTopP(Math.min(value, 1));
-                  }}
-                  style={{ width: '52px', margin: 0, border: 'none' }}
-                />
-              </div>
-            </div>
-            <div style={{ display: 'flex', flexDirection: "column", gap: '4px' }}>
-              <label>Max Tokens:</label>
-              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                <input
-                  type="range"
-                  min="1"
-                  max="4096"
-                  step="1"
-                  value={maxTokens}
-                  onChange={(e) => setMaxTokens(parseInt(e.target.value))}
-                  style={{ height: '4px', flex: 1, padding: 0, margin: 0, border: 'none' }}
-                />
-                <input
-                  type="number"
-                  min="1"
-                  max="4096"
-                  value={maxTokens}
-                  onChange={(e) => setMaxTokens(Math.min(parseInt(e.target.value), 4096))}
-                  style={{ width: '60px', margin: 0, border: 'none' }}
-                />
-              </div>
-            </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "10px",
+              paddingTop: "10px",
+            }}
+          >
+            {[
+              {
+                label: "Temperature",
+                value: temperature,
+                min: 0,
+                max: 1,
+                step: 0.01,
+                onChange: (value) => setTemperature(value),
+                defaultValue: temperature,
+              },
+              {
+                label: "Top P",
+                value: topP,
+                min: 0,
+                max: 1,
+                step: 0.01,
+                onChange: (value) => setTopP(value),
+                defaultValue: topP,
+              },
+              {
+                label: "Max Tokens",
+                value: maxTokens,
+                min: 1,
+                max: 4096,
+                step: 1,
+                onChange: (value) => setMaxTokens(parseInt(value)),
+                defaultValue: maxTokens,
+              },
+            ].map((props) => (
+              <RangeSlider key={props.label} {...props} />
+            ))}
           </div>
         )}
       </div>
@@ -163,7 +139,7 @@ function labelOfModel(model) {
  * @param {HTMLElement} dom
  * @param {InputRenderContext} context
  */
-export function messages(dom, context) {
+export function messages(dom: HTMLElement, context: InputRenderContext) {
   injectStyles()
 
   const Role = ['system', 'user', 'assistant']
@@ -171,7 +147,7 @@ export function messages(dom, context) {
   function MessagesComponent() {
     const [messages, setMessages] = useState(initialMessages)
 
-    const updateRole = useCallback((index, role) => {
+    const updateRole = useCallback((index: number, role: string) => {
       const newMessages = messages.slice()
       if (newMessages[index]) {
         newMessages[index] = { ...newMessages[index], role }
@@ -179,7 +155,7 @@ export function messages(dom, context) {
       }
     }, [messages])
 
-    const updateContent = useCallback((index, content) => {
+    const updateContent = useCallback((index: number, content: string) => {
       const newMessages = messages.slice()
       if (newMessages[index]) {
         newMessages[index] = { ...newMessages[index], content }
@@ -259,7 +235,7 @@ const customComponents = {
 
 function TheSelect(props) {
   const [menuWidth, setMenuWidth] = useState(0);
-  const innerRef = useRef(null);
+  const innerRef = useRef<SelectInstance<any, any>>(null);
 
   useEffect(() => {
     if (innerRef.current?.controlRef) {
@@ -277,7 +253,7 @@ function TheSelect(props) {
     }
   }, []);
 
-  return <div style={{ display: 'contents', ['--menu-width']: `${menuWidth}px` }}>
+  return <div style={{ display: 'contents', ['--menu-width']: `${menuWidth}px` } as React.CSSProperties}>
     <Select
       ref={innerRef}
       value={props.value}
@@ -290,6 +266,55 @@ function TheSelect(props) {
       styles={{ menu: (base) => ({ ...base, width: 'var(--menu-width)' }) }}
     />
   </div>
+}
+
+// TODO: add types
+function RangeSlider({ label, value, min, max, step, onChange, defaultValue }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+      <label>{label}:</label>
+      <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+        <input
+          type="range"
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          defaultValue={defaultValue}
+          style={{
+            height: "4px",
+            flex: 1,
+            padding: 0,
+            margin: 0,
+            border: "none",
+          }}
+        />
+        <input
+          type="number"
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          defaultValue={defaultValue}
+          // TODO: add limits
+          onChange={(e) => {
+            const newValue =
+              e.target.value === "" ? "" : Math.min(Math.max(Number(e.target.value), min), max);
+            onChange(newValue);
+          }}
+          onBlur={(e) => {
+            if (e.target.value === "" || isNaN(Number(e.target.value))) {
+              onChange(defaultValue);
+            } else {
+              onChange(Math.min(Math.max(Number(e.target.value), min), max));
+            }
+          }}
+          style={{ width: "60px", margin: 0, border: "none" }}
+        />
+      </div>
+    </div>
+  );
 }
 
 function parseMessages(value) {

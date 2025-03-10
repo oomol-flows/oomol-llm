@@ -2,12 +2,13 @@
   "private": true,
   "scripts": {
     "build": "npm run build-render && npm run build-entry",
-    "build-render": "esbuild tasks/LLM/inputRender.jsx --bundle --format=esm --define:process.env.NODE_ENV=\\\"production\\\" --outfile=tasks/LLM/bundled/inputRender.js",
+    "build-render": "esbuild tasks/LLM/inputRender.tsx --bundle --format=esm --define:process.env.NODE_ENV=\\\"production\\\" --outfile=tasks/LLM/bundled/inputRender.js",
     "build-entry": "esbuild tasks/LLM/main.ts --bundle --platform=node --format=esm --outdir=tasks/LLM/bundled"
   },
   "devDependencies": {
     "@ai-sdk/openai-compatible": "^0.1.12",
     "@oomol/types": "^0.0.9",
+    "@types/react-dom": "^18.3.1",
     "ai": "^4.1.47",
     "clsx": "^2.1.1",
     "esbuild": "^0.25.0",
