@@ -7454,6 +7454,406 @@ var require_hoist_non_react_statics_cjs = __commonJS({
   }
 });
 
+// node_modules/react-simple-code-editor/lib/index.js
+var require_lib = __commonJS({
+  "node_modules/react-simple-code-editor/lib/index.js"(exports) {
+    "use strict";
+    var __assign = exports && exports.__assign || function() {
+      __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+          s = arguments[i];
+          for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+        }
+        return t;
+      };
+      return __assign.apply(this, arguments);
+    };
+    var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
+      if (k2 === void 0) k2 = k;
+      var desc = Object.getOwnPropertyDescriptor(m, k);
+      if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+        desc = { enumerable: true, get: function() {
+          return m[k];
+        } };
+      }
+      Object.defineProperty(o, k2, desc);
+    } : function(o, m, k, k2) {
+      if (k2 === void 0) k2 = k;
+      o[k2] = m[k];
+    });
+    var __setModuleDefault = exports && exports.__setModuleDefault || (Object.create ? function(o, v) {
+      Object.defineProperty(o, "default", { enumerable: true, value: v });
+    } : function(o, v) {
+      o["default"] = v;
+    });
+    var __importStar = exports && exports.__importStar || function(mod) {
+      if (mod && mod.__esModule) return mod;
+      var result = {};
+      if (mod != null) {
+        for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+      }
+      __setModuleDefault(result, mod);
+      return result;
+    };
+    var __rest = exports && exports.__rest || function(s, e) {
+      var t = {};
+      for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+      if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+          if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+            t[p[i]] = s[p[i]];
+        }
+      return t;
+    };
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var React7 = __importStar(require_react());
+    var KEYCODE_Y = 89;
+    var KEYCODE_Z = 90;
+    var KEYCODE_M = 77;
+    var KEYCODE_PARENS = 57;
+    var KEYCODE_BRACKETS = 219;
+    var KEYCODE_QUOTE = 222;
+    var KEYCODE_BACK_QUOTE = 192;
+    var HISTORY_LIMIT = 100;
+    var HISTORY_TIME_GAP = 3e3;
+    var isWindows = typeof window !== "undefined" && "navigator" in window && /Win/i.test(navigator.platform);
+    var isMacLike = typeof window !== "undefined" && "navigator" in window && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
+    var className = "npm__react-simple-code-editor__textarea";
+    var cssText = (
+      /* CSS */
+      "\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.".concat(className, ":empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .").concat(className, " {\n    color: transparent !important;\n  }\n\n  .").concat(className, "::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\n")
+    );
+    var Editor2 = React7.forwardRef(function Editor3(props, ref) {
+      var autoFocus = props.autoFocus, disabled = props.disabled, form = props.form, highlight = props.highlight, _a = props.ignoreTabKey, ignoreTabKey = _a === void 0 ? false : _a, _b = props.insertSpaces, insertSpaces = _b === void 0 ? true : _b, maxLength = props.maxLength, minLength = props.minLength, name = props.name, onBlur = props.onBlur, onClick = props.onClick, onFocus2 = props.onFocus, onKeyDown = props.onKeyDown, onKeyUp = props.onKeyUp, onValueChange = props.onValueChange, _c = props.padding, padding = _c === void 0 ? 0 : _c, placeholder = props.placeholder, preClassName = props.preClassName, readOnly = props.readOnly, required = props.required, style = props.style, _d = props.tabSize, tabSize = _d === void 0 ? 2 : _d, textareaClassName = props.textareaClassName, textareaId = props.textareaId, value = props.value, rest = __rest(props, ["autoFocus", "disabled", "form", "highlight", "ignoreTabKey", "insertSpaces", "maxLength", "minLength", "name", "onBlur", "onClick", "onFocus", "onKeyDown", "onKeyUp", "onValueChange", "padding", "placeholder", "preClassName", "readOnly", "required", "style", "tabSize", "textareaClassName", "textareaId", "value"]);
+      var historyRef = React7.useRef({
+        stack: [],
+        offset: -1
+      });
+      var inputRef = React7.useRef(null);
+      var _e = React7.useState(true), capture = _e[0], setCapture = _e[1];
+      var contentStyle = {
+        paddingTop: typeof padding === "object" ? padding.top : padding,
+        paddingRight: typeof padding === "object" ? padding.right : padding,
+        paddingBottom: typeof padding === "object" ? padding.bottom : padding,
+        paddingLeft: typeof padding === "object" ? padding.left : padding
+      };
+      var highlighted = highlight(value);
+      var getLines = function(text, position2) {
+        return text.substring(0, position2).split("\n");
+      };
+      var recordChange = React7.useCallback(function(record, overwrite) {
+        var _a2, _b2, _c2;
+        if (overwrite === void 0) {
+          overwrite = false;
+        }
+        var _d2 = historyRef.current, stack = _d2.stack, offset2 = _d2.offset;
+        if (stack.length && offset2 > -1) {
+          historyRef.current.stack = stack.slice(0, offset2 + 1);
+          var count = historyRef.current.stack.length;
+          if (count > HISTORY_LIMIT) {
+            var extras = count - HISTORY_LIMIT;
+            historyRef.current.stack = stack.slice(extras, count);
+            historyRef.current.offset = Math.max(historyRef.current.offset - extras, 0);
+          }
+        }
+        var timestamp = Date.now();
+        if (overwrite) {
+          var last = historyRef.current.stack[historyRef.current.offset];
+          if (last && timestamp - last.timestamp < HISTORY_TIME_GAP) {
+            var re = /[^a-z0-9]([a-z0-9]+)$/i;
+            var previous = (_a2 = getLines(last.value, last.selectionStart).pop()) === null || _a2 === void 0 ? void 0 : _a2.match(re);
+            var current = (_b2 = getLines(record.value, record.selectionStart).pop()) === null || _b2 === void 0 ? void 0 : _b2.match(re);
+            if ((previous === null || previous === void 0 ? void 0 : previous[1]) && ((_c2 = current === null || current === void 0 ? void 0 : current[1]) === null || _c2 === void 0 ? void 0 : _c2.startsWith(previous[1]))) {
+              historyRef.current.stack[historyRef.current.offset] = __assign(__assign({}, record), { timestamp });
+              return;
+            }
+          }
+        }
+        historyRef.current.stack.push(__assign(__assign({}, record), { timestamp }));
+        historyRef.current.offset++;
+      }, []);
+      var recordCurrentState = React7.useCallback(function() {
+        var input = inputRef.current;
+        if (!input)
+          return;
+        var value2 = input.value, selectionStart = input.selectionStart, selectionEnd = input.selectionEnd;
+        recordChange({
+          value: value2,
+          selectionStart,
+          selectionEnd
+        });
+      }, [recordChange]);
+      var updateInput = function(record) {
+        var input = inputRef.current;
+        if (!input)
+          return;
+        input.value = record.value;
+        input.selectionStart = record.selectionStart;
+        input.selectionEnd = record.selectionEnd;
+        onValueChange === null || onValueChange === void 0 ? void 0 : onValueChange(record.value);
+      };
+      var applyEdits = function(record) {
+        var input = inputRef.current;
+        var last = historyRef.current.stack[historyRef.current.offset];
+        if (last && input) {
+          historyRef.current.stack[historyRef.current.offset] = __assign(__assign({}, last), { selectionStart: input.selectionStart, selectionEnd: input.selectionEnd });
+        }
+        recordChange(record);
+        updateInput(record);
+      };
+      var undoEdit = function() {
+        var _a2 = historyRef.current, stack = _a2.stack, offset2 = _a2.offset;
+        var record = stack[offset2 - 1];
+        if (record) {
+          updateInput(record);
+          historyRef.current.offset = Math.max(offset2 - 1, 0);
+        }
+      };
+      var redoEdit = function() {
+        var _a2 = historyRef.current, stack = _a2.stack, offset2 = _a2.offset;
+        var record = stack[offset2 + 1];
+        if (record) {
+          updateInput(record);
+          historyRef.current.offset = Math.min(offset2 + 1, stack.length - 1);
+        }
+      };
+      var handleKeyDown = function(e) {
+        if (onKeyDown) {
+          onKeyDown(e);
+          if (e.defaultPrevented) {
+            return;
+          }
+        }
+        if (e.key === "Escape") {
+          e.currentTarget.blur();
+        }
+        var _a2 = e.currentTarget, value2 = _a2.value, selectionStart = _a2.selectionStart, selectionEnd = _a2.selectionEnd;
+        var tabCharacter = (insertSpaces ? " " : "	").repeat(tabSize);
+        if (e.key === "Tab" && !ignoreTabKey && capture) {
+          e.preventDefault();
+          if (e.shiftKey) {
+            var linesBeforeCaret = getLines(value2, selectionStart);
+            var startLine_1 = linesBeforeCaret.length - 1;
+            var endLine_1 = getLines(value2, selectionEnd).length - 1;
+            var nextValue = value2.split("\n").map(function(line3, i) {
+              if (i >= startLine_1 && i <= endLine_1 && line3.startsWith(tabCharacter)) {
+                return line3.substring(tabCharacter.length);
+              }
+              return line3;
+            }).join("\n");
+            if (value2 !== nextValue) {
+              var startLineText = linesBeforeCaret[startLine_1];
+              applyEdits({
+                value: nextValue,
+                // Move the start cursor if first line in selection was modified
+                // It was modified only if it started with a tab
+                selectionStart: (startLineText === null || startLineText === void 0 ? void 0 : startLineText.startsWith(tabCharacter)) ? selectionStart - tabCharacter.length : selectionStart,
+                // Move the end cursor by total number of characters removed
+                selectionEnd: selectionEnd - (value2.length - nextValue.length)
+              });
+            }
+          } else if (selectionStart !== selectionEnd) {
+            var linesBeforeCaret = getLines(value2, selectionStart);
+            var startLine_2 = linesBeforeCaret.length - 1;
+            var endLine_2 = getLines(value2, selectionEnd).length - 1;
+            var startLineText = linesBeforeCaret[startLine_2];
+            applyEdits({
+              value: value2.split("\n").map(function(line3, i) {
+                if (i >= startLine_2 && i <= endLine_2) {
+                  return tabCharacter + line3;
+                }
+                return line3;
+              }).join("\n"),
+              // Move the start cursor by number of characters added in first line of selection
+              // Don't move it if it there was no text before cursor
+              selectionStart: startLineText && /\S/.test(startLineText) ? selectionStart + tabCharacter.length : selectionStart,
+              // Move the end cursor by total number of characters added
+              selectionEnd: selectionEnd + tabCharacter.length * (endLine_2 - startLine_2 + 1)
+            });
+          } else {
+            var updatedSelection = selectionStart + tabCharacter.length;
+            applyEdits({
+              // Insert tab character at caret
+              value: value2.substring(0, selectionStart) + tabCharacter + value2.substring(selectionEnd),
+              // Update caret position
+              selectionStart: updatedSelection,
+              selectionEnd: updatedSelection
+            });
+          }
+        } else if (e.key === "Backspace") {
+          var hasSelection = selectionStart !== selectionEnd;
+          var textBeforeCaret = value2.substring(0, selectionStart);
+          if (textBeforeCaret.endsWith(tabCharacter) && !hasSelection) {
+            e.preventDefault();
+            var updatedSelection = selectionStart - tabCharacter.length;
+            applyEdits({
+              // Remove tab character at caret
+              value: value2.substring(0, selectionStart - tabCharacter.length) + value2.substring(selectionEnd),
+              // Update caret position
+              selectionStart: updatedSelection,
+              selectionEnd: updatedSelection
+            });
+          }
+        } else if (e.key === "Enter") {
+          if (selectionStart === selectionEnd) {
+            var line2 = getLines(value2, selectionStart).pop();
+            var matches = line2 === null || line2 === void 0 ? void 0 : line2.match(/^\s+/);
+            if (matches === null || matches === void 0 ? void 0 : matches[0]) {
+              e.preventDefault();
+              var indent = "\n" + matches[0];
+              var updatedSelection = selectionStart + indent.length;
+              applyEdits({
+                // Insert indentation character at caret
+                value: value2.substring(0, selectionStart) + indent + value2.substring(selectionEnd),
+                // Update caret position
+                selectionStart: updatedSelection,
+                selectionEnd: updatedSelection
+              });
+            }
+          }
+        } else if (e.keyCode === KEYCODE_PARENS || e.keyCode === KEYCODE_BRACKETS || e.keyCode === KEYCODE_QUOTE || e.keyCode === KEYCODE_BACK_QUOTE) {
+          var chars = void 0;
+          if (e.keyCode === KEYCODE_PARENS && e.shiftKey) {
+            chars = ["(", ")"];
+          } else if (e.keyCode === KEYCODE_BRACKETS) {
+            if (e.shiftKey) {
+              chars = ["{", "}"];
+            } else {
+              chars = ["[", "]"];
+            }
+          } else if (e.keyCode === KEYCODE_QUOTE) {
+            if (e.shiftKey) {
+              chars = ['"', '"'];
+            } else {
+              chars = ["'", "'"];
+            }
+          } else if (e.keyCode === KEYCODE_BACK_QUOTE && !e.shiftKey) {
+            chars = ["`", "`"];
+          }
+          if (selectionStart !== selectionEnd && chars) {
+            e.preventDefault();
+            applyEdits({
+              value: value2.substring(0, selectionStart) + chars[0] + value2.substring(selectionStart, selectionEnd) + chars[1] + value2.substring(selectionEnd),
+              // Update caret position
+              selectionStart,
+              selectionEnd: selectionEnd + 2
+            });
+          }
+        } else if ((isMacLike ? (
+          // Trigger undo with ⌘+Z on Mac
+          e.metaKey && e.keyCode === KEYCODE_Z
+        ) : (
+          // Trigger undo with Ctrl+Z on other platforms
+          e.ctrlKey && e.keyCode === KEYCODE_Z
+        )) && !e.shiftKey && !e.altKey) {
+          e.preventDefault();
+          undoEdit();
+        } else if ((isMacLike ? (
+          // Trigger redo with ⌘+Shift+Z on Mac
+          e.metaKey && e.keyCode === KEYCODE_Z && e.shiftKey
+        ) : isWindows ? (
+          // Trigger redo with Ctrl+Y on Windows
+          e.ctrlKey && e.keyCode === KEYCODE_Y
+        ) : (
+          // Trigger redo with Ctrl+Shift+Z on other platforms
+          e.ctrlKey && e.keyCode === KEYCODE_Z && e.shiftKey
+        )) && !e.altKey) {
+          e.preventDefault();
+          redoEdit();
+        } else if (e.keyCode === KEYCODE_M && e.ctrlKey && (isMacLike ? e.shiftKey : true)) {
+          e.preventDefault();
+          setCapture(function(prev2) {
+            return !prev2;
+          });
+        }
+      };
+      var handleChange = function(e) {
+        var _a2 = e.currentTarget, value2 = _a2.value, selectionStart = _a2.selectionStart, selectionEnd = _a2.selectionEnd;
+        recordChange({
+          value: value2,
+          selectionStart,
+          selectionEnd
+        }, true);
+        onValueChange(value2);
+      };
+      React7.useEffect(function() {
+        recordCurrentState();
+      }, [recordCurrentState]);
+      React7.useImperativeHandle(ref, function() {
+        return {
+          get session() {
+            return {
+              history: historyRef.current
+            };
+          },
+          set session(session) {
+            historyRef.current = session.history;
+          }
+        };
+      }, []);
+      return React7.createElement(
+        "div",
+        __assign({}, rest, { style: __assign(__assign({}, styles.container), style) }),
+        React7.createElement("pre", __assign({ className: preClassName, "aria-hidden": "true", style: __assign(__assign(__assign({}, styles.editor), styles.highlight), contentStyle) }, typeof highlighted === "string" ? { dangerouslySetInnerHTML: { __html: highlighted + "<br />" } } : { children: highlighted })),
+        React7.createElement("textarea", { ref: function(c) {
+          return inputRef.current = c;
+        }, style: __assign(__assign(__assign({}, styles.editor), styles.textarea), contentStyle), className: className + (textareaClassName ? " ".concat(textareaClassName) : ""), id: textareaId, value, onChange: handleChange, onKeyDown: handleKeyDown, onClick, onKeyUp, onFocus: onFocus2, onBlur, disabled, form, maxLength, minLength, name, placeholder, readOnly, required, autoFocus, autoCapitalize: "off", autoComplete: "off", autoCorrect: "off", spellCheck: false, "data-gramm": false }),
+        React7.createElement("style", { dangerouslySetInnerHTML: { __html: cssText } })
+      );
+    });
+    var styles = {
+      container: {
+        position: "relative",
+        textAlign: "left",
+        boxSizing: "border-box",
+        padding: 0,
+        overflow: "hidden"
+      },
+      textarea: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        height: "100%",
+        width: "100%",
+        resize: "none",
+        color: "inherit",
+        overflow: "hidden",
+        MozOsxFontSmoothing: "grayscale",
+        WebkitFontSmoothing: "antialiased",
+        WebkitTextFillColor: "transparent"
+      },
+      highlight: {
+        position: "relative",
+        pointerEvents: "none"
+      },
+      editor: {
+        margin: 0,
+        border: 0,
+        background: "none",
+        boxSizing: "inherit",
+        display: "inherit",
+        fontFamily: "inherit",
+        fontSize: "inherit",
+        fontStyle: "inherit",
+        fontVariantLigatures: "inherit",
+        fontWeight: "inherit",
+        letterSpacing: "inherit",
+        lineHeight: "inherit",
+        tabSize: "inherit",
+        textIndent: "inherit",
+        textRendering: "inherit",
+        textTransform: "inherit",
+        whiteSpace: "pre-wrap",
+        wordBreak: "keep-all",
+        overflowWrap: "break-word"
+      }
+    };
+    exports.default = Editor2;
+  }
+});
+
 // tasks/LLM/inputRender.jsx
 var import_react9 = __toESM(require_react());
 var import_client = __toESM(require_client());
@@ -10554,12 +10954,12 @@ var LiveRegion = function LiveRegion2(props) {
   var ariaLiveMessages = selectProps.ariaLiveMessages, getOptionLabel4 = selectProps.getOptionLabel, inputValue = selectProps.inputValue, isMulti = selectProps.isMulti, isOptionDisabled3 = selectProps.isOptionDisabled, isSearchable = selectProps.isSearchable, menuIsOpen = selectProps.menuIsOpen, options2 = selectProps.options, screenReaderStatus2 = selectProps.screenReaderStatus, tabSelectsValue = selectProps.tabSelectsValue, isLoading = selectProps.isLoading;
   var ariaLabel = selectProps["aria-label"];
   var ariaLive = selectProps["aria-live"];
-  var messages = (0, import_react6.useMemo)(function() {
+  var messages2 = (0, import_react6.useMemo)(function() {
     return _objectSpread2(_objectSpread2({}, defaultAriaLiveMessages), ariaLiveMessages || {});
   }, [ariaLiveMessages]);
   var ariaSelected = (0, import_react6.useMemo)(function() {
     var message = "";
-    if (ariaSelection && messages.onChange) {
+    if (ariaSelection && messages2.onChange) {
       var option = ariaSelection.option, selectedOptions = ariaSelection.options, removedValue = ariaSelection.removedValue, removedValues = ariaSelection.removedValues, value = ariaSelection.value;
       var asOption = function asOption2(val) {
         return !Array.isArray(val) ? val : null;
@@ -10575,15 +10975,15 @@ var LiveRegion = function LiveRegion2(props) {
         label,
         labels
       }, ariaSelection);
-      message = messages.onChange(onChangeProps);
+      message = messages2.onChange(onChangeProps);
     }
     return message;
-  }, [ariaSelection, messages, isOptionDisabled3, selectValue, getOptionLabel4]);
+  }, [ariaSelection, messages2, isOptionDisabled3, selectValue, getOptionLabel4]);
   var ariaFocused = (0, import_react6.useMemo)(function() {
     var focusMsg = "";
     var focused = focusedOption || focusedValue;
     var isSelected = !!(focusedOption && selectValue && selectValue.includes(focusedOption));
-    if (focused && messages.onFocus) {
+    if (focused && messages2.onFocus) {
       var onFocusProps = {
         focused,
         label: getOptionLabel4(focused),
@@ -10594,29 +10994,29 @@ var LiveRegion = function LiveRegion2(props) {
         selectValue,
         isAppleDevice: isAppleDevice2
       };
-      focusMsg = messages.onFocus(onFocusProps);
+      focusMsg = messages2.onFocus(onFocusProps);
     }
     return focusMsg;
-  }, [focusedOption, focusedValue, getOptionLabel4, isOptionDisabled3, messages, focusableOptions, selectValue, isAppleDevice2]);
+  }, [focusedOption, focusedValue, getOptionLabel4, isOptionDisabled3, messages2, focusableOptions, selectValue, isAppleDevice2]);
   var ariaResults = (0, import_react6.useMemo)(function() {
     var resultsMsg = "";
-    if (menuIsOpen && options2.length && !isLoading && messages.onFilter) {
+    if (menuIsOpen && options2.length && !isLoading && messages2.onFilter) {
       var resultsMessage = screenReaderStatus2({
         count: focusableOptions.length
       });
-      resultsMsg = messages.onFilter({
+      resultsMsg = messages2.onFilter({
         inputValue,
         resultsMessage
       });
     }
     return resultsMsg;
-  }, [focusableOptions, inputValue, menuIsOpen, messages, options2, screenReaderStatus2, isLoading]);
+  }, [focusableOptions, inputValue, menuIsOpen, messages2, options2, screenReaderStatus2, isLoading]);
   var isInitialFocus = (ariaSelection === null || ariaSelection === void 0 ? void 0 : ariaSelection.action) === "initial-input-focus";
   var ariaGuidance = (0, import_react6.useMemo)(function() {
     var guidanceMsg = "";
-    if (messages.guidance) {
+    if (messages2.guidance) {
       var context = focusedValue ? "value" : menuIsOpen ? "menu" : "input";
-      guidanceMsg = messages.guidance({
+      guidanceMsg = messages2.guidance({
         "aria-label": ariaLabel,
         context,
         isDisabled: focusedOption && isOptionDisabled3(focusedOption, selectValue),
@@ -10627,7 +11027,7 @@ var LiveRegion = function LiveRegion2(props) {
       });
     }
     return guidanceMsg;
-  }, [ariaLabel, focusedOption, focusedValue, isMulti, isOptionDisabled3, isSearchable, menuIsOpen, messages, selectValue, tabSelectsValue, isInitialFocus]);
+  }, [ariaLabel, focusedOption, focusedValue, isMulti, isOptionDisabled3, isSearchable, menuIsOpen, messages2, selectValue, tabSelectsValue, isInitialFocus]);
   var ScreenReaderText = jsx(import_react6.Fragment, null, jsx("span", {
     id: "aria-selection"
   }, ariaSelected), jsx("span", {
@@ -12779,6 +13179,9 @@ var StateManagedSelect = /* @__PURE__ */ (0, import_react8.forwardRef)(function(
 });
 var StateManagedSelect$1 = StateManagedSelect;
 
+// tasks/LLM/inputRender.jsx
+var import_react_simple_code_editor = __toESM(require_lib());
+
 // node_modules/clsx/dist/clsx.mjs
 function r(e) {
   var t, f, n = "";
@@ -12797,20 +13200,7 @@ var clsx_default = clsx;
 
 // tasks/LLM/inputRender.jsx
 function model(dom, context) {
-  const customComponents = {
-    Menu: (props) => /* @__PURE__ */ import_react9.default.createElement(components.Menu, { ...props, className: clsx_default(props.className, "nowheel") }, props.children)
-  };
-  const LLM_STYLE = `
-    .llm-container {
-      .react-select-container {
-        flex: 1;
-      }
-
-      .react-select__control {
-        min-height: 24px;
-      }
-    }
-  `;
+  injectStyles();
   function ModelComponent() {
     const [models, setModels] = (0, import_react9.useState)([]);
     const [expanded, setExpanded] = (0, import_react9.useState)(false);
@@ -12818,32 +13208,6 @@ function model(dom, context) {
     const [temperature, setTemperature] = (0, import_react9.useState)(context.store.value$.value?.temperature || 0);
     const [topP, setTopP] = (0, import_react9.useState)(context.store.value$.value?.top_p ?? 0.5);
     const [maxTokens, setMaxTokens] = (0, import_react9.useState)(context.store.value$.value?.max_tokens || 4096);
-    (0, import_react9.useEffect)(() => {
-      let style = document.head.querySelector("#llm-container-style");
-      if (!style) {
-        style = document.createElement("style");
-        style.textContent = LLM_STYLE;
-        style.id = "llm-container-style";
-        document.head.appendChild(style);
-      }
-    }, []);
-    const [menuWidth, setMenuWidth] = (0, import_react9.useState)(0);
-    const innerRef = (0, import_react9.useRef)(null);
-    (0, import_react9.useEffect)(() => {
-      if (innerRef.current?.controlRef) {
-        let timer = 0;
-        const observer = new ResizeObserver((entries) => {
-          const width = entries[0].borderBoxSize[0].inlineSize;
-          clearTimeout(timer);
-          timer = window.setTimeout(() => setMenuWidth(width), 0);
-        });
-        observer.observe(innerRef.current.controlRef);
-        return () => {
-          clearTimeout(timer);
-          observer.disconnect();
-        };
-      }
-    }, []);
     (0, import_react9.useEffect)(() => {
       context.postMessage("getLLMModels", (models2) => {
         if (models2?.length) {
@@ -12859,27 +13223,12 @@ function model(dom, context) {
         max_tokens: maxTokens
       });
     }, [selectedModel, temperature, topP, maxTokens]);
-    const options2 = (0, import_react9.useMemo)(
-      () => {
-        return models.map((model2) => ({
-          value: model2,
-          label: model2
-        }));
-      },
-      [models]
-    );
-    return /* @__PURE__ */ import_react9.default.createElement("div", { id: "llm-container-style", className: "llm-container", style: { ["--menu-width"]: `${menuWidth}px` } }, /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "5px", alignItems: "center" } }, /* @__PURE__ */ import_react9.default.createElement(
-      StateManagedSelect$1,
+    return /* @__PURE__ */ import_react9.default.createElement("div", { className: "llm-container" }, /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "5px", alignItems: "center" } }, /* @__PURE__ */ import_react9.default.createElement(
+      TheSelect,
       {
-        ref: innerRef,
-        defaultValue: { value: "oomol-chat", label: "Default" },
-        options: options2,
-        className: "react-select-container",
-        classNamePrefix: "react-select",
-        onChange: (selectedOption) => setSelectedModel(selectedOption.value),
-        unstyled: true,
-        components: customComponents,
-        styles: { menu: (base) => ({ ...base, width: "var(--menu-width)" }) }
+        value: { value: selectedModel, label: labelOfModel(selectedModel) },
+        options: models.map((model2) => ({ value: model2, label: labelOfModel(model2) })),
+        onChange: (selectedOption) => setSelectedModel(selectedOption.value)
       }
     ), /* @__PURE__ */ import_react9.default.createElement("button", { onClick: () => setExpanded(!expanded) }, /* @__PURE__ */ import_react9.default.createElement("i", { className: "codicon codicon-settings" }))), expanded && /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "5px", paddingTop: "10px" } }, /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "4px" } }, /* @__PURE__ */ import_react9.default.createElement("label", null, "Temperature:"), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "8px", alignItems: "center" } }, /* @__PURE__ */ import_react9.default.createElement(
       "input",
@@ -12955,14 +13304,22 @@ function model(dom, context) {
   root.render(/* @__PURE__ */ import_react9.default.createElement(ModelComponent, null));
   return () => root.unmount();
 }
+function labelOfModel(model2) {
+  if (model2 === "oomol-chat") return "Default";
+  model2 = model2.replace(/\W/g, " ").replace(/\s+/g, " ").toLowerCase();
+  model2 = model2.split(" ").map((word) => {
+    if (word === "oomol") return "OOMOL";
+    if (word === "qwen") return "Qwen";
+    if (word === "qvq") return "QvQ";
+    if (word === "qwq") return "QwQ";
+    if (word === "deepseek") return "DeepSeek";
+    if (word === "ai") return "AI";
+    return word[0].toUpperCase() + word.slice(1);
+  }).join(" ");
+  return model2;
+}
 function prompt(dom, context) {
-  let style = document.head.querySelector("#highlight-in-textarea");
-  if (!style) {
-    style = document.createElement("style");
-    style.textContent = HL_STYLE;
-    style.id = "highlight-in-textarea";
-    document.head.appendChild(style);
-  }
+  injectStyles();
   const textarea = dom.appendChild(document.createElement("textarea"));
   textarea.value = context.store.value$.value || "";
   textarea.placeholder = context.store.description$.value;
@@ -12976,364 +13333,182 @@ function prompt(dom, context) {
   });
   return () => hit.destroy();
 }
-var HL_STYLE = `
-.hit-container {
-    position: relative;
-    overflow: hidden !important;
-    -webkit-text-size-adjust: none !important;
+function messages(dom, context) {
+  injectStyles();
+  const Role = ["system", "user", "assistant"];
+  const initialMessages = parseMessages(context.store.value$.value);
+  function MessagesComponent() {
+    const [messages2, setMessages] = (0, import_react9.useState)(initialMessages);
+    const updateRole = (0, import_react9.useCallback)((index2, role) => {
+      const newMessages = messages2.slice();
+      if (newMessages[index2]) {
+        newMessages[index2] = { ...newMessages[index2], role };
+        setMessages(newMessages);
+      }
+    }, [messages2]);
+    const updateContent = (0, import_react9.useCallback)((index2, content) => {
+      const newMessages = messages2.slice();
+      if (newMessages[index2]) {
+        newMessages[index2] = { ...newMessages[index2], content };
+        setMessages(newMessages);
+      }
+    }, [messages2]);
+    const addMessage = (0, import_react9.useCallback)(() => {
+      setMessages((m) => [...m, { role: "user", content: "" }]);
+    }, []);
+    const deleteMessage = (0, import_react9.useCallback)((index2) => {
+      setMessages((m) => {
+        m = m.slice();
+        m.splice(index2, 1);
+        return m;
+      });
+    }, []);
+    (0, import_react9.useEffect)(() => {
+      context.store.value$.set(messages2);
+    }, [messages2]);
+    return /* @__PURE__ */ import_react9.default.createElement("div", { className: "llm-container" }, messages2.map((a, i) => /* @__PURE__ */ import_react9.default.createElement("div", { key: i, "data-message-index": i, className: "llm-message-container" }, /* @__PURE__ */ import_react9.default.createElement("div", { className: "llm-message-head" }, /* @__PURE__ */ import_react9.default.createElement(
+      TheSelect,
+      {
+        value: { value: a.role, label: a.role },
+        options: Role.map((role) => ({ value: role, label: role })),
+        onChange: (e) => updateRole(i, e.value)
+      }
+    ), /* @__PURE__ */ import_react9.default.createElement("button", { onClick: () => deleteMessage(i) }, /* @__PURE__ */ import_react9.default.createElement("i", { className: "codicon codicon-trash" }))), /* @__PURE__ */ import_react9.default.createElement(
+      import_react_simple_code_editor.default,
+      {
+        value: a.content,
+        onValueChange: (content) => updateContent(i, content),
+        highlight: doHighlight,
+        padding: 5,
+        className: "llm-message-content",
+        placeholder: context.store.description$.value,
+        style: { minHeight: 100, resize: "vertical" }
+      }
+    ))), /* @__PURE__ */ import_react9.default.createElement("button", { className: "llm-btn-add-message", onClick: addMessage }, "Add message"));
+  }
+  const root = (0, import_client.createRoot)(dom);
+  root.render(/* @__PURE__ */ import_react9.default.createElement(MessagesComponent, null));
+  return () => root.unmount();
+}
+function doHighlight(content) {
+  return content.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/{{input}}/g, "<mark>{{input}}</mark>");
+}
+var customComponents = {
+  Menu: (props) => /* @__PURE__ */ import_react9.default.createElement(components.Menu, { ...props, className: clsx_default(props.className, "nowheel") }, props.children)
+};
+function TheSelect(props) {
+  const [menuWidth, setMenuWidth] = (0, import_react9.useState)(0);
+  const innerRef = (0, import_react9.useRef)(null);
+  (0, import_react9.useEffect)(() => {
+    if (innerRef.current?.controlRef) {
+      let timer = 0;
+      const observer = new ResizeObserver((entries) => {
+        const width = entries[0].borderBoxSize[0].inlineSize;
+        clearTimeout(timer);
+        timer = window.setTimeout(() => setMenuWidth(width), 0);
+      });
+      observer.observe(innerRef.current.controlRef);
+      return () => {
+        clearTimeout(timer);
+        observer.disconnect();
+      };
+    }
+  }, []);
+  return /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "contents", ["--menu-width"]: `${menuWidth}px` } }, /* @__PURE__ */ import_react9.default.createElement(
+    StateManagedSelect$1,
+    {
+      ref: innerRef,
+      value: props.value,
+      options: props.options,
+      className: "react-select-container",
+      classNamePrefix: "react-select",
+      onChange: props.onChange,
+      unstyled: true,
+      components: customComponents,
+      styles: { menu: (base) => ({ ...base, width: "var(--menu-width)" }) }
+    }
+  ));
+}
+function parseMessages(value) {
+  if (typeof value === "string") {
+    return [{ role: "user", content: value }];
+  } else if (Array.isArray(value)) {
+    const Role = ["system", "user", "assistant"];
+    return value.filter((x) => !!x).map((v) => {
+      if (typeof v === "string") {
+        return { role: "user", content: v };
+      } else {
+        let role = Role.includes(v.role) ? v.role : "user";
+        let content = typeof v.content === "string" ? v.content : "";
+        return { role, content };
+      }
+    });
+  } else {
+    return [];
+  }
+}
+function injectStyles() {
+  let style = document.head.querySelector("#oomol-llm-styles");
+  if (!style) {
+    style = document.createElement("style");
+    style.textContent = STYLE;
+    style.id = "oomol-llm-styles";
+    document.head.appendChild(style);
+  }
+}
+var STYLE = `
+.llm-container .react-select-container {
+  flex: 1;
 }
 
-.hit-backdrop {
-    position: absolute !important;
-    top: 0 !important;
-    right: -99px !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    padding-right: 99px !important;
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-    pointer-events: none;
+.llm-container .react-select__control {
+  min-height: 24px;
 }
 
-.hit-highlights {
-    width: auto !important;
-    height: auto !important;
-    border-color: transparent !important;
-    white-space: pre-wrap !important;
-    word-wrap: break-word !important;
-    color: transparent !important;
-    overflow: hidden !important;
+.llm-container mark {
+  color: var(--vscode-chat-slashCommandForeground);
+  background: none transparent !important;
 }
 
-.hit-input {
-    display: block !important;
-    position: relative !important;
-    margin: 0;
-    padding: 0;
-    border-radius: 5px;
-    font: inherit;
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
+.llm-message-container {
+  margin-bottom: 4px;
 }
 
-.hit-content {
-    border: 1px solid transparent;
-    padding: 5px;
-}
-.hit-content:focus-within {
-    border-color: var(--vscode-focusBorder);
+.llm-message-head {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 4px;
 }
 
-.hit-content mark {
-    padding: 0 !important;
-    color: var(--vscode-chat-slashCommandForeground);
-    background: none transparent !important;
+.llm-message-head select {
+  border-color: transparent;
+}
+
+.llm-btn-add-message {
+}
+
+.llm-message-content {
+  border: 1px solid transparent;
+  background: var(--widget-background);
+  border-radius: var(--widget-radius);
+}
+
+.llm-message-content:hover {
+  background: var(--widget-background-highlight-color);
+}
+
+.llm-message-content:focus-within {
+  border-color: var(--brand-highlight-color);
+  background: var(--widget-input-background);
+}
+
+.llm-message-content ::selection {
+  background: #2b4f7760;
 }
 `;
-var HighlightInTextarea = function(el, config) {
-  this.init(el, config);
-};
-HighlightInTextarea.instance = function(el, config) {
-  return new HighlightInTextarea(el, config);
-};
-HighlightInTextarea.prototype = {
-  ID: "hit",
-  init: function(el, config) {
-    if (typeof el === "string") {
-      this.el = document.querySelector(el);
-    } else {
-      this.el = el;
-    }
-    if (this.getType(config) === "custom") {
-      this.highlight = config;
-      this.generate();
-    } else {
-      console.error("valid config object not provided");
-    }
-  },
-  // returns identifier strings that aren't necessarily "real" JavaScript types
-  getType: function(instance) {
-    let type = typeof instance;
-    if (!instance) {
-      return "falsey";
-    } else if (Array.isArray(instance)) {
-      if (instance.length === 2 && typeof instance[0] === "number" && typeof instance[1] === "number") {
-        return "range";
-      } else {
-        return "array";
-      }
-    } else if (type === "object") {
-      if (instance instanceof RegExp) {
-        return "regexp";
-      } else if (instance.hasOwnProperty("highlight")) {
-        return "custom";
-      }
-    } else if (type === "function" || type === "string") {
-      return type;
-    }
-    return "other";
-  },
-  generate: function() {
-    this.el.classList.add(this.ID + "-input", this.ID + "-content");
-    this.el.addEventListener("input", this.handleInput.bind(this));
-    this.el.addEventListener("scroll", this.handleScroll.bind(this));
-    this.highlights = document.createElement("div");
-    this.highlights.classList.add(
-      this.ID + "-highlights",
-      this.ID + "-content"
-    );
-    this.backdrop = document.createElement("div");
-    this.backdrop.classList.add(this.ID + "-backdrop");
-    this.backdrop.append(this.highlights);
-    this.container = document.createElement("div");
-    this.container.classList.add(this.ID + "-container");
-    this.el.parentNode.insertBefore(this.container, this.el.nextSibling);
-    this.container.append(this.el);
-    this.container.append(this.backdrop);
-    this.container.addEventListener(
-      "scroll",
-      this.blockContainerScroll.bind(this)
-    );
-    this.browser = this.detectBrowser();
-    switch (this.browser) {
-      case "firefox":
-        this.fixFirefox();
-        break;
-      case "ios":
-        this.fixIOS();
-        break;
-    }
-    this.handleInput();
-  },
-  // browser sniffing sucks, but there are browser-specific quirks to handle
-  // that are not a matter of feature detection
-  detectBrowser: function() {
-    let ua = window.navigator.userAgent.toLowerCase();
-    if (ua.indexOf("firefox") !== -1) {
-      return "firefox";
-    } else if (!!ua.match(/msie|trident\/7|edge/)) {
-      return "ie";
-    } else if (!!ua.match(/ipad|iphone|ipod/) && ua.indexOf("windows phone") === -1) {
-      return "ios";
-    } else {
-      return "other";
-    }
-  },
-  // Firefox doesn't show text that scrolls into the padding of a textarea, so
-  // rearrange a couple box models to make highlights behave the same way
-  fixFirefox: function() {
-    const hl = window.getComputedStyle(this.highlights, null);
-    let padding = {
-      "padding-top": parseInt(hl.getPropertyValue("padding-top")),
-      "padding-right": parseInt(hl.getPropertyValue("padding-right")),
-      "padding-bottom": parseInt(hl.getPropertyValue("padding-bottom")),
-      "padding-left": parseInt(hl.getPropertyValue("padding-left"))
-    };
-    let border = {
-      "border-top-width": parseInt(hl.getPropertyValue("border-top-width")),
-      "border-right-width": parseInt(hl.getPropertyValue("border-right-width")),
-      "border-bottom-width": parseInt(
-        hl.getPropertyValue("border-bottom-width")
-      ),
-      "border-left-width": parseInt(hl.getPropertyValue("border-left-width"))
-    };
-    this.highlights.style.padding = "0";
-    this.highlights.style.borderWidth = "0";
-    const bdStyle = window.getComputedStyle(this.backdrop, null);
-    const bdMarginTopOldValue = parseInt(
-      bdStyle.getPropertyValue("margin-top")
-    );
-    const bdMarginRightOldValue = parseInt(
-      bdStyle.getPropertyValue("margin-right")
-    );
-    const bdMarginBottomOldValue = parseInt(
-      bdStyle.getPropertyValue("margin-bottom")
-    );
-    const bdMarginLeftOldValue = parseInt(
-      bdStyle.getPropertyValue("margin-left")
-    );
-    this.backdrop.style.marginTop = bdMarginTopOldValue + padding["padding-top"] + border["border-top-width"] + "px";
-    this.backdrop.style.marginRight = bdMarginRightOldValue + padding["padding-right"] + border["border-right-width"] + "px";
-    this.backdrop.style.marginBottom = bdMarginBottomOldValue + padding["padding-bottom"] + border["border-bottom-width"] + "px";
-    this.backdrop.style.marginLeft = bdMarginLeftOldValue + padding["padding-left"] + border["border-left-width"] + "px";
-  },
-  // iOS adds 3px of (unremovable) padding to the left and right of a textarea,
-  // so adjust highlights div to match
-  fixIOS: function() {
-    const paddingLeftOldValue = parseInt(this.highlights.style.paddingLeft);
-    this.highlights.style.paddingLeft = paddingLeftOldValue + 3 + "px";
-    const paddingRightOldValue = parseInt(this.highlights.style.paddingRight);
-    this.highlights.style.paddingRight = paddingRightOldValue + 3 + "px";
-  },
-  handleInput: function() {
-    let input = this.el.value;
-    let ranges = this.getRanges(input, this.highlight);
-    let unstaggeredRanges = this.removeStaggeredRanges(ranges);
-    let boundaries = this.getBoundaries(unstaggeredRanges);
-    this.renderMarks(boundaries);
-  },
-  getRanges: function(input, highlight) {
-    let type = this.getType(highlight);
-    switch (type) {
-      case "array":
-        return this.getArrayRanges(input, highlight);
-      case "function":
-        return this.getFunctionRanges(input, highlight);
-      case "regexp":
-        return this.getRegExpRanges(input, highlight);
-      case "string":
-        return this.getStringRanges(input, highlight);
-      case "range":
-        return this.getRangeRanges(input, highlight);
-      case "custom":
-        return this.getCustomRanges(input, highlight);
-      default:
-        if (!highlight) {
-          return [];
-        } else {
-          console.error("unrecognized highlight type");
-        }
-    }
-  },
-  getArrayRanges: function(input, arr) {
-    let ranges = arr.map(this.getRanges.bind(this, input));
-    return Array.prototype.concat.apply([], ranges);
-  },
-  getFunctionRanges: function(input, func) {
-    return this.getRanges(input, func(input));
-  },
-  getRegExpRanges: function(input, regex) {
-    let ranges = [];
-    let match2;
-    while (match2 = regex.exec(input), match2 !== null) {
-      ranges.push([match2.index, match2.index + match2[0].length]);
-      if (!regex.global) {
-        break;
-      }
-    }
-    return ranges;
-  },
-  getStringRanges: function(input, str) {
-    let ranges = [];
-    let inputLower = input.toLowerCase();
-    let strLower = str.toLowerCase();
-    let index2 = 0;
-    while (index2 = inputLower.indexOf(strLower, index2), index2 !== -1) {
-      ranges.push([index2, index2 + strLower.length]);
-      index2 += strLower.length;
-    }
-    return ranges;
-  },
-  getRangeRanges: function(input, range) {
-    return [range];
-  },
-  getCustomRanges: function(input, custom) {
-    let ranges = this.getRanges(input, custom.highlight);
-    if (custom.className) {
-      ranges.forEach(function(range) {
-        if (range.className) {
-          range.className = custom.className + " " + range.className;
-        } else {
-          range.className = custom.className;
-        }
-      });
-    }
-    return ranges;
-  },
-  // prevent staggered overlaps (clean nesting is fine)
-  removeStaggeredRanges: function(ranges) {
-    let unstaggeredRanges = [];
-    ranges.forEach(function(range) {
-      let isStaggered = unstaggeredRanges.some(function(unstaggeredRange) {
-        let isStartInside = range[0] > unstaggeredRange[0] && range[0] < unstaggeredRange[1];
-        let isStopInside = range[1] > unstaggeredRange[0] && range[1] < unstaggeredRange[1];
-        return isStartInside !== isStopInside;
-      });
-      if (!isStaggered) {
-        unstaggeredRanges.push(range);
-      }
-    });
-    return unstaggeredRanges;
-  },
-  getBoundaries: function(ranges) {
-    let boundaries = [];
-    ranges.forEach(function(range) {
-      boundaries.push({
-        type: "start",
-        index: range[0],
-        className: range.className
-      });
-      boundaries.push({
-        type: "stop",
-        index: range[1]
-      });
-    });
-    this.sortBoundaries(boundaries);
-    return boundaries;
-  },
-  sortBoundaries: function(boundaries) {
-    boundaries.sort(function(a, b) {
-      if (a.index !== b.index) {
-        return b.index - a.index;
-      } else if (a.type === "stop" && b.type === "start") {
-        return 1;
-      } else if (a.type === "start" && b.type === "stop") {
-        return -1;
-      } else {
-        return 0;
-      }
-    });
-  },
-  renderMarks: function(boundaries) {
-    let input = this.el.value;
-    boundaries.forEach(function(boundary, index2) {
-      let markup;
-      if (boundary.type === "start") {
-        markup = "{{hit-mark-start|" + index2 + "}}";
-      } else {
-        markup = "{{hit-mark-stop}}";
-      }
-      input = input.slice(0, boundary.index) + markup + input.slice(boundary.index);
-    });
-    input = input.replace(/\n({{hit-mark-stop}})?$/, "\n\n$1");
-    input = input.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    if (this.browser === "ie") {
-      input = input.replace(/ /g, " <wbr>");
-    }
-    input = input.replace(
-      /{{hit-mark-start\|(\d+)}}/g,
-      function(match2, subMatch) {
-        const className = boundaries[+subMatch].className;
-        if (className) {
-          return '<mark class="' + className + '">';
-        } else {
-          return "<mark>";
-        }
-      }
-    );
-    input = input.replace(/{{hit-mark-stop}}/g, "</mark>");
-    this.highlights.innerHTML = input;
-  },
-  handleScroll: function() {
-    this.backdrop.scrollTop = this.el.scrollTop;
-    let scrollLeft = this.el.scrollLeft;
-    if (scrollLeft > 0) {
-      this.backdrop.style.transform = "translateX(" + -scrollLeft + "px)";
-    } else {
-      this.backdrop.style.transform = "";
-    }
-  },
-  // in Chrome, page up/down in the textarea will shift stuff within the
-  // container (despite the CSS), this immediately reverts the shift
-  blockContainerScroll: function() {
-    this.container.scrollLeft = 0;
-  },
-  destroy: function() {
-    this.container.parentElement.replaceChild(this.el, this.container);
-    this.el.classList.remove(this.ID + "-content", this.ID + "-input");
-  }
-};
 export {
+  messages,
   model,
   prompt
 };

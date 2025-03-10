@@ -11257,10 +11257,13 @@ async function main_default(params, context) {
   const apiKey = context.OOMOL_LLM_ENV.apiKey;
   const input = (params.input || "").trim();
   const model = params.model.model || models.shift();
-  const prompt = params.prompt.replaceAll("{{input}}", input);
+  const messages = typeof params.messages === "string" ? [{ role: "user", content: params.messages }] : params.messages.map((e) => {
+    e.content = e.content.replaceAll("{{input}}", input);
+    return e;
+  });
   const { text: text2 } = await generateText({
     model: createOpenAICompatible({ name: "oomol", baseURL, apiKey }).chatModel(model),
-    prompt,
+    messages,
     temperature: params.model.temperature,
     topP: params.model.top_p,
     maxTokens: params.model.max_tokens
