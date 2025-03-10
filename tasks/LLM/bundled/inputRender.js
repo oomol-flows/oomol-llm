@@ -7854,7 +7854,7 @@ var require_lib = __commonJS({
   }
 });
 
-// tasks/LLM/inputRender.jsx
+// tasks/LLM/inputRender.tsx
 var import_react9 = __toESM(require_react());
 var import_client = __toESM(require_client());
 
@@ -13179,7 +13179,7 @@ var StateManagedSelect = /* @__PURE__ */ (0, import_react8.forwardRef)(function(
 });
 var StateManagedSelect$1 = StateManagedSelect;
 
-// tasks/LLM/inputRender.jsx
+// tasks/LLM/inputRender.tsx
 var import_react_simple_code_editor = __toESM(require_lib());
 
 // node_modules/clsx/dist/clsx.mjs
@@ -13198,7 +13198,7 @@ function clsx() {
 }
 var clsx_default = clsx;
 
-// tasks/LLM/inputRender.jsx
+// tasks/LLM/inputRender.tsx
 function model(dom, context) {
   injectStyles();
   function ModelComponent() {
@@ -13230,75 +13230,46 @@ function model(dom, context) {
         options: models.map((model2) => ({ value: model2, label: labelOfModel(model2) })),
         onChange: (selectedOption) => setSelectedModel(selectedOption.value)
       }
-    ), /* @__PURE__ */ import_react9.default.createElement("button", { onClick: () => setExpanded(!expanded) }, /* @__PURE__ */ import_react9.default.createElement("i", { className: "codicon codicon-settings" }))), expanded && /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "5px", paddingTop: "10px" } }, /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "4px" } }, /* @__PURE__ */ import_react9.default.createElement("label", null, "Temperature:"), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "8px", alignItems: "center" } }, /* @__PURE__ */ import_react9.default.createElement(
-      "input",
+    ), /* @__PURE__ */ import_react9.default.createElement("button", { onClick: () => setExpanded(!expanded) }, /* @__PURE__ */ import_react9.default.createElement("i", { className: "codicon codicon-settings" }))), expanded && /* @__PURE__ */ import_react9.default.createElement(
+      "div",
       {
-        type: "range",
-        min: "0",
-        max: "1",
-        step: "0.01",
-        value: temperature,
-        onChange: (e) => setTemperature(parseFloat(e.target.value)),
-        style: { height: "4px", flex: 1, padding: 0, margin: 0, border: "none" }
-      }
-    ), /* @__PURE__ */ import_react9.default.createElement(
-      "input",
-      {
-        type: "number",
-        min: "0",
-        max: "1",
-        step: "0.1",
-        value: temperature,
-        onChange: (e) => setTemperature(Math.min(parseFloat(e.target.value), 1)),
-        style: { width: "52px", margin: 0, border: "none" }
-      }
-    ))), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "4px" } }, /* @__PURE__ */ import_react9.default.createElement("label", null, "Top P:"), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "8px", alignItems: "center" } }, /* @__PURE__ */ import_react9.default.createElement(
-      "input",
-      {
-        type: "range",
-        min: "0",
-        max: "1",
-        step: "0.01",
-        value: topP,
-        onChange: (e) => setTopP(parseFloat(e.target.value)),
-        style: { height: "4px", flex: 1, margin: 0, border: "none", padding: 0 }
-      }
-    ), /* @__PURE__ */ import_react9.default.createElement(
-      "input",
-      {
-        type: "number",
-        min: "0",
-        max: "1",
-        step: "0.1",
-        value: topP,
-        onChange: (e) => {
-          const value = parseFloat(e.target.value);
-          setTopP(Math.min(value, 1));
+        style: {
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
+          paddingTop: "10px"
+        }
+      },
+      [
+        {
+          label: "Temperature",
+          value: temperature,
+          min: 0,
+          max: 1,
+          step: 0.01,
+          onChange: (value) => setTemperature(value),
+          defaultValue: temperature
         },
-        style: { width: "52px", margin: 0, border: "none" }
-      }
-    ))), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "4px" } }, /* @__PURE__ */ import_react9.default.createElement("label", null, "Max Tokens:"), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "8px", alignItems: "center" } }, /* @__PURE__ */ import_react9.default.createElement(
-      "input",
-      {
-        type: "range",
-        min: "1",
-        max: "4096",
-        step: "1",
-        value: maxTokens,
-        onChange: (e) => setMaxTokens(parseInt(e.target.value)),
-        style: { height: "4px", flex: 1, padding: 0, margin: 0, border: "none" }
-      }
-    ), /* @__PURE__ */ import_react9.default.createElement(
-      "input",
-      {
-        type: "number",
-        min: "1",
-        max: "4096",
-        value: maxTokens,
-        onChange: (e) => setMaxTokens(Math.min(parseInt(e.target.value), 4096)),
-        style: { width: "60px", margin: 0, border: "none" }
-      }
-    )))));
+        {
+          label: "Top P",
+          value: topP,
+          min: 0,
+          max: 1,
+          step: 0.01,
+          onChange: (value) => setTopP(value),
+          defaultValue: topP
+        },
+        {
+          label: "Max Tokens",
+          value: maxTokens,
+          min: 1,
+          max: 4096,
+          step: 1,
+          onChange: (value) => setMaxTokens(parseInt(value)),
+          defaultValue: maxTokens
+        }
+      ].map((props) => /* @__PURE__ */ import_react9.default.createElement(RangeSlider, { key: props.label, ...props }))
+    ));
   }
   const root = (0, import_client.createRoot)(dom);
   root.render(/* @__PURE__ */ import_react9.default.createElement(ModelComponent, null));
@@ -13317,21 +13288,6 @@ function labelOfModel(model2) {
     return word[0].toUpperCase() + word.slice(1);
   }).join(" ");
   return model2;
-}
-function prompt(dom, context) {
-  injectStyles();
-  const textarea = dom.appendChild(document.createElement("textarea"));
-  textarea.value = context.store.value$.value || "";
-  textarea.placeholder = context.store.description$.value;
-  textarea.style.minHeight = "100px";
-  textarea.style.resize = "vertical";
-  textarea.onchange = function update() {
-    context.store.value$.set(this.value);
-  };
-  const hit = new HighlightInTextarea(textarea, {
-    highlight: "{{input}}"
-  });
-  return () => hit.destroy();
 }
 function messages(dom, context) {
   injectStyles();
@@ -13429,6 +13385,51 @@ function TheSelect(props) {
     }
   ));
 }
+function RangeSlider({ label, value, min: min2, max: max2, step, onChange: onChange2, defaultValue }) {
+  return /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "4px" } }, /* @__PURE__ */ import_react9.default.createElement("label", null, label, ":"), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "8px", alignItems: "center" } }, /* @__PURE__ */ import_react9.default.createElement(
+    "input",
+    {
+      type: "range",
+      min: min2,
+      max: max2,
+      step,
+      value,
+      onChange: (e) => onChange2(e.target.value),
+      defaultValue,
+      style: {
+        height: "4px",
+        flex: 1,
+        padding: 0,
+        margin: 0,
+        border: "none"
+      }
+    }
+  ), /* @__PURE__ */ import_react9.default.createElement(
+    "input",
+    {
+      type: "number",
+      min: min2,
+      max: max2,
+      step,
+      value,
+      defaultValue,
+      onChange: (e) => {
+        const newValue = e.target.value === "" ? "" : Math.min(Math.max(Number(e.target.value), min2), max2);
+        onChange2(newValue);
+      },
+      onBlur: (e) => {
+        console.log("blur", e.target.value);
+        if (e.target.value === "" || isNaN(Number(e.target.value))) {
+          console.log("run here", defaultValue);
+          onChange2(defaultValue);
+        } else {
+          onChange2(Math.min(Math.max(Number(e.target.value), min2), max2));
+        }
+      },
+      style: { width: "60px", margin: 0, border: "none" }
+    }
+  )));
+}
 function parseMessages(value) {
   if (typeof value === "string") {
     return [{ role: "user", content: value }];
@@ -13509,8 +13510,7 @@ var STYLE = `
 `;
 export {
   messages,
-  model,
-  prompt
+  model
 };
 /*! Bundled license information:
 
