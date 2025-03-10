@@ -14,10 +14,12 @@ inputs_def:
       ui:widget: self::model
       ui:options:
         title: Model
-  - handle: prompt
+  - handle: messages
     json_schema:
-      type: string
-      ui:widget: self::prompt
+      anyOf:
+        - type: string
+        - type: array
+      ui:widget: self::messages
       ui:options:
         title: Prompt
     description: "{{input}} will be replaced by the data from input handle."

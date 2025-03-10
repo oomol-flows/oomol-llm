@@ -6,7 +6,12 @@ import { generateText } from 'ai'
 interface Input {
     input: string | null
     model: IModelOptions
-    prompt: string
+    messages: string | Message[]
+}
+
+export interface Message {
+    role: 'system' | 'user' | 'assistant'
+    content: string
 }
 
 interface Output {
@@ -23,11 +28,16 @@ export default async function (
 
     const input = (params.input || '').trim()
     const model = params.model.model || models.shift()!
-    const prompt = params.prompt.replaceAll('{{input}}', input)
+    const messages: Message[] = typeof params.messages === 'string'
+        ? [{ role: 'user', content: params.messages }]
+        : params.messages.map(e => {
+            e.content = e.content.replaceAll('{{input}}', input)
+            return e
+        })
 
     const { text } = await generateText({
         model: createOpenAICompatible({ name: 'oomol', baseURL, apiKey }).chatModel(model),
-        prompt: prompt,
+        messages: messages,
         temperature: params.model.temperature,
         topP: params.model.top_p,
         maxTokens: params.model.max_tokens

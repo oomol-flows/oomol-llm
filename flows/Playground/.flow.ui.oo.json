@@ -1,36 +1,11 @@
 {
   "nodes": {
     "LLM#1": {
-      "rfNode": {
-        "position": {
-          "x": 484,
-          "y": 0
-        }
-      }
-    },
-    "LLM#2": {
+      "contentWidth": 409.5598396181143,
       "rfNode": {
         "position": {
           "x": 0,
-          "y": 1
-        }
-      }
-    },
-    "markdown_text_preview#1": {
-      "contentWidth": 350,
-      "rfNode": {
-        "position": {
-          "x": 35,
-          "y": 498
-        }
-      }
-    },
-    "markdown_text_preview#2": {
-      "contentWidth": 350,
-      "rfNode": {
-        "position": {
-          "x": 519,
-          "y": 498
+          "y": 0
         }
       }
     }
