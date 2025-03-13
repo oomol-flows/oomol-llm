@@ -3,6 +3,14 @@ import type { Context } from '@oomol/types/oocana'
 import { createOpenAICompatible } from '@ai-sdk/openai-compatible'
 import { generateText } from 'ai'
 
+
+ export interface IModelOptions {
+    model?: string
+    temperature?: number // 0-1
+    top_p?: number // 0-1
+    max_tokens?: number // 1-4096
+}
+
 interface Input {
     input: string | null
     model: IModelOptions
@@ -44,11 +52,4 @@ export default async function (
     });
 
     return { output: text }
-}
-
-interface IModelOptions {
-    model?: string
-    temperature?: number // 0-1
-    top_p?: number // 0-1
-    max_tokens?: number // 1-4096
 }
