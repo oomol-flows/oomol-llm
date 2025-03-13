@@ -13,22 +13,6 @@ import Editor from "react-simple-code-editor";
 import clsx from "clsx";
 import { IModelOptions } from "./main";
 
-/**
- * TODO: publish @oomol/types/inputRender
- * @typedef {{
- *   store: {
- *     value$: { value: IModelOptions, set(v: IModelOptions): void }
- *     description$: { value: string }
- *   },
- *   postMessage: (message: any, ...args: any[]) => void
- * }} InputRenderContext
- */
-
-/**
- * @param {HTMLElement} dom
- * @param {InputRenderContext} context
- */
-
 type Model = {
   model_name: string;
   model_display_name: string;
@@ -423,7 +407,16 @@ function ModelIcon({ modelName, size }: { modelName: string; size?: number }) {
   ) : null;
 }
 
-// TODO: add types
+interface RangeInputProps {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  step: number;
+  onChange: (value: number | string) => void;
+  defaultValue?: number;
+}
+
 function RangeInput({
   label,
   value,
@@ -432,15 +425,7 @@ function RangeInput({
   step,
   onChange,
   defaultValue,
-}: {
-  label: string;
-  value: number;
-  min: number;
-  max: number;
-  step: number;
-  onChange: (value: number | string) => void;
-  defaultValue?: number;
-}) {
+}: RangeInputProps) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
       <label>{label}:</label>
@@ -470,7 +455,6 @@ function RangeInput({
           step={step}
           value={value}
           defaultValue={defaultValue}
-          // TODO: add limits
           onChange={(e) => {
             const newValue =
               e.target.value === ""

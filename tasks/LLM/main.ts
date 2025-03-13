@@ -3,8 +3,7 @@ import type { Context } from '@oomol/types/oocana'
 import { createOpenAICompatible } from '@ai-sdk/openai-compatible'
 import { generateText } from 'ai'
 
-
- export interface IModelOptions {
+export interface IModelOptions {
     model?: string
     temperature?: number // 0-1
     top_p?: number // 0-1
@@ -29,7 +28,7 @@ interface Output {
 export default async function (
     params: Input,
     context: Context<Input, Output>,
-): Promise<Output> {    
+): Promise<Output> {
     const models = context.OOMOL_LLM_ENV.models
     const baseURL = context.OOMOL_LLM_ENV.baseUrl + '/v1'
     const apiKey = context.OOMOL_LLM_ENV.apiKey

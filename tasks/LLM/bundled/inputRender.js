@@ -13485,7 +13485,6 @@ function RangeInput({
   onChange: onChange2,
   defaultValue
 }) {
-  console.log("value ==========", value);
   return /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "4px" } }, /* @__PURE__ */ import_react9.default.createElement("label", null, label, ":"), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "8px", alignItems: "center" } }, /* @__PURE__ */ import_react9.default.createElement(
     "input",
     {
@@ -13495,7 +13494,6 @@ function RangeInput({
       step,
       value,
       onChange: (e) => {
-        console.log("onchangeeeeeeeeeeeeee", e.target.value);
         onChange2(e.target.value);
       },
       defaultValue,
