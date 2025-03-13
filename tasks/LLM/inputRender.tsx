@@ -441,7 +441,6 @@ function RangeInput({
   onChange: (value: number | string) => void;
   defaultValue?: number;
 }) {
-  console.log("value ==========", value);
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
       <label>{label}:</label>
@@ -453,7 +452,6 @@ function RangeInput({
           step={step}
           value={value}
           onChange={(e) => {
-            console.log("onchangeeeeeeeeeeeeee", e.target.value);
             onChange(e.target.value);
           }}
           defaultValue={defaultValue}
