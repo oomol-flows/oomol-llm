@@ -607,8 +607,12 @@ const STYLE = `
   .ratio {
     white-space: nowrap;
     font-size: 12px;
-    color: var(--text-1);
+    color: var(--text-2);
     font-weight: 500;
+
+    .oomol-theme-dark & {
+      color: var(--text-3);
+    }
   }
 }
 
