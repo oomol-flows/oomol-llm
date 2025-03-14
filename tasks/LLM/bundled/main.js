@@ -11253,7 +11253,7 @@ var HANGING_STREAM_WARNING_TIME_MS = 15 * 1e3;
 // tasks/LLM/main.ts
 async function main_default(params, context) {
   const models = context.OOMOL_LLM_ENV.models;
-  const baseURL = context.OOMOL_LLM_ENV.baseUrl + "/v1";
+  const baseURL = context.OOMOL_LLM_ENV.baseUrl;
   const apiKey = context.OOMOL_LLM_ENV.apiKey;
   const input = (params.input || "").trim();
   const model = params.model.model || models.shift();

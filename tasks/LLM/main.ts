@@ -30,7 +30,7 @@ export default async function (
     context: Context<Input, Output>,
 ): Promise<Output> {
     const models = context.OOMOL_LLM_ENV.models
-    const baseURL = context.OOMOL_LLM_ENV.baseUrl + '/v1'
+    const baseURL = context.OOMOL_LLM_ENV.baseUrl
     const apiKey = context.OOMOL_LLM_ENV.apiKey
 
     const input = (params.input || '').trim()
