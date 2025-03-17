@@ -4,7 +4,7 @@ var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __commonJS = (cb, mod) => function __require() {
+var __commonJS = (cb, mod) => function __require2() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
 var __copyProps = (to, from, except, desc) => {
@@ -1465,13 +1465,13 @@ function processCreateParams(params) {
   if (errorMap2)
     return { errorMap: errorMap2, description };
   const customMap = (iss, ctx) => {
-    var _a16, _b;
+    var _a17, _b;
     const { message } = params;
     if (iss.code === "invalid_enum_value") {
       return { message: message !== null && message !== void 0 ? message : ctx.defaultError };
     }
     if (typeof ctx.data === "undefined") {
-      return { message: (_a16 = message !== null && message !== void 0 ? message : required_error) !== null && _a16 !== void 0 ? _a16 : ctx.defaultError };
+      return { message: (_a17 = message !== null && message !== void 0 ? message : required_error) !== null && _a17 !== void 0 ? _a17 : ctx.defaultError };
     }
     if (iss.code !== "invalid_type")
       return { message: ctx.defaultError };
@@ -1527,11 +1527,11 @@ var ZodType = class {
     throw result.error;
   }
   safeParse(data, params) {
-    var _a16;
+    var _a17;
     const ctx = {
       common: {
         issues: [],
-        async: (_a16 = params === null || params === void 0 ? void 0 : params.async) !== null && _a16 !== void 0 ? _a16 : false,
+        async: (_a17 = params === null || params === void 0 ? void 0 : params.async) !== null && _a17 !== void 0 ? _a17 : false,
         contextualErrorMap: params === null || params === void 0 ? void 0 : params.errorMap
       },
       path: (params === null || params === void 0 ? void 0 : params.path) || [],
@@ -1544,7 +1544,7 @@ var ZodType = class {
     return handleResult(ctx, result);
   }
   "~validate"(data) {
-    var _a16, _b;
+    var _a17, _b;
     const ctx = {
       common: {
         issues: [],
@@ -1565,7 +1565,7 @@ var ZodType = class {
           issues: ctx.common.issues
         };
       } catch (err) {
-        if ((_b = (_a16 = err === null || err === void 0 ? void 0 : err.message) === null || _a16 === void 0 ? void 0 : _a16.toLowerCase()) === null || _b === void 0 ? void 0 : _b.includes("encountered")) {
+        if ((_b = (_a17 = err === null || err === void 0 ? void 0 : err.message) === null || _a17 === void 0 ? void 0 : _a17.toLowerCase()) === null || _b === void 0 ? void 0 : _b.includes("encountered")) {
           this["~standard"].async = true;
         }
         ctx.common = {
@@ -1826,7 +1826,7 @@ function isValidJWT(jwt, alg) {
     if (alg && decoded.alg !== alg)
       return false;
     return true;
-  } catch (_a16) {
+  } catch (_a17) {
     return false;
   }
 }
@@ -1985,7 +1985,7 @@ var ZodString = class _ZodString extends ZodType {
       } else if (check.kind === "url") {
         try {
           new URL(input.data);
-        } catch (_a16) {
+        } catch (_a17) {
           ctx = this._getOrReturnCtx(input, ctx);
           addIssueToContext(ctx, {
             validation: "url",
@@ -2197,7 +2197,7 @@ var ZodString = class _ZodString extends ZodType {
     return this._addCheck({ kind: "cidr", ...errorUtil.errToObj(options) });
   }
   datetime(options) {
-    var _a16, _b;
+    var _a17, _b;
     if (typeof options === "string") {
       return this._addCheck({
         kind: "datetime",
@@ -2210,7 +2210,7 @@ var ZodString = class _ZodString extends ZodType {
     return this._addCheck({
       kind: "datetime",
       precision: typeof (options === null || options === void 0 ? void 0 : options.precision) === "undefined" ? null : options === null || options === void 0 ? void 0 : options.precision,
-      offset: (_a16 = options === null || options === void 0 ? void 0 : options.offset) !== null && _a16 !== void 0 ? _a16 : false,
+      offset: (_a17 = options === null || options === void 0 ? void 0 : options.offset) !== null && _a17 !== void 0 ? _a17 : false,
       local: (_b = options === null || options === void 0 ? void 0 : options.local) !== null && _b !== void 0 ? _b : false,
       ...errorUtil.errToObj(options === null || options === void 0 ? void 0 : options.message)
     });
@@ -2379,11 +2379,11 @@ var ZodString = class _ZodString extends ZodType {
   }
 };
 ZodString.create = (params) => {
-  var _a16;
+  var _a17;
   return new ZodString({
     checks: [],
     typeName: ZodFirstPartyTypeKind.ZodString,
-    coerce: (_a16 = params === null || params === void 0 ? void 0 : params.coerce) !== null && _a16 !== void 0 ? _a16 : false,
+    coerce: (_a17 = params === null || params === void 0 ? void 0 : params.coerce) !== null && _a17 !== void 0 ? _a17 : false,
     ...processCreateParams(params)
   });
 };
@@ -2636,7 +2636,7 @@ var ZodBigInt = class _ZodBigInt extends ZodType {
     if (this._def.coerce) {
       try {
         input.data = BigInt(input.data);
-      } catch (_a16) {
+      } catch (_a17) {
         return this._getInvalidInput(input);
       }
     }
@@ -2791,11 +2791,11 @@ var ZodBigInt = class _ZodBigInt extends ZodType {
   }
 };
 ZodBigInt.create = (params) => {
-  var _a16;
+  var _a17;
   return new ZodBigInt({
     checks: [],
     typeName: ZodFirstPartyTypeKind.ZodBigInt,
-    coerce: (_a16 = params === null || params === void 0 ? void 0 : params.coerce) !== null && _a16 !== void 0 ? _a16 : false,
+    coerce: (_a17 = params === null || params === void 0 ? void 0 : params.coerce) !== null && _a17 !== void 0 ? _a17 : false,
     ...processCreateParams(params)
   });
 };
@@ -3301,8 +3301,8 @@ var ZodObject = class _ZodObject extends ZodType {
       unknownKeys: "strict",
       ...message !== void 0 ? {
         errorMap: (issue, ctx) => {
-          var _a16, _b, _c, _d;
-          const defaultError = (_c = (_b = (_a16 = this._def).errorMap) === null || _b === void 0 ? void 0 : _b.call(_a16, issue, ctx).message) !== null && _c !== void 0 ? _c : ctx.defaultError;
+          var _a17, _b, _c, _d;
+          const defaultError = (_c = (_b = (_a17 = this._def).errorMap) === null || _b === void 0 ? void 0 : _b.call(_a17, issue, ctx).message) !== null && _c !== void 0 ? _c : ctx.defaultError;
           if (issue.code === "unrecognized_keys")
             return {
               message: (_d = errorUtil.errToObj(message).message) !== null && _d !== void 0 ? _d : defaultError
@@ -4768,21 +4768,21 @@ function cleanParams(params, data) {
 function custom(check, _params = {}, fatal) {
   if (check)
     return ZodAny.create().superRefine((data, ctx) => {
-      var _a16, _b;
+      var _a17, _b;
       const r = check(data);
       if (r instanceof Promise) {
         return r.then((r2) => {
-          var _a17, _b2;
+          var _a18, _b2;
           if (!r2) {
             const params = cleanParams(_params, data);
-            const _fatal = (_b2 = (_a17 = params.fatal) !== null && _a17 !== void 0 ? _a17 : fatal) !== null && _b2 !== void 0 ? _b2 : true;
+            const _fatal = (_b2 = (_a18 = params.fatal) !== null && _a18 !== void 0 ? _a18 : fatal) !== null && _b2 !== void 0 ? _b2 : true;
             ctx.addIssue({ code: "custom", ...params, fatal: _fatal });
           }
         });
       }
       if (!r) {
         const params = cleanParams(_params, data);
-        const _fatal = (_b = (_a16 = params.fatal) !== null && _a16 !== void 0 ? _a16 : fatal) !== null && _b !== void 0 ? _b : true;
+        const _fatal = (_b = (_a17 = params.fatal) !== null && _a17 !== void 0 ? _a17 : fatal) !== null && _b !== void 0 ? _b : true;
         ctx.addIssue({ code: "custom", ...params, fatal: _fatal });
       }
       return;
@@ -5001,8 +5001,8 @@ var z = /* @__PURE__ */ Object.freeze({
 
 // node_modules/@ai-sdk/openai-compatible/dist/index.mjs
 function getOpenAIMetadata(message) {
-  var _a16, _b;
-  return (_b = (_a16 = message == null ? void 0 : message.providerMetadata) == null ? void 0 : _a16.openaiCompatible) != null ? _b : {};
+  var _a17, _b;
+  return (_b = (_a17 = message == null ? void 0 : message.providerMetadata) == null ? void 0 : _a17.openaiCompatible) != null ? _b : {};
 }
 function convertToOpenAICompatibleChatMessages(prompt) {
   const messages = [];
@@ -5025,7 +5025,7 @@ function convertToOpenAICompatibleChatMessages(prompt) {
         messages.push({
           role: "user",
           content: content.map((part) => {
-            var _a16;
+            var _a17;
             const partMetadata = getOpenAIMetadata(part);
             switch (part.type) {
               case "text": {
@@ -5035,7 +5035,7 @@ function convertToOpenAICompatibleChatMessages(prompt) {
                 return {
                   type: "image_url",
                   image_url: {
-                    url: part.image instanceof URL ? part.image.toString() : `data:${(_a16 = part.mimeType) != null ? _a16 : "image/jpeg"};base64,${convertUint8ArrayToBase64(part.image)}`
+                    url: part.image instanceof URL ? part.image.toString() : `data:${(_a17 = part.mimeType) != null ? _a17 : "image/jpeg"};base64,${convertUint8ArrayToBase64(part.image)}`
                   },
                   ...partMetadata
                 };
@@ -5156,8 +5156,8 @@ function prepareTools({
   mode,
   structuredOutputs
 }) {
-  var _a16;
-  const tools = ((_a16 = mode.tools) == null ? void 0 : _a16.length) ? mode.tools : void 0;
+  var _a17;
+  const tools = ((_a17 = mode.tools) == null ? void 0 : _a17.length) ? mode.tools : void 0;
   const toolWarnings = [];
   if (tools == null) {
     return { tools: void 0, tool_choice: void 0, toolWarnings };
@@ -5210,11 +5210,11 @@ var OpenAICompatibleChatLanguageModel = class {
   // type inferred via constructor
   constructor(modelId, settings, config) {
     this.specificationVersion = "v1";
-    var _a16, _b;
+    var _a17, _b;
     this.modelId = modelId;
     this.settings = settings;
     this.config = config;
-    const errorStructure = (_a16 = config.errorStructure) != null ? _a16 : defaultOpenAICompatibleErrorStructure;
+    const errorStructure = (_a17 = config.errorStructure) != null ? _a17 : defaultOpenAICompatibleErrorStructure;
     this.chunkSchema = createOpenAICompatibleChatChunkSchema(
       errorStructure.errorSchema
     );
@@ -5244,7 +5244,7 @@ var OpenAICompatibleChatLanguageModel = class {
     responseFormat,
     seed
   }) {
-    var _a16, _b;
+    var _a17, _b;
     const type = mode.type;
     const warnings = [];
     if (topK != null) {
@@ -5275,7 +5275,7 @@ var OpenAICompatibleChatLanguageModel = class {
         type: "json_schema",
         json_schema: {
           schema: responseFormat.schema,
-          name: (_a16 = responseFormat.name) != null ? _a16 : "response",
+          name: (_a17 = responseFormat.name) != null ? _a17 : "response",
           description: responseFormat.description
         }
       } : { type: "json_object" } : void 0,
@@ -5341,13 +5341,13 @@ var OpenAICompatibleChatLanguageModel = class {
     }
   }
   async doGenerate(options) {
-    var _a16, _b, _c, _d, _e, _f, _g, _h, _i;
+    var _a17, _b, _c, _d, _e, _f, _g, _h, _i;
     const { args, warnings } = this.getArgs({ ...options });
     const body = JSON.stringify(args);
     const {
       responseHeaders,
       value: responseBody,
-      rawValue: parsedBody
+      rawValue: rawResponse
     } = await postJsonToApi({
       url: this.config.url({
         path: "/chat/completions",
@@ -5364,8 +5364,8 @@ var OpenAICompatibleChatLanguageModel = class {
     });
     const { messages: rawPrompt, ...rawSettings } = args;
     const choice = responseBody.choices[0];
-    const providerMetadata = (_b = (_a16 = this.config.metadataExtractor) == null ? void 0 : _a16.extractMetadata) == null ? void 0 : _b.call(_a16, {
-      parsedBody
+    const providerMetadata = (_b = (_a17 = this.config.metadataExtractor) == null ? void 0 : _a17.extractMetadata) == null ? void 0 : _b.call(_a17, {
+      parsedBody: rawResponse
     });
     return {
       text: (_c = choice.message.content) != null ? _c : void 0,
@@ -5386,14 +5386,14 @@ var OpenAICompatibleChatLanguageModel = class {
       },
       ...providerMetadata && { providerMetadata },
       rawCall: { rawPrompt, rawSettings },
-      rawResponse: { headers: responseHeaders },
+      rawResponse: { headers: responseHeaders, body: rawResponse },
       response: getResponseMetadata(responseBody),
       warnings,
       request: { body }
     };
   }
   async doStream(options) {
-    var _a16;
+    var _a17;
     if (this.settings.simulateStreaming) {
       const result = await this.doGenerate(options);
       const simulatedStream = new ReadableStream({
@@ -5449,7 +5449,7 @@ var OpenAICompatibleChatLanguageModel = class {
     }
     const { args, warnings } = this.getArgs({ ...options });
     const body = JSON.stringify({ ...args, stream: true });
-    const metadataExtractor = (_a16 = this.config.metadataExtractor) == null ? void 0 : _a16.createStreamExtractor();
+    const metadataExtractor = (_a17 = this.config.metadataExtractor) == null ? void 0 : _a17.createStreamExtractor();
     const { responseHeaders, value: response } = await postJsonToApi({
       url: this.config.url({
         path: "/chat/completions",
@@ -5780,11 +5780,11 @@ var OpenAICompatibleCompletionLanguageModel = class {
   constructor(modelId, settings, config) {
     this.specificationVersion = "v1";
     this.defaultObjectGenerationMode = void 0;
-    var _a16;
+    var _a17;
     this.modelId = modelId;
     this.settings = settings;
     this.config = config;
-    const errorStructure = (_a16 = config.errorStructure) != null ? _a16 : defaultOpenAICompatibleErrorStructure;
+    const errorStructure = (_a17 = config.errorStructure) != null ? _a17 : defaultOpenAICompatibleErrorStructure;
     this.chunkSchema = createOpenAICompatibleCompletionChunkSchema(
       errorStructure.errorSchema
     );
@@ -5811,7 +5811,7 @@ var OpenAICompatibleCompletionLanguageModel = class {
     seed,
     providerMetadata
   }) {
-    var _a16;
+    var _a17;
     const type = mode.type;
     const warnings = [];
     if (topK != null) {
@@ -5852,7 +5852,7 @@ var OpenAICompatibleCompletionLanguageModel = class {
     };
     switch (type) {
       case "regular": {
-        if ((_a16 = mode.tools) == null ? void 0 : _a16.length) {
+        if ((_a17 = mode.tools) == null ? void 0 : _a17.length) {
           throw new UnsupportedFunctionalityError({
             functionality: "tools"
           });
@@ -5881,9 +5881,13 @@ var OpenAICompatibleCompletionLanguageModel = class {
     }
   }
   async doGenerate(options) {
-    var _a16, _b, _c, _d;
+    var _a17, _b, _c, _d;
     const { args, warnings } = this.getArgs(options);
-    const { responseHeaders, value: response } = await postJsonToApi({
+    const {
+      responseHeaders,
+      value: response,
+      rawValue: rawResponse
+    } = await postJsonToApi({
       url: this.config.url({
         path: "/completions",
         modelId: this.modelId
@@ -5902,12 +5906,12 @@ var OpenAICompatibleCompletionLanguageModel = class {
     return {
       text: choice.text,
       usage: {
-        promptTokens: (_b = (_a16 = response.usage) == null ? void 0 : _a16.prompt_tokens) != null ? _b : NaN,
+        promptTokens: (_b = (_a17 = response.usage) == null ? void 0 : _a17.prompt_tokens) != null ? _b : NaN,
         completionTokens: (_d = (_c = response.usage) == null ? void 0 : _c.completion_tokens) != null ? _d : NaN
       },
       finishReason: mapOpenAICompatibleFinishReason(choice.finish_reason),
       rawCall: { rawPrompt, rawSettings },
-      rawResponse: { headers: responseHeaders },
+      rawResponse: { headers: responseHeaders, body: rawResponse },
       response: getResponseMetadata(response),
       warnings,
       request: { body: JSON.stringify(args) }
@@ -6042,19 +6046,19 @@ var OpenAICompatibleEmbeddingModel = class {
     return this.config.provider;
   }
   get maxEmbeddingsPerCall() {
-    var _a16;
-    return (_a16 = this.config.maxEmbeddingsPerCall) != null ? _a16 : 2048;
+    var _a17;
+    return (_a17 = this.config.maxEmbeddingsPerCall) != null ? _a17 : 2048;
   }
   get supportsParallelCalls() {
-    var _a16;
-    return (_a16 = this.config.supportsParallelCalls) != null ? _a16 : true;
+    var _a17;
+    return (_a17 = this.config.supportsParallelCalls) != null ? _a17 : true;
   }
   async doEmbed({
     values,
     headers,
     abortSignal
   }) {
-    var _a16;
+    var _a17;
     if (values.length > this.maxEmbeddingsPerCall) {
       throw new TooManyEmbeddingValuesForCallError({
         provider: this.provider,
@@ -6077,7 +6081,7 @@ var OpenAICompatibleEmbeddingModel = class {
         user: this.settings.user
       },
       failedResponseHandler: createJsonErrorResponseHandler(
-        (_a16 = this.config.errorStructure) != null ? _a16 : defaultOpenAICompatibleErrorStructure
+        (_a17 = this.config.errorStructure) != null ? _a17 : defaultOpenAICompatibleErrorStructure
       ),
       successfulResponseHandler: createJsonResponseHandler(
         openaiTextEmbeddingResponseSchema
@@ -6149,6 +6153,8 @@ var defaultOptions = {
   dateStrategy: "format:date-time",
   mapStrategy: "entries",
   removeAdditionalStrategy: "passthrough",
+  allowedAdditionalProperties: true,
+  rejectedAdditionalProperties: false,
   definitionPath: "definitions",
   target: "jsonSchema7",
   strictUnions: false,
@@ -6177,11 +6183,11 @@ var getRefs = (options) => {
     ..._options,
     currentPath,
     propertyPath: void 0,
-    seen: new Map(Object.entries(_options.definitions).map(([name16, def]) => [
+    seen: new Map(Object.entries(_options.definitions).map(([name17, def]) => [
       def._def,
       {
         def: def._def,
-        path: [..._options.basePath, _options.definitionPath, name16],
+        path: [..._options.basePath, _options.definitionPath, name17],
         // Resolution of references will be forced even though seen, so it's ok that the schema is undefined here for now.
         jsonSchema: void 0
       }
@@ -6780,7 +6786,7 @@ function parseRecordDef(def, refs) {
           currentPath: [...refs.currentPath, "properties", key]
         }) ?? {}
       }), {}),
-      additionalProperties: false
+      additionalProperties: refs.rejectedAdditionalProperties
     };
   }
   const schema = {
@@ -6788,7 +6794,7 @@ function parseRecordDef(def, refs) {
     additionalProperties: parseDef(def.valueType._def, {
       ...refs,
       currentPath: [...refs.currentPath, "additionalProperties"]
-    }) ?? {}
+    }) ?? refs.allowedAdditionalProperties
   };
   if (refs.target === "openApi3") {
     return schema;
@@ -7022,53 +7028,73 @@ function parseNumberDef(def, refs) {
 }
 
 // node_modules/zod-to-json-schema/dist/esm/parsers/object.js
-function decideAdditionalProperties(def, refs) {
-  if (refs.removeAdditionalStrategy === "strict") {
-    return def.catchall._def.typeName === "ZodNever" ? def.unknownKeys !== "strict" : parseDef(def.catchall._def, {
-      ...refs,
-      currentPath: [...refs.currentPath, "additionalProperties"]
-    }) ?? true;
-  } else {
-    return def.catchall._def.typeName === "ZodNever" ? def.unknownKeys === "passthrough" : parseDef(def.catchall._def, {
-      ...refs,
-      currentPath: [...refs.currentPath, "additionalProperties"]
-    }) ?? true;
-  }
-}
 function parseObjectDef(def, refs) {
   const forceOptionalIntoNullable = refs.target === "openAi";
   const result = {
     type: "object",
-    ...Object.entries(def.shape()).reduce((acc, [propName, propDef]) => {
-      if (propDef === void 0 || propDef._def === void 0)
-        return acc;
-      let propOptional = propDef.isOptional();
-      if (propOptional && forceOptionalIntoNullable) {
-        if (propDef instanceof ZodOptional) {
-          propDef = propDef._def.innerType;
-        }
-        if (!propDef.isNullable()) {
-          propDef = propDef.nullable();
-        }
-        propOptional = false;
-      }
-      const parsedDef = parseDef(propDef._def, {
-        ...refs,
-        currentPath: [...refs.currentPath, "properties", propName],
-        propertyPath: [...refs.currentPath, "properties", propName]
-      });
-      if (parsedDef === void 0)
-        return acc;
-      return {
-        properties: { ...acc.properties, [propName]: parsedDef },
-        required: propOptional ? acc.required : [...acc.required, propName]
-      };
-    }, { properties: {}, required: [] }),
-    additionalProperties: decideAdditionalProperties(def, refs)
+    properties: {}
   };
-  if (!result.required.length)
-    delete result.required;
+  const required = [];
+  const shape = def.shape();
+  for (const propName in shape) {
+    let propDef = shape[propName];
+    if (propDef === void 0 || propDef._def === void 0) {
+      continue;
+    }
+    let propOptional = safeIsOptional(propDef);
+    if (propOptional && forceOptionalIntoNullable) {
+      if (propDef instanceof ZodOptional) {
+        propDef = propDef._def.innerType;
+      }
+      if (!propDef.isNullable()) {
+        propDef = propDef.nullable();
+      }
+      propOptional = false;
+    }
+    const parsedDef = parseDef(propDef._def, {
+      ...refs,
+      currentPath: [...refs.currentPath, "properties", propName],
+      propertyPath: [...refs.currentPath, "properties", propName]
+    });
+    if (parsedDef === void 0) {
+      continue;
+    }
+    result.properties[propName] = parsedDef;
+    if (!propOptional) {
+      required.push(propName);
+    }
+  }
+  if (required.length) {
+    result.required = required;
+  }
+  const additionalProperties = decideAdditionalProperties(def, refs);
+  if (additionalProperties !== void 0) {
+    result.additionalProperties = additionalProperties;
+  }
   return result;
+}
+function decideAdditionalProperties(def, refs) {
+  if (def.catchall._def.typeName !== "ZodNever") {
+    return parseDef(def.catchall._def, {
+      ...refs,
+      currentPath: [...refs.currentPath, "additionalProperties"]
+    });
+  }
+  switch (def.unknownKeys) {
+    case "passthrough":
+      return refs.allowedAdditionalProperties;
+    case "strict":
+      return refs.rejectedAdditionalProperties;
+    case "strip":
+      return refs.removeAdditionalStrategy === "strict" ? refs.allowedAdditionalProperties : refs.rejectedAdditionalProperties;
+  }
+}
+function safeIsOptional(schema) {
+  try {
+    return schema.isOptional();
+  } catch {
+    return true;
+  }
 }
 
 // node_modules/zod-to-json-schema/dist/esm/parsers/optional.js
@@ -7323,34 +7349,34 @@ var addMeta = (def, refs, jsonSchema2) => {
 // node_modules/zod-to-json-schema/dist/esm/zodToJsonSchema.js
 var zodToJsonSchema = (schema, options) => {
   const refs = getRefs(options);
-  const definitions = typeof options === "object" && options.definitions ? Object.entries(options.definitions).reduce((acc, [name17, schema2]) => ({
+  const definitions = typeof options === "object" && options.definitions ? Object.entries(options.definitions).reduce((acc, [name18, schema2]) => ({
     ...acc,
-    [name17]: parseDef(schema2._def, {
+    [name18]: parseDef(schema2._def, {
       ...refs,
-      currentPath: [...refs.basePath, refs.definitionPath, name17]
+      currentPath: [...refs.basePath, refs.definitionPath, name18]
     }, true) ?? {}
   }), {}) : void 0;
-  const name16 = typeof options === "string" ? options : options?.nameStrategy === "title" ? void 0 : options?.name;
-  const main = parseDef(schema._def, name16 === void 0 ? refs : {
+  const name17 = typeof options === "string" ? options : options?.nameStrategy === "title" ? void 0 : options?.name;
+  const main = parseDef(schema._def, name17 === void 0 ? refs : {
     ...refs,
-    currentPath: [...refs.basePath, refs.definitionPath, name16]
+    currentPath: [...refs.basePath, refs.definitionPath, name17]
   }, false) ?? {};
   const title = typeof options === "object" && options.name !== void 0 && options.nameStrategy === "title" ? options.name : void 0;
   if (title !== void 0) {
     main.title = title;
   }
-  const combined = name16 === void 0 ? definitions ? {
+  const combined = name17 === void 0 ? definitions ? {
     ...main,
     [refs.definitionPath]: definitions
   } : main : {
     $ref: [
       ...refs.$refStrategy === "relative" ? [] : refs.basePath,
       refs.definitionPath,
-      name16
+      name17
     ].join("/"),
     [refs.definitionPath]: {
       ...definitions,
-      [name16]: main
+      [name17]: main
     }
   };
   if (refs.target === "jsonSchema7") {
@@ -8044,8 +8070,8 @@ function formatDataStreamPart(type, value) {
 var NEWLINE = "\n".charCodeAt(0);
 var NEWLINE2 = "\n".charCodeAt(0);
 function zodSchema(zodSchema2, options) {
-  var _a16;
-  const useReferences = (_a16 = options == null ? void 0 : options.useReferences) != null ? _a16 : false;
+  var _a17;
+  const useReferences = (_a17 = options == null ? void 0 : options.useReferences) != null ? _a17 : false;
   return jsonSchema(
     esm_default(zodSchema2, {
       $refStrategy: useReferences ? "root" : "none",
@@ -8158,11 +8184,11 @@ var major = VERSION.split(".")[0];
 var GLOBAL_OPENTELEMETRY_API_KEY = Symbol.for("opentelemetry.js.api." + major);
 var _global = _globalThis;
 function registerGlobal(type, instance, diag, allowOverride) {
-  var _a16;
+  var _a17;
   if (allowOverride === void 0) {
     allowOverride = false;
   }
-  var api = _global[GLOBAL_OPENTELEMETRY_API_KEY] = (_a16 = _global[GLOBAL_OPENTELEMETRY_API_KEY]) !== null && _a16 !== void 0 ? _a16 : {
+  var api = _global[GLOBAL_OPENTELEMETRY_API_KEY] = (_a17 = _global[GLOBAL_OPENTELEMETRY_API_KEY]) !== null && _a17 !== void 0 ? _a17 : {
     version: VERSION
   };
   if (!allowOverride && api[type]) {
@@ -8180,8 +8206,8 @@ function registerGlobal(type, instance, diag, allowOverride) {
   return true;
 }
 function getGlobal(type) {
-  var _a16, _b;
-  var globalVersion = (_a16 = _global[GLOBAL_OPENTELEMETRY_API_KEY]) === null || _a16 === void 0 ? void 0 : _a16.version;
+  var _a17, _b;
+  var globalVersion = (_a17 = _global[GLOBAL_OPENTELEMETRY_API_KEY]) === null || _a17 === void 0 ? void 0 : _a17.version;
   if (!globalVersion || !isCompatible(globalVersion)) {
     return;
   }
@@ -8358,13 +8384,13 @@ var DiagAPI = (
       }
       var self = this;
       var setLogger = function(logger, optionsOrLogLevel) {
-        var _a16, _b, _c;
+        var _a17, _b, _c;
         if (optionsOrLogLevel === void 0) {
           optionsOrLogLevel = { logLevel: DiagLogLevel.INFO };
         }
         if (logger === self) {
           var err = new Error("Cannot use diag as the logger for itself. Please use a DiagLogger implementation like ConsoleDiagLogger or a custom implementation");
-          self.error((_a16 = err.stack) !== null && _a16 !== void 0 ? _a16 : err.message);
+          self.error((_a17 = err.stack) !== null && _a17 !== void 0 ? _a17 : err.message);
           return false;
         }
         if (typeof optionsOrLogLevel === "number") {
@@ -8535,12 +8561,12 @@ var ContextAPI = (
       return this._getContextManager().active();
     };
     ContextAPI2.prototype.with = function(context, fn, thisArg) {
-      var _a16;
+      var _a17;
       var args = [];
       for (var _i = 3; _i < arguments.length; _i++) {
         args[_i - 3] = arguments[_i];
       }
-      return (_a16 = this._getContextManager()).with.apply(_a16, __spreadArray4([context, fn, thisArg], __read4(args), false));
+      return (_a17 = this._getContextManager()).with.apply(_a17, __spreadArray4([context, fn, thisArg], __read4(args), false));
     };
     ContextAPI2.prototype.bind = function(context, target) {
       return this._getContextManager().bind(context, target);
@@ -8635,8 +8661,8 @@ function setSpanContext(context, spanContext) {
   return setSpan(context, new NonRecordingSpan(spanContext));
 }
 function getSpanContext(context) {
-  var _a16;
-  return (_a16 = getSpan(context)) === null || _a16 === void 0 ? void 0 : _a16.spanContext();
+  var _a17;
+  return (_a17 = getSpan(context)) === null || _a17 === void 0 ? void 0 : _a17.spanContext();
 }
 
 // node_modules/@opentelemetry/api/build/esm/trace/spancontext-utils.js
@@ -8662,7 +8688,7 @@ var NoopTracer = (
   function() {
     function NoopTracer2() {
     }
-    NoopTracer2.prototype.startSpan = function(name16, options, context) {
+    NoopTracer2.prototype.startSpan = function(name17, options, context) {
       if (context === void 0) {
         context = contextApi.active();
       }
@@ -8677,7 +8703,7 @@ var NoopTracer = (
         return new NonRecordingSpan();
       }
     };
-    NoopTracer2.prototype.startActiveSpan = function(name16, arg2, arg3, arg4) {
+    NoopTracer2.prototype.startActiveSpan = function(name17, arg2, arg3, arg4) {
       var opts;
       var ctx;
       var fn;
@@ -8694,7 +8720,7 @@ var NoopTracer = (
         fn = arg4;
       }
       var parentContext = ctx !== null && ctx !== void 0 ? ctx : contextApi.active();
-      var span = this.startSpan(name16, opts, parentContext);
+      var span = this.startSpan(name17, opts, parentContext);
       var contextWithSpanSet = setSpan(parentContext, span);
       return contextApi.with(contextWithSpanSet, fn, void 0, span);
     };
@@ -8710,14 +8736,14 @@ var NOOP_TRACER = new NoopTracer();
 var ProxyTracer = (
   /** @class */
   function() {
-    function ProxyTracer2(_provider, name16, version, options) {
+    function ProxyTracer2(_provider, name17, version, options) {
       this._provider = _provider;
-      this.name = name16;
+      this.name = name17;
       this.version = version;
       this.options = options;
     }
-    ProxyTracer2.prototype.startSpan = function(name16, options, context) {
-      return this._getTracer().startSpan(name16, options, context);
+    ProxyTracer2.prototype.startSpan = function(name17, options, context) {
+      return this._getTracer().startSpan(name17, options, context);
     };
     ProxyTracer2.prototype.startActiveSpan = function(_name, _options, _context, _fn) {
       var tracer = this._getTracer();
@@ -8758,20 +8784,20 @@ var ProxyTracerProvider = (
   function() {
     function ProxyTracerProvider2() {
     }
-    ProxyTracerProvider2.prototype.getTracer = function(name16, version, options) {
-      var _a16;
-      return (_a16 = this.getDelegateTracer(name16, version, options)) !== null && _a16 !== void 0 ? _a16 : new ProxyTracer(this, name16, version, options);
+    ProxyTracerProvider2.prototype.getTracer = function(name17, version, options) {
+      var _a17;
+      return (_a17 = this.getDelegateTracer(name17, version, options)) !== null && _a17 !== void 0 ? _a17 : new ProxyTracer(this, name17, version, options);
     };
     ProxyTracerProvider2.prototype.getDelegate = function() {
-      var _a16;
-      return (_a16 = this._delegate) !== null && _a16 !== void 0 ? _a16 : NOOP_TRACER_PROVIDER;
+      var _a17;
+      return (_a17 = this._delegate) !== null && _a17 !== void 0 ? _a17 : NOOP_TRACER_PROVIDER;
     };
     ProxyTracerProvider2.prototype.setDelegate = function(delegate) {
       this._delegate = delegate;
     };
-    ProxyTracerProvider2.prototype.getDelegateTracer = function(name16, version, options) {
-      var _a16;
-      return (_a16 = this._delegate) === null || _a16 === void 0 ? void 0 : _a16.getTracer(name16, version, options);
+    ProxyTracerProvider2.prototype.getDelegateTracer = function(name17, version, options) {
+      var _a17;
+      return (_a17 = this._delegate) === null || _a17 === void 0 ? void 0 : _a17.getTracer(name17, version, options);
     };
     return ProxyTracerProvider2;
   }()
@@ -8817,8 +8843,8 @@ var TraceAPI = (
     TraceAPI2.prototype.getTracerProvider = function() {
       return getGlobal(API_NAME3) || this._proxyTracerProvider;
     };
-    TraceAPI2.prototype.getTracer = function(name16, version) {
-      return this.getTracerProvider().getTracer(name16, version);
+    TraceAPI2.prototype.getTracer = function(name17, version) {
+      return this.getTracerProvider().getTracer(name17, version);
     };
     TraceAPI2.prototype.disable = function() {
       unregisterGlobal(API_NAME3, DiagAPI.instance());
@@ -8834,8 +8860,8 @@ var trace = TraceAPI.getInstance();
 // node_modules/ai/dist/index.mjs
 var __defProp3 = Object.defineProperty;
 var __export = (target, all) => {
-  for (var name16 in all)
-    __defProp3(target, name16, { get: all[name16], enumerable: true });
+  for (var name17 in all)
+    __defProp3(target, name17, { get: all[name17], enumerable: true });
 };
 function prepareResponseHeaders(headers, {
   contentType,
@@ -8849,6 +8875,49 @@ function prepareResponseHeaders(headers, {
     responseHeaders.set("X-Vercel-AI-Data-Stream", dataStreamVersion);
   }
   return responseHeaders;
+}
+function prepareOutgoingHttpHeaders(headers, {
+  contentType,
+  dataStreamVersion
+}) {
+  const outgoingHeaders = {};
+  if (headers != null) {
+    for (const [key, value] of Object.entries(headers)) {
+      outgoingHeaders[key] = value;
+    }
+  }
+  if (outgoingHeaders["Content-Type"] == null) {
+    outgoingHeaders["Content-Type"] = contentType;
+  }
+  if (dataStreamVersion !== void 0) {
+    outgoingHeaders["X-Vercel-AI-Data-Stream"] = dataStreamVersion;
+  }
+  return outgoingHeaders;
+}
+function writeToServerResponse({
+  response,
+  status,
+  statusText,
+  headers,
+  stream
+}) {
+  response.writeHead(status != null ? status : 200, statusText, headers);
+  const reader = stream.getReader();
+  const read = async () => {
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done)
+          break;
+        response.write(value);
+      }
+    } catch (error) {
+      throw error;
+    } finally {
+      response.end();
+    }
+  };
+  read();
 }
 var name14 = "AI_InvalidArgumentError";
 var marker15 = `vercel.ai.error.${name14}`;
@@ -8989,7 +9058,7 @@ function getBaseTelemetryAttributes({
   telemetry,
   headers
 }) {
-  var _a16;
+  var _a17;
   return {
     "ai.model.provider": model.provider,
     "ai.model.id": model.modelId,
@@ -8999,7 +9068,7 @@ function getBaseTelemetryAttributes({
       return attributes;
     }, {}),
     // add metadata as attributes:
-    ...Object.entries((_a16 = telemetry == null ? void 0 : telemetry.metadata) != null ? _a16 : {}).reduce(
+    ...Object.entries((_a17 = telemetry == null ? void 0 : telemetry.metadata) != null ? _a17 : {}).reduce(
       (attributes, [key, value]) => {
         attributes[`ai.telemetry.metadata.${key}`] = value;
         return attributes;
@@ -9019,7 +9088,7 @@ var noopTracer = {
   startSpan() {
     return noopSpan;
   },
-  startActiveSpan(name16, arg1, arg2, arg3) {
+  startActiveSpan(name17, arg1, arg2, arg3) {
     if (typeof arg1 === "function") {
       return arg1(noopSpan);
     }
@@ -9084,13 +9153,13 @@ function getTracer({
   return trace.getTracer("ai");
 }
 function recordSpan({
-  name: name16,
+  name: name17,
   tracer,
   attributes,
   fn,
   endWhenDone = true
 }) {
-  return tracer.startActiveSpan(name16, { attributes }, async (span) => {
+  return tracer.startActiveSpan(name17, { attributes }, async (span) => {
     try {
       const result = await fn(span);
       if (endWhenDone) {
@@ -9202,7 +9271,7 @@ async function download({
   url,
   fetchImplementation = fetch
 }) {
-  var _a16;
+  var _a17;
   const urlText = url.toString();
   try {
     const response = await fetchImplementation(urlText);
@@ -9215,7 +9284,7 @@ async function download({
     }
     return {
       data: new Uint8Array(await response.arrayBuffer()),
-      mimeType: (_a16 = response.headers.get("content-type")) != null ? _a16 : void 0
+      mimeType: (_a17 = response.headers.get("content-type")) != null ? _a17 : void 0
     };
   } catch (error) {
     if (DownloadError.isInstance(error)) {
@@ -9264,8 +9333,8 @@ var dataContentSchema = z.union([
   z.custom(
     // Buffer might not be available in some environments such as CloudFlare:
     (value) => {
-      var _a16, _b;
-      return (_b = (_a16 = globalThis.Buffer) == null ? void 0 : _a16.isBuffer(value)) != null ? _b : false;
+      var _a17, _b;
+      return (_b = (_a17 = globalThis.Buffer) == null ? void 0 : _a17.isBuffer(value)) != null ? _b : false;
     },
     { message: "Must be a Buffer" }
   )
@@ -9358,14 +9427,14 @@ async function convertToLanguageModelPrompt({
   ];
 }
 function convertToLanguageModelMessage(message, downloadedAssets) {
-  var _a16, _b, _c, _d, _e, _f;
+  var _a17, _b, _c, _d, _e, _f;
   const role = message.role;
   switch (role) {
     case "system": {
       return {
         role: "system",
         content: message.content,
-        providerMetadata: (_a16 = message.providerOptions) != null ? _a16 : message.experimental_providerMetadata
+        providerMetadata: (_a17 = message.providerOptions) != null ? _a17 : message.experimental_providerMetadata
       };
     }
     case "user": {
@@ -9409,7 +9478,7 @@ function convertToLanguageModelMessage(message, downloadedAssets) {
       return {
         role: "tool",
         content: message.content.map((part) => {
-          var _a17;
+          var _a18;
           return {
             type: "tool-result",
             toolCallId: part.toolCallId,
@@ -9417,7 +9486,7 @@ function convertToLanguageModelMessage(message, downloadedAssets) {
             result: part.result,
             content: part.experimental_content,
             isError: part.isError,
-            providerMetadata: (_a17 = part.providerOptions) != null ? _a17 : part.experimental_providerMetadata
+            providerMetadata: (_a18 = part.providerOptions) != null ? _a18 : part.experimental_providerMetadata
           };
         }),
         providerMetadata: (_f = message.providerOptions) != null ? _f : message.experimental_providerMetadata
@@ -9453,12 +9522,12 @@ async function downloadAssets(messages, downloadImplementation, modelSupportsIma
   );
 }
 function convertPartToLanguageModelPart(part, downloadedAssets) {
-  var _a16;
+  var _a17, _b, _c, _d;
   if (part.type === "text") {
     return {
       type: "text",
       text: part.text,
-      providerMetadata: part.experimental_providerMetadata
+      providerMetadata: (_a17 = part.providerOptions) != null ? _a17 : part.experimental_providerMetadata
     };
   }
   let mimeType = part.mimeType;
@@ -9506,13 +9575,13 @@ function convertPartToLanguageModelPart(part, downloadedAssets) {
   switch (type) {
     case "image": {
       if (normalizedData instanceof Uint8Array) {
-        mimeType = (_a16 = detectImageMimeType(normalizedData)) != null ? _a16 : mimeType;
+        mimeType = (_b = detectImageMimeType(normalizedData)) != null ? _b : mimeType;
       }
       return {
         type: "image",
         image: normalizedData,
         mimeType,
-        providerMetadata: part.experimental_providerMetadata
+        providerMetadata: (_c = part.providerOptions) != null ? _c : part.experimental_providerMetadata
       };
     }
     case "file": {
@@ -9522,8 +9591,9 @@ function convertPartToLanguageModelPart(part, downloadedAssets) {
       return {
         type: "file",
         data: normalizedData instanceof Uint8Array ? convertDataContentToBase64String(normalizedData) : normalizedData,
+        filename: part.filename,
         mimeType,
-        providerMetadata: part.experimental_providerMetadata
+        providerMetadata: (_d = part.providerOptions) != null ? _d : part.experimental_providerMetadata
       };
     }
   }
@@ -9610,6 +9680,7 @@ function prepareCallSettings({
   }
   return {
     maxTokens,
+    // TODO v5 remove default 0 for temperature
     temperature: temperature != null ? temperature : 0,
     topP,
     topK,
@@ -9620,7 +9691,7 @@ function prepareCallSettings({
   };
 }
 function attachmentsToParts(attachments) {
-  var _a16, _b, _c;
+  var _a17, _b, _c;
   const parts = [];
   for (const attachment of attachments) {
     let url;
@@ -9632,7 +9703,7 @@ function attachmentsToParts(attachments) {
     switch (url.protocol) {
       case "http:":
       case "https:": {
-        if ((_a16 = attachment.contentType) == null ? void 0 : _a16.startsWith("image/")) {
+        if ((_a17 = attachment.contentType) == null ? void 0 : _a17.startsWith("image/")) {
           parts.push({ type: "image", image: url });
         } else {
           if (!attachment.contentType) {
@@ -9713,8 +9784,8 @@ var MessageConversionError = class extends AISDKError {
 };
 _a82 = symbol82;
 function convertToCoreMessages(messages, options) {
-  var _a16, _b;
-  const tools = (_a16 = options == null ? void 0 : options.tools) != null ? _a16 : {};
+  var _a17, _b;
+  const tools = (_a17 = options == null ? void 0 : options.tools) != null ? _a17 : {};
   const coreMessages = [];
   for (let i = 0; i < messages.length; i++) {
     const message = messages[i];
@@ -9859,14 +9930,14 @@ function convertToCoreMessages(messages, options) {
           break;
         }
         const maxStep = toolInvocations.reduce((max, toolInvocation) => {
-          var _a17;
-          return Math.max(max, (_a17 = toolInvocation.step) != null ? _a17 : 0);
+          var _a18;
+          return Math.max(max, (_a18 = toolInvocation.step) != null ? _a18 : 0);
         }, 0);
         for (let i2 = 0; i2 <= maxStep; i2++) {
           const stepInvocations = toolInvocations.filter(
             (toolInvocation) => {
-              var _a17;
-              return ((_a17 = toolInvocation.step) != null ? _a17 : 0) === i2;
+              var _a18;
+              return ((_a18 = toolInvocation.step) != null ? _a18 : 0) === i2;
             }
           );
           if (stepInvocations.length === 0) {
@@ -10004,6 +10075,7 @@ var imagePartSchema = z.object({
 var filePartSchema = z.object({
   type: z.literal("file"),
   data: z.union([dataContentSchema, z.instanceof(URL)]),
+  filename: z.string().optional(),
   mimeType: z.string(),
   providerOptions: providerMetadataSchema.optional(),
   experimental_providerMetadata: providerMetadataSchema.optional()
@@ -10186,7 +10258,153 @@ function injectJsonInstruction({
     schemaSuffix
   ].filter((line) => line != null).join("\n");
 }
+function createAsyncIterableStream(source) {
+  const stream = source.pipeThrough(new TransformStream());
+  stream[Symbol.asyncIterator] = () => {
+    const reader = stream.getReader();
+    return {
+      async next() {
+        const { done, value } = await reader.read();
+        return done ? { done: true, value: void 0 } : { done: false, value };
+      }
+    };
+  };
+  return stream;
+}
 var originalGenerateId = createIdGenerator({ prefix: "aiobj", size: 24 });
+var DelayedPromise = class {
+  constructor() {
+    this.status = { type: "pending" };
+    this._resolve = void 0;
+    this._reject = void 0;
+  }
+  get value() {
+    if (this.promise) {
+      return this.promise;
+    }
+    this.promise = new Promise((resolve, reject) => {
+      if (this.status.type === "resolved") {
+        resolve(this.status.value);
+      } else if (this.status.type === "rejected") {
+        reject(this.status.error);
+      }
+      this._resolve = resolve;
+      this._reject = reject;
+    });
+    return this.promise;
+  }
+  resolve(value) {
+    var _a17;
+    this.status = { type: "resolved", value };
+    if (this.promise) {
+      (_a17 = this._resolve) == null ? void 0 : _a17.call(this, value);
+    }
+  }
+  reject(error) {
+    var _a17;
+    this.status = { type: "rejected", error };
+    if (this.promise) {
+      (_a17 = this._reject) == null ? void 0 : _a17.call(this, error);
+    }
+  }
+};
+function createResolvablePromise() {
+  let resolve;
+  let reject;
+  const promise = new Promise((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+  return {
+    promise,
+    resolve,
+    reject
+  };
+}
+function createStitchableStream() {
+  let innerStreamReaders = [];
+  let controller = null;
+  let isClosed = false;
+  let waitForNewStream = createResolvablePromise();
+  const processPull = async () => {
+    if (isClosed && innerStreamReaders.length === 0) {
+      controller == null ? void 0 : controller.close();
+      return;
+    }
+    if (innerStreamReaders.length === 0) {
+      waitForNewStream = createResolvablePromise();
+      await waitForNewStream.promise;
+      return processPull();
+    }
+    try {
+      const { value, done } = await innerStreamReaders[0].read();
+      if (done) {
+        innerStreamReaders.shift();
+        if (innerStreamReaders.length > 0) {
+          await processPull();
+        } else if (isClosed) {
+          controller == null ? void 0 : controller.close();
+        }
+      } else {
+        controller == null ? void 0 : controller.enqueue(value);
+      }
+    } catch (error) {
+      controller == null ? void 0 : controller.error(error);
+      innerStreamReaders.shift();
+      if (isClosed && innerStreamReaders.length === 0) {
+        controller == null ? void 0 : controller.close();
+      }
+    }
+  };
+  return {
+    stream: new ReadableStream({
+      start(controllerParam) {
+        controller = controllerParam;
+      },
+      pull: processPull,
+      async cancel() {
+        for (const reader of innerStreamReaders) {
+          await reader.cancel();
+        }
+        innerStreamReaders = [];
+        isClosed = true;
+      }
+    }),
+    addStream: (innerStream) => {
+      if (isClosed) {
+        throw new Error("Cannot add inner stream: outer stream is closed");
+      }
+      innerStreamReaders.push(innerStream.getReader());
+      waitForNewStream.resolve();
+    },
+    /**
+     * Gracefully close the outer stream. This will let the inner streams
+     * finish processing and then close the outer stream.
+     */
+    close: () => {
+      isClosed = true;
+      waitForNewStream.resolve();
+      if (innerStreamReaders.length === 0) {
+        controller == null ? void 0 : controller.close();
+      }
+    },
+    /**
+     * Immediately close the outer stream. This will cancel all inner streams
+     * and close the outer stream.
+     */
+    terminate: () => {
+      isClosed = true;
+      waitForNewStream.resolve();
+      innerStreamReaders.forEach((reader) => reader.cancel());
+      innerStreamReaders = [];
+      controller == null ? void 0 : controller.close();
+    }
+  };
+}
+function now() {
+  var _a17, _b;
+  return (_b = (_a17 = globalThis == null ? void 0 : globalThis.performance) == null ? void 0 : _a17.now()) != null ? _b : Date.now();
+}
 var originalGenerateId2 = createIdGenerator({ prefix: "aiobj", size: 24 });
 var name92 = "AI_NoOutputSpecifiedError";
 var marker92 = `vercel.ai.error.${name92}`;
@@ -10241,24 +10459,24 @@ function prepareToolsAndToolChoice({
     };
   }
   const filteredTools = activeTools != null ? Object.entries(tools).filter(
-    ([name16]) => activeTools.includes(name16)
+    ([name17]) => activeTools.includes(name17)
   ) : Object.entries(tools);
   return {
-    tools: filteredTools.map(([name16, tool2]) => {
+    tools: filteredTools.map(([name17, tool2]) => {
       const toolType = tool2.type;
       switch (toolType) {
         case void 0:
         case "function":
           return {
             type: "function",
-            name: name16,
+            name: name17,
             description: tool2.description,
             parameters: asSchema(tool2.parameters).jsonSchema
           };
         case "provider-defined":
           return {
             type: "provider-defined",
-            name: name16,
+            name: name17,
             id: tool2.id,
             args: tool2.args
           };
@@ -10275,10 +10493,6 @@ var lastWhitespaceRegexp = /^([\s\S]*?)(\s+)(\S*)$/;
 function splitOnLastWhitespace(text2) {
   const match = text2.match(lastWhitespaceRegexp);
   return match ? { prefix: match[1], whitespace: match[2], suffix: match[3] } : void 0;
-}
-function removeTextAfterLastWhitespace(text2) {
-  const match = splitOnLastWhitespace(text2);
-  return match ? match.prefix + match.whitespace : text2;
 }
 var name112 = "AI_InvalidToolArgumentsError";
 var marker112 = `vercel.ai.error.${name112}`;
@@ -10408,6 +10622,10 @@ async function doParseToolCall({
     args: parseResult.value
   };
 }
+function asReasoningText(reasoning) {
+  const reasoningText = reasoning.filter((part) => part.type === "text").map((part) => part.text).join("");
+  return reasoningText.length > 0 ? reasoningText : void 0;
+}
 function toResponseMessages({
   text: text2 = "",
   reasoning,
@@ -10454,10 +10672,6 @@ function toResponseMessages({
   }
   return responseMessages;
 }
-function asReasoningText(reasoning) {
-  const reasoningText = reasoning.filter((part) => part.type === "text").map((part) => part.text).join("");
-  return reasoningText.length > 0 ? reasoningText : void 0;
-}
 var originalGenerateId3 = createIdGenerator({
   prefix: "aitxt",
   size: 24
@@ -10466,447 +10680,6 @@ var originalGenerateMessageId = createIdGenerator({
   prefix: "msg",
   size: 24
 });
-async function generateText({
-  model,
-  tools,
-  toolChoice,
-  system,
-  prompt,
-  messages,
-  maxRetries: maxRetriesArg,
-  abortSignal,
-  headers,
-  maxSteps = 1,
-  experimental_generateMessageId: generateMessageId = originalGenerateMessageId,
-  experimental_output: output,
-  experimental_continueSteps: continueSteps = false,
-  experimental_telemetry: telemetry,
-  experimental_providerMetadata,
-  providerOptions = experimental_providerMetadata,
-  experimental_activeTools: activeTools,
-  experimental_repairToolCall: repairToolCall,
-  _internal: {
-    generateId: generateId3 = originalGenerateId3,
-    currentDate = () => /* @__PURE__ */ new Date()
-  } = {},
-  onStepFinish,
-  ...settings
-}) {
-  var _a16;
-  if (maxSteps < 1) {
-    throw new InvalidArgumentError2({
-      parameter: "maxSteps",
-      value: maxSteps,
-      message: "maxSteps must be at least 1"
-    });
-  }
-  const { maxRetries, retry } = prepareRetries({ maxRetries: maxRetriesArg });
-  const baseTelemetryAttributes = getBaseTelemetryAttributes({
-    model,
-    telemetry,
-    headers,
-    settings: { ...settings, maxRetries }
-  });
-  const initialPrompt = standardizePrompt({
-    prompt: {
-      system: (_a16 = output == null ? void 0 : output.injectIntoSystemPrompt({ system, model })) != null ? _a16 : system,
-      prompt,
-      messages
-    },
-    tools
-  });
-  const tracer = getTracer(telemetry);
-  return recordSpan({
-    name: "ai.generateText",
-    attributes: selectTelemetryAttributes({
-      telemetry,
-      attributes: {
-        ...assembleOperationName({
-          operationId: "ai.generateText",
-          telemetry
-        }),
-        ...baseTelemetryAttributes,
-        // specific settings that only make sense on the outer level:
-        "ai.prompt": {
-          input: () => JSON.stringify({ system, prompt, messages })
-        },
-        "ai.settings.maxSteps": maxSteps
-      }
-    }),
-    tracer,
-    fn: async (span) => {
-      var _a17, _b, _c, _d, _e, _f, _g, _h, _i;
-      const mode = {
-        type: "regular",
-        ...prepareToolsAndToolChoice({ tools, toolChoice, activeTools })
-      };
-      const callSettings = prepareCallSettings(settings);
-      let currentModelResponse;
-      let currentToolCalls = [];
-      let currentToolResults = [];
-      let currentReasoningDetails = [];
-      let stepCount = 0;
-      const responseMessages = [];
-      let text2 = "";
-      const sources = [];
-      const steps = [];
-      let usage = {
-        completionTokens: 0,
-        promptTokens: 0,
-        totalTokens: 0
-      };
-      let stepType = "initial";
-      do {
-        const promptFormat = stepCount === 0 ? initialPrompt.type : "messages";
-        const stepInputMessages = [
-          ...initialPrompt.messages,
-          ...responseMessages
-        ];
-        const promptMessages = await convertToLanguageModelPrompt({
-          prompt: {
-            type: promptFormat,
-            system: initialPrompt.system,
-            messages: stepInputMessages
-          },
-          modelSupportsImageUrls: model.supportsImageUrls,
-          modelSupportsUrl: (_a17 = model.supportsUrl) == null ? void 0 : _a17.bind(model)
-          // support 'this' context
-        });
-        currentModelResponse = await retry(
-          () => recordSpan({
-            name: "ai.generateText.doGenerate",
-            attributes: selectTelemetryAttributes({
-              telemetry,
-              attributes: {
-                ...assembleOperationName({
-                  operationId: "ai.generateText.doGenerate",
-                  telemetry
-                }),
-                ...baseTelemetryAttributes,
-                "ai.prompt.format": { input: () => promptFormat },
-                "ai.prompt.messages": {
-                  input: () => JSON.stringify(promptMessages)
-                },
-                "ai.prompt.tools": {
-                  // convert the language model level tools:
-                  input: () => {
-                    var _a18;
-                    return (_a18 = mode.tools) == null ? void 0 : _a18.map((tool2) => JSON.stringify(tool2));
-                  }
-                },
-                "ai.prompt.toolChoice": {
-                  input: () => mode.toolChoice != null ? JSON.stringify(mode.toolChoice) : void 0
-                },
-                // standardized gen-ai llm span attributes:
-                "gen_ai.system": model.provider,
-                "gen_ai.request.model": model.modelId,
-                "gen_ai.request.frequency_penalty": settings.frequencyPenalty,
-                "gen_ai.request.max_tokens": settings.maxTokens,
-                "gen_ai.request.presence_penalty": settings.presencePenalty,
-                "gen_ai.request.stop_sequences": settings.stopSequences,
-                "gen_ai.request.temperature": settings.temperature,
-                "gen_ai.request.top_k": settings.topK,
-                "gen_ai.request.top_p": settings.topP
-              }
-            }),
-            tracer,
-            fn: async (span2) => {
-              var _a18, _b2, _c2, _d2, _e2, _f2;
-              const result = await model.doGenerate({
-                mode,
-                ...callSettings,
-                inputFormat: promptFormat,
-                responseFormat: output == null ? void 0 : output.responseFormat({ model }),
-                prompt: promptMessages,
-                providerMetadata: providerOptions,
-                abortSignal,
-                headers
-              });
-              const responseData = {
-                id: (_b2 = (_a18 = result.response) == null ? void 0 : _a18.id) != null ? _b2 : generateId3(),
-                timestamp: (_d2 = (_c2 = result.response) == null ? void 0 : _c2.timestamp) != null ? _d2 : currentDate(),
-                modelId: (_f2 = (_e2 = result.response) == null ? void 0 : _e2.modelId) != null ? _f2 : model.modelId
-              };
-              span2.setAttributes(
-                selectTelemetryAttributes({
-                  telemetry,
-                  attributes: {
-                    "ai.response.finishReason": result.finishReason,
-                    "ai.response.text": {
-                      output: () => result.text
-                    },
-                    "ai.response.toolCalls": {
-                      output: () => JSON.stringify(result.toolCalls)
-                    },
-                    "ai.response.id": responseData.id,
-                    "ai.response.model": responseData.modelId,
-                    "ai.response.timestamp": responseData.timestamp.toISOString(),
-                    "ai.usage.promptTokens": result.usage.promptTokens,
-                    "ai.usage.completionTokens": result.usage.completionTokens,
-                    // standardized gen-ai llm span attributes:
-                    "gen_ai.response.finish_reasons": [result.finishReason],
-                    "gen_ai.response.id": responseData.id,
-                    "gen_ai.response.model": responseData.modelId,
-                    "gen_ai.usage.input_tokens": result.usage.promptTokens,
-                    "gen_ai.usage.output_tokens": result.usage.completionTokens
-                  }
-                })
-              );
-              return { ...result, response: responseData };
-            }
-          })
-        );
-        currentToolCalls = await Promise.all(
-          ((_b = currentModelResponse.toolCalls) != null ? _b : []).map(
-            (toolCall) => parseToolCall({
-              toolCall,
-              tools,
-              repairToolCall,
-              system,
-              messages: stepInputMessages
-            })
-          )
-        );
-        currentToolResults = tools == null ? [] : await executeTools({
-          toolCalls: currentToolCalls,
-          tools,
-          tracer,
-          telemetry,
-          messages: stepInputMessages,
-          abortSignal
-        });
-        const currentUsage = calculateLanguageModelUsage(
-          currentModelResponse.usage
-        );
-        usage = addLanguageModelUsage(usage, currentUsage);
-        let nextStepType = "done";
-        if (++stepCount < maxSteps) {
-          if (continueSteps && currentModelResponse.finishReason === "length" && // only use continue when there are no tool calls:
-          currentToolCalls.length === 0) {
-            nextStepType = "continue";
-          } else if (
-            // there are tool calls:
-            currentToolCalls.length > 0 && // all current tool calls have results:
-            currentToolResults.length === currentToolCalls.length
-          ) {
-            nextStepType = "tool-result";
-          }
-        }
-        const originalText = (_c = currentModelResponse.text) != null ? _c : "";
-        const stepTextLeadingWhitespaceTrimmed = stepType === "continue" && // only for continue steps
-        text2.trimEnd() !== text2 ? originalText.trimStart() : originalText;
-        const stepText = nextStepType === "continue" ? removeTextAfterLastWhitespace(stepTextLeadingWhitespaceTrimmed) : stepTextLeadingWhitespaceTrimmed;
-        text2 = nextStepType === "continue" || stepType === "continue" ? text2 + stepText : stepText;
-        currentReasoningDetails = asReasoningDetails(
-          currentModelResponse.reasoning
-        );
-        sources.push(...(_d = currentModelResponse.sources) != null ? _d : []);
-        if (stepType === "continue") {
-          const lastMessage = responseMessages[responseMessages.length - 1];
-          if (typeof lastMessage.content === "string") {
-            lastMessage.content += stepText;
-          } else {
-            lastMessage.content.push({
-              text: stepText,
-              type: "text"
-            });
-          }
-        } else {
-          responseMessages.push(
-            ...toResponseMessages({
-              text: text2,
-              reasoning: asReasoningDetails(currentModelResponse.reasoning),
-              tools: tools != null ? tools : {},
-              toolCalls: currentToolCalls,
-              toolResults: currentToolResults,
-              messageId: generateMessageId(),
-              generateMessageId
-            })
-          );
-        }
-        const currentStepResult = {
-          stepType,
-          text: stepText,
-          // TODO v5: rename reasoning to reasoningText (and use reasoning for composite array)
-          reasoning: asReasoningText(currentReasoningDetails),
-          reasoningDetails: currentReasoningDetails,
-          sources: (_e = currentModelResponse.sources) != null ? _e : [],
-          toolCalls: currentToolCalls,
-          toolResults: currentToolResults,
-          finishReason: currentModelResponse.finishReason,
-          usage: currentUsage,
-          warnings: currentModelResponse.warnings,
-          logprobs: currentModelResponse.logprobs,
-          request: (_f = currentModelResponse.request) != null ? _f : {},
-          response: {
-            ...currentModelResponse.response,
-            headers: (_g = currentModelResponse.rawResponse) == null ? void 0 : _g.headers,
-            // deep clone msgs to avoid mutating past messages in multi-step:
-            messages: structuredClone(responseMessages)
-          },
-          providerMetadata: currentModelResponse.providerMetadata,
-          experimental_providerMetadata: currentModelResponse.providerMetadata,
-          isContinued: nextStepType === "continue"
-        };
-        steps.push(currentStepResult);
-        await (onStepFinish == null ? void 0 : onStepFinish(currentStepResult));
-        stepType = nextStepType;
-      } while (stepType !== "done");
-      span.setAttributes(
-        selectTelemetryAttributes({
-          telemetry,
-          attributes: {
-            "ai.response.finishReason": currentModelResponse.finishReason,
-            "ai.response.text": {
-              output: () => currentModelResponse.text
-            },
-            "ai.response.toolCalls": {
-              output: () => JSON.stringify(currentModelResponse.toolCalls)
-            },
-            "ai.usage.promptTokens": currentModelResponse.usage.promptTokens,
-            "ai.usage.completionTokens": currentModelResponse.usage.completionTokens
-          }
-        })
-      );
-      return new DefaultGenerateTextResult({
-        text: text2,
-        reasoning: asReasoningText(currentReasoningDetails),
-        reasoningDetails: currentReasoningDetails,
-        sources,
-        outputResolver: () => {
-          if (output == null) {
-            throw new NoOutputSpecifiedError();
-          }
-          return output.parseOutput(
-            { text: text2 },
-            { response: currentModelResponse.response, usage }
-          );
-        },
-        toolCalls: currentToolCalls,
-        toolResults: currentToolResults,
-        finishReason: currentModelResponse.finishReason,
-        usage,
-        warnings: currentModelResponse.warnings,
-        request: (_h = currentModelResponse.request) != null ? _h : {},
-        response: {
-          ...currentModelResponse.response,
-          headers: (_i = currentModelResponse.rawResponse) == null ? void 0 : _i.headers,
-          messages: responseMessages
-        },
-        logprobs: currentModelResponse.logprobs,
-        steps,
-        providerMetadata: currentModelResponse.providerMetadata
-      });
-    }
-  });
-}
-async function executeTools({
-  toolCalls,
-  tools,
-  tracer,
-  telemetry,
-  messages,
-  abortSignal
-}) {
-  const toolResults = await Promise.all(
-    toolCalls.map(async ({ toolCallId, toolName, args }) => {
-      const tool2 = tools[toolName];
-      if ((tool2 == null ? void 0 : tool2.execute) == null) {
-        return void 0;
-      }
-      const result = await recordSpan({
-        name: "ai.toolCall",
-        attributes: selectTelemetryAttributes({
-          telemetry,
-          attributes: {
-            ...assembleOperationName({
-              operationId: "ai.toolCall",
-              telemetry
-            }),
-            "ai.toolCall.name": toolName,
-            "ai.toolCall.id": toolCallId,
-            "ai.toolCall.args": {
-              output: () => JSON.stringify(args)
-            }
-          }
-        }),
-        tracer,
-        fn: async (span) => {
-          try {
-            const result2 = await tool2.execute(args, {
-              toolCallId,
-              messages,
-              abortSignal
-            });
-            try {
-              span.setAttributes(
-                selectTelemetryAttributes({
-                  telemetry,
-                  attributes: {
-                    "ai.toolCall.result": {
-                      output: () => JSON.stringify(result2)
-                    }
-                  }
-                })
-              );
-            } catch (ignored) {
-            }
-            return result2;
-          } catch (error) {
-            throw new ToolExecutionError({
-              toolCallId,
-              toolName,
-              toolArgs: args,
-              cause: error
-            });
-          }
-        }
-      });
-      return {
-        type: "tool-result",
-        toolCallId,
-        toolName,
-        args,
-        result
-      };
-    })
-  );
-  return toolResults.filter(
-    (result) => result != null
-  );
-}
-var DefaultGenerateTextResult = class {
-  constructor(options) {
-    this.text = options.text;
-    this.reasoning = options.reasoning;
-    this.reasoningDetails = options.reasoningDetails;
-    this.toolCalls = options.toolCalls;
-    this.toolResults = options.toolResults;
-    this.finishReason = options.finishReason;
-    this.usage = options.usage;
-    this.warnings = options.warnings;
-    this.request = options.request;
-    this.response = options.response;
-    this.steps = options.steps;
-    this.experimental_providerMetadata = options.providerMetadata;
-    this.providerMetadata = options.providerMetadata;
-    this.logprobs = options.logprobs;
-    this.outputResolver = options.outputResolver;
-    this.sources = options.sources;
-  }
-  get experimental_output() {
-    return this.outputResolver();
-  }
-};
-function asReasoningDetails(reasoning) {
-  if (reasoning == null) {
-    return [];
-  }
-  if (typeof reasoning === "string") {
-    return [{ type: "text", text: reasoning }];
-  }
-  return reasoning;
-}
 var output_exports = {};
 __export(output_exports, {
   object: () => object,
@@ -10916,7 +10689,25 @@ var name142 = "AI_InvalidStreamPartError";
 var marker142 = `vercel.ai.error.${name142}`;
 var symbol142 = Symbol.for(marker142);
 var _a142;
+var InvalidStreamPartError = class extends AISDKError {
+  constructor({
+    chunk,
+    message
+  }) {
+    super({ name: name142, message });
+    this[_a142] = true;
+    this.chunk = chunk;
+  }
+  static isInstance(error) {
+    return AISDKError.hasMarker(error, marker142);
+  }
+};
 _a142 = symbol142;
+var name15 = "AI_MCPClientError";
+var marker152 = `vercel.ai.error.${name15}`;
+var symbol152 = Symbol.for(marker152);
+var _a152;
+_a152 = symbol152;
 var text = () => ({
   type: "text",
   responseFormat: () => ({ type: "text" }),
@@ -10992,6 +10783,9 @@ var object = ({
     }
   };
 };
+function asArray(value) {
+  return value === void 0 ? [] : Array.isArray(value) ? value : [value];
+}
 function mergeStreams(stream1, stream2) {
   const reader1 = stream1.getReader();
   const reader2 = stream2.getReader();
@@ -11078,6 +10872,197 @@ function mergeStreams(stream1, stream2) {
     }
   });
 }
+function runToolsTransformation({
+  tools,
+  generatorStream,
+  toolCallStreaming,
+  tracer,
+  telemetry,
+  system,
+  messages,
+  abortSignal,
+  repairToolCall
+}) {
+  let toolResultsStreamController = null;
+  const toolResultsStream = new ReadableStream({
+    start(controller) {
+      toolResultsStreamController = controller;
+    }
+  });
+  const activeToolCalls = {};
+  const outstandingToolResults = /* @__PURE__ */ new Set();
+  let canClose = false;
+  let finishChunk = void 0;
+  function attemptClose() {
+    if (canClose && outstandingToolResults.size === 0) {
+      if (finishChunk != null) {
+        toolResultsStreamController.enqueue(finishChunk);
+      }
+      toolResultsStreamController.close();
+    }
+  }
+  const forwardStream = new TransformStream({
+    async transform(chunk, controller) {
+      const chunkType = chunk.type;
+      switch (chunkType) {
+        case "text-delta":
+        case "reasoning":
+        case "reasoning-signature":
+        case "redacted-reasoning":
+        case "source":
+        case "response-metadata":
+        case "error": {
+          controller.enqueue(chunk);
+          break;
+        }
+        case "tool-call-delta": {
+          if (toolCallStreaming) {
+            if (!activeToolCalls[chunk.toolCallId]) {
+              controller.enqueue({
+                type: "tool-call-streaming-start",
+                toolCallId: chunk.toolCallId,
+                toolName: chunk.toolName
+              });
+              activeToolCalls[chunk.toolCallId] = true;
+            }
+            controller.enqueue({
+              type: "tool-call-delta",
+              toolCallId: chunk.toolCallId,
+              toolName: chunk.toolName,
+              argsTextDelta: chunk.argsTextDelta
+            });
+          }
+          break;
+        }
+        case "tool-call": {
+          try {
+            const toolCall = await parseToolCall({
+              toolCall: chunk,
+              tools,
+              repairToolCall,
+              system,
+              messages
+            });
+            controller.enqueue(toolCall);
+            const tool2 = tools[toolCall.toolName];
+            if (tool2.execute != null) {
+              const toolExecutionId = generateId();
+              outstandingToolResults.add(toolExecutionId);
+              recordSpan({
+                name: "ai.toolCall",
+                attributes: selectTelemetryAttributes({
+                  telemetry,
+                  attributes: {
+                    ...assembleOperationName({
+                      operationId: "ai.toolCall",
+                      telemetry
+                    }),
+                    "ai.toolCall.name": toolCall.toolName,
+                    "ai.toolCall.id": toolCall.toolCallId,
+                    "ai.toolCall.args": {
+                      output: () => JSON.stringify(toolCall.args)
+                    }
+                  }
+                }),
+                tracer,
+                fn: async (span) => tool2.execute(toolCall.args, {
+                  toolCallId: toolCall.toolCallId,
+                  messages,
+                  abortSignal
+                }).then(
+                  (result) => {
+                    toolResultsStreamController.enqueue({
+                      ...toolCall,
+                      type: "tool-result",
+                      result
+                    });
+                    outstandingToolResults.delete(toolExecutionId);
+                    attemptClose();
+                    try {
+                      span.setAttributes(
+                        selectTelemetryAttributes({
+                          telemetry,
+                          attributes: {
+                            "ai.toolCall.result": {
+                              output: () => JSON.stringify(result)
+                            }
+                          }
+                        })
+                      );
+                    } catch (ignored) {
+                    }
+                  },
+                  (error) => {
+                    toolResultsStreamController.enqueue({
+                      type: "error",
+                      error: new ToolExecutionError({
+                        toolCallId: toolCall.toolCallId,
+                        toolName: toolCall.toolName,
+                        toolArgs: toolCall.args,
+                        cause: error
+                      })
+                    });
+                    outstandingToolResults.delete(toolExecutionId);
+                    attemptClose();
+                  }
+                )
+              });
+            }
+          } catch (error) {
+            toolResultsStreamController.enqueue({
+              type: "error",
+              error
+            });
+          }
+          break;
+        }
+        case "finish": {
+          finishChunk = {
+            type: "finish",
+            finishReason: chunk.finishReason,
+            logprobs: chunk.logprobs,
+            usage: calculateLanguageModelUsage(chunk.usage),
+            experimental_providerMetadata: chunk.providerMetadata
+          };
+          break;
+        }
+        default: {
+          const _exhaustiveCheck = chunkType;
+          throw new Error(`Unhandled chunk type: ${_exhaustiveCheck}`);
+        }
+      }
+    },
+    flush() {
+      canClose = true;
+      attemptClose();
+    }
+  });
+  return new ReadableStream({
+    async start(controller) {
+      return Promise.all([
+        generatorStream.pipeThrough(forwardStream).pipeTo(
+          new WritableStream({
+            write(chunk) {
+              controller.enqueue(chunk);
+            },
+            close() {
+            }
+          })
+        ),
+        toolResultsStream.pipeTo(
+          new WritableStream({
+            write(chunk) {
+              controller.enqueue(chunk);
+            },
+            close() {
+              controller.close();
+            }
+          })
+        )
+      ]);
+    }
+  });
+}
 var originalGenerateId4 = createIdGenerator({
   prefix: "aitxt",
   size: 24
@@ -11086,11 +11071,1319 @@ var originalGenerateMessageId2 = createIdGenerator({
   prefix: "msg",
   size: 24
 });
-var name15 = "AI_NoSuchProviderError";
-var marker152 = `vercel.ai.error.${name15}`;
-var symbol152 = Symbol.for(marker152);
-var _a152;
-_a152 = symbol152;
+function streamText({
+  model,
+  tools,
+  toolChoice,
+  system,
+  prompt,
+  messages,
+  maxRetries,
+  abortSignal,
+  headers,
+  maxSteps = 1,
+  experimental_generateMessageId: generateMessageId = originalGenerateMessageId2,
+  experimental_output: output,
+  experimental_continueSteps: continueSteps = false,
+  experimental_telemetry: telemetry,
+  experimental_providerMetadata,
+  providerOptions = experimental_providerMetadata,
+  experimental_toolCallStreaming = false,
+  toolCallStreaming = experimental_toolCallStreaming,
+  experimental_activeTools: activeTools,
+  experimental_repairToolCall: repairToolCall,
+  experimental_transform: transform,
+  onChunk,
+  onError,
+  onFinish,
+  onStepFinish,
+  _internal: {
+    now: now2 = now,
+    generateId: generateId3 = originalGenerateId4,
+    currentDate = () => /* @__PURE__ */ new Date()
+  } = {},
+  ...settings
+}) {
+  return new DefaultStreamTextResult({
+    model,
+    telemetry,
+    headers,
+    settings,
+    maxRetries,
+    abortSignal,
+    system,
+    prompt,
+    messages,
+    tools,
+    toolChoice,
+    toolCallStreaming,
+    transforms: asArray(transform),
+    activeTools,
+    repairToolCall,
+    maxSteps,
+    output,
+    continueSteps,
+    providerOptions,
+    onChunk,
+    onError,
+    onFinish,
+    onStepFinish,
+    now: now2,
+    currentDate,
+    generateId: generateId3,
+    generateMessageId
+  });
+}
+function createOutputTransformStream(output) {
+  if (!output) {
+    return new TransformStream({
+      transform(chunk, controller) {
+        controller.enqueue({ part: chunk, partialOutput: void 0 });
+      }
+    });
+  }
+  let text2 = "";
+  let textChunk = "";
+  let lastPublishedJson = "";
+  function publishTextChunk({
+    controller,
+    partialOutput = void 0
+  }) {
+    controller.enqueue({
+      part: { type: "text-delta", textDelta: textChunk },
+      partialOutput
+    });
+    textChunk = "";
+  }
+  return new TransformStream({
+    transform(chunk, controller) {
+      if (chunk.type === "step-finish") {
+        publishTextChunk({ controller });
+      }
+      if (chunk.type !== "text-delta") {
+        controller.enqueue({ part: chunk, partialOutput: void 0 });
+        return;
+      }
+      text2 += chunk.textDelta;
+      textChunk += chunk.textDelta;
+      const result = output.parsePartial({ text: text2 });
+      if (result != null) {
+        const currentJson = JSON.stringify(result.partial);
+        if (currentJson !== lastPublishedJson) {
+          publishTextChunk({ controller, partialOutput: result.partial });
+          lastPublishedJson = currentJson;
+        }
+      }
+    },
+    flush(controller) {
+      if (textChunk.length > 0) {
+        publishTextChunk({ controller });
+      }
+    }
+  });
+}
+var DefaultStreamTextResult = class {
+  constructor({
+    model,
+    telemetry,
+    headers,
+    settings,
+    maxRetries: maxRetriesArg,
+    abortSignal,
+    system,
+    prompt,
+    messages,
+    tools,
+    toolChoice,
+    toolCallStreaming,
+    transforms,
+    activeTools,
+    repairToolCall,
+    maxSteps,
+    output,
+    continueSteps,
+    providerOptions,
+    now: now2,
+    currentDate,
+    generateId: generateId3,
+    generateMessageId,
+    onChunk,
+    onError,
+    onFinish,
+    onStepFinish
+  }) {
+    this.warningsPromise = new DelayedPromise();
+    this.usagePromise = new DelayedPromise();
+    this.finishReasonPromise = new DelayedPromise();
+    this.providerMetadataPromise = new DelayedPromise();
+    this.textPromise = new DelayedPromise();
+    this.reasoningPromise = new DelayedPromise();
+    this.reasoningDetailsPromise = new DelayedPromise();
+    this.sourcesPromise = new DelayedPromise();
+    this.toolCallsPromise = new DelayedPromise();
+    this.toolResultsPromise = new DelayedPromise();
+    this.requestPromise = new DelayedPromise();
+    this.responsePromise = new DelayedPromise();
+    this.stepsPromise = new DelayedPromise();
+    var _a17;
+    if (maxSteps < 1) {
+      throw new InvalidArgumentError2({
+        parameter: "maxSteps",
+        value: maxSteps,
+        message: "maxSteps must be at least 1"
+      });
+    }
+    this.output = output;
+    let recordedStepText = "";
+    let recordedContinuationText = "";
+    let recordedFullText = "";
+    let stepReasoning = [];
+    let activeReasoningText = void 0;
+    let recordedStepSources = [];
+    const recordedSources = [];
+    const recordedResponse = {
+      id: generateId3(),
+      timestamp: currentDate(),
+      modelId: model.modelId,
+      messages: []
+    };
+    let recordedToolCalls = [];
+    let recordedToolResults = [];
+    let recordedFinishReason = void 0;
+    let recordedUsage = void 0;
+    let stepType = "initial";
+    const recordedSteps = [];
+    let rootSpan;
+    const eventProcessor = new TransformStream({
+      async transform(chunk, controller) {
+        controller.enqueue(chunk);
+        const { part } = chunk;
+        if (part.type === "text-delta" || part.type === "reasoning" || part.type === "source" || part.type === "tool-call" || part.type === "tool-result" || part.type === "tool-call-streaming-start" || part.type === "tool-call-delta") {
+          await (onChunk == null ? void 0 : onChunk({ chunk: part }));
+        }
+        if (part.type === "error") {
+          await (onError == null ? void 0 : onError({ error: part.error }));
+        }
+        if (part.type === "text-delta") {
+          recordedStepText += part.textDelta;
+          recordedContinuationText += part.textDelta;
+          recordedFullText += part.textDelta;
+        }
+        if (part.type === "reasoning") {
+          if (activeReasoningText == null) {
+            activeReasoningText = { type: "text", text: part.textDelta };
+            stepReasoning.push(activeReasoningText);
+          } else {
+            activeReasoningText.text += part.textDelta;
+          }
+        }
+        if (part.type === "reasoning-signature") {
+          if (activeReasoningText == null) {
+            throw new AISDKError({
+              name: "InvalidStreamPart",
+              message: "reasoning-signature without reasoning"
+            });
+          }
+          activeReasoningText.signature = part.signature;
+          activeReasoningText = void 0;
+        }
+        if (part.type === "redacted-reasoning") {
+          stepReasoning.push({ type: "redacted", data: part.data });
+        }
+        if (part.type === "source") {
+          recordedSources.push(part.source);
+          recordedStepSources.push(part.source);
+        }
+        if (part.type === "tool-call") {
+          recordedToolCalls.push(part);
+        }
+        if (part.type === "tool-result") {
+          recordedToolResults.push(part);
+        }
+        if (part.type === "step-finish") {
+          const stepMessages = toResponseMessages({
+            text: recordedContinuationText,
+            reasoning: stepReasoning,
+            tools: tools != null ? tools : {},
+            toolCalls: recordedToolCalls,
+            toolResults: recordedToolResults,
+            messageId: part.messageId,
+            generateMessageId
+          });
+          const currentStep = recordedSteps.length;
+          let nextStepType = "done";
+          if (currentStep + 1 < maxSteps) {
+            if (continueSteps && part.finishReason === "length" && // only use continue when there are no tool calls:
+            recordedToolCalls.length === 0) {
+              nextStepType = "continue";
+            } else if (
+              // there are tool calls:
+              recordedToolCalls.length > 0 && // all current tool calls have results:
+              recordedToolResults.length === recordedToolCalls.length
+            ) {
+              nextStepType = "tool-result";
+            }
+          }
+          const currentStepResult = {
+            stepType,
+            text: recordedStepText,
+            reasoning: asReasoningText(stepReasoning),
+            reasoningDetails: stepReasoning,
+            sources: recordedStepSources,
+            toolCalls: recordedToolCalls,
+            toolResults: recordedToolResults,
+            finishReason: part.finishReason,
+            usage: part.usage,
+            warnings: part.warnings,
+            logprobs: part.logprobs,
+            request: part.request,
+            response: {
+              ...part.response,
+              messages: [...recordedResponse.messages, ...stepMessages]
+            },
+            providerMetadata: part.experimental_providerMetadata,
+            experimental_providerMetadata: part.experimental_providerMetadata,
+            isContinued: part.isContinued
+          };
+          await (onStepFinish == null ? void 0 : onStepFinish(currentStepResult));
+          recordedSteps.push(currentStepResult);
+          recordedToolCalls = [];
+          recordedToolResults = [];
+          recordedStepText = "";
+          recordedStepSources = [];
+          stepReasoning = [];
+          activeReasoningText = void 0;
+          if (nextStepType !== "done") {
+            stepType = nextStepType;
+          }
+          if (nextStepType !== "continue") {
+            recordedResponse.messages.push(...stepMessages);
+            recordedContinuationText = "";
+          }
+        }
+        if (part.type === "finish") {
+          recordedResponse.id = part.response.id;
+          recordedResponse.timestamp = part.response.timestamp;
+          recordedResponse.modelId = part.response.modelId;
+          recordedResponse.headers = part.response.headers;
+          recordedUsage = part.usage;
+          recordedFinishReason = part.finishReason;
+        }
+      },
+      async flush(controller) {
+        var _a18;
+        try {
+          if (recordedSteps.length === 0) {
+            return;
+          }
+          const lastStep = recordedSteps[recordedSteps.length - 1];
+          self.warningsPromise.resolve(lastStep.warnings);
+          self.requestPromise.resolve(lastStep.request);
+          self.responsePromise.resolve(lastStep.response);
+          self.toolCallsPromise.resolve(lastStep.toolCalls);
+          self.toolResultsPromise.resolve(lastStep.toolResults);
+          self.providerMetadataPromise.resolve(
+            lastStep.experimental_providerMetadata
+          );
+          self.reasoningPromise.resolve(lastStep.reasoning);
+          self.reasoningDetailsPromise.resolve(lastStep.reasoningDetails);
+          const finishReason = recordedFinishReason != null ? recordedFinishReason : "unknown";
+          const usage = recordedUsage != null ? recordedUsage : {
+            completionTokens: NaN,
+            promptTokens: NaN,
+            totalTokens: NaN
+          };
+          self.finishReasonPromise.resolve(finishReason);
+          self.usagePromise.resolve(usage);
+          self.textPromise.resolve(recordedFullText);
+          self.sourcesPromise.resolve(recordedSources);
+          self.stepsPromise.resolve(recordedSteps);
+          await (onFinish == null ? void 0 : onFinish({
+            finishReason,
+            logprobs: void 0,
+            usage,
+            text: recordedFullText,
+            reasoning: lastStep.reasoning,
+            reasoningDetails: lastStep.reasoningDetails,
+            sources: lastStep.sources,
+            toolCalls: lastStep.toolCalls,
+            toolResults: lastStep.toolResults,
+            request: (_a18 = lastStep.request) != null ? _a18 : {},
+            response: lastStep.response,
+            warnings: lastStep.warnings,
+            providerMetadata: lastStep.providerMetadata,
+            experimental_providerMetadata: lastStep.experimental_providerMetadata,
+            steps: recordedSteps
+          }));
+          rootSpan.setAttributes(
+            selectTelemetryAttributes({
+              telemetry,
+              attributes: {
+                "ai.response.finishReason": finishReason,
+                "ai.response.text": { output: () => recordedFullText },
+                "ai.response.toolCalls": {
+                  output: () => {
+                    var _a19;
+                    return ((_a19 = lastStep.toolCalls) == null ? void 0 : _a19.length) ? JSON.stringify(lastStep.toolCalls) : void 0;
+                  }
+                },
+                "ai.usage.promptTokens": usage.promptTokens,
+                "ai.usage.completionTokens": usage.completionTokens
+              }
+            })
+          );
+        } catch (error) {
+          controller.error(error);
+        } finally {
+          rootSpan.end();
+        }
+      }
+    });
+    const stitchableStream = createStitchableStream();
+    this.addStream = stitchableStream.addStream;
+    this.closeStream = stitchableStream.close;
+    let stream = stitchableStream.stream;
+    for (const transform of transforms) {
+      stream = stream.pipeThrough(
+        transform({
+          tools,
+          stopStream() {
+            stitchableStream.terminate();
+          }
+        })
+      );
+    }
+    this.baseStream = stream.pipeThrough(createOutputTransformStream(output)).pipeThrough(eventProcessor);
+    const { maxRetries, retry } = prepareRetries({
+      maxRetries: maxRetriesArg
+    });
+    const tracer = getTracer(telemetry);
+    const baseTelemetryAttributes = getBaseTelemetryAttributes({
+      model,
+      telemetry,
+      headers,
+      settings: { ...settings, maxRetries }
+    });
+    const initialPrompt = standardizePrompt({
+      prompt: {
+        system: (_a17 = output == null ? void 0 : output.injectIntoSystemPrompt({ system, model })) != null ? _a17 : system,
+        prompt,
+        messages
+      },
+      tools
+    });
+    const self = this;
+    recordSpan({
+      name: "ai.streamText",
+      attributes: selectTelemetryAttributes({
+        telemetry,
+        attributes: {
+          ...assembleOperationName({ operationId: "ai.streamText", telemetry }),
+          ...baseTelemetryAttributes,
+          // specific settings that only make sense on the outer level:
+          "ai.prompt": {
+            input: () => JSON.stringify({ system, prompt, messages })
+          },
+          "ai.settings.maxSteps": maxSteps
+        }
+      }),
+      tracer,
+      endWhenDone: false,
+      fn: async (rootSpanArg) => {
+        rootSpan = rootSpanArg;
+        async function streamStep({
+          currentStep,
+          responseMessages,
+          usage,
+          stepType: stepType2,
+          previousStepText,
+          hasLeadingWhitespace,
+          messageId
+        }) {
+          var _a18;
+          const promptFormat = responseMessages.length === 0 ? initialPrompt.type : "messages";
+          const stepInputMessages = [
+            ...initialPrompt.messages,
+            ...responseMessages
+          ];
+          const promptMessages = await convertToLanguageModelPrompt({
+            prompt: {
+              type: promptFormat,
+              system: initialPrompt.system,
+              messages: stepInputMessages
+            },
+            modelSupportsImageUrls: model.supportsImageUrls,
+            modelSupportsUrl: (_a18 = model.supportsUrl) == null ? void 0 : _a18.bind(model)
+            // support 'this' context
+          });
+          const mode = {
+            type: "regular",
+            ...prepareToolsAndToolChoice({ tools, toolChoice, activeTools })
+          };
+          const {
+            result: { stream: stream2, warnings, rawResponse, request },
+            doStreamSpan,
+            startTimestampMs
+          } = await retry(
+            () => recordSpan({
+              name: "ai.streamText.doStream",
+              attributes: selectTelemetryAttributes({
+                telemetry,
+                attributes: {
+                  ...assembleOperationName({
+                    operationId: "ai.streamText.doStream",
+                    telemetry
+                  }),
+                  ...baseTelemetryAttributes,
+                  "ai.prompt.format": {
+                    input: () => promptFormat
+                  },
+                  "ai.prompt.messages": {
+                    input: () => JSON.stringify(promptMessages)
+                  },
+                  "ai.prompt.tools": {
+                    // convert the language model level tools:
+                    input: () => {
+                      var _a19;
+                      return (_a19 = mode.tools) == null ? void 0 : _a19.map((tool2) => JSON.stringify(tool2));
+                    }
+                  },
+                  "ai.prompt.toolChoice": {
+                    input: () => mode.toolChoice != null ? JSON.stringify(mode.toolChoice) : void 0
+                  },
+                  // standardized gen-ai llm span attributes:
+                  "gen_ai.system": model.provider,
+                  "gen_ai.request.model": model.modelId,
+                  "gen_ai.request.frequency_penalty": settings.frequencyPenalty,
+                  "gen_ai.request.max_tokens": settings.maxTokens,
+                  "gen_ai.request.presence_penalty": settings.presencePenalty,
+                  "gen_ai.request.stop_sequences": settings.stopSequences,
+                  "gen_ai.request.temperature": settings.temperature,
+                  "gen_ai.request.top_k": settings.topK,
+                  "gen_ai.request.top_p": settings.topP
+                }
+              }),
+              tracer,
+              endWhenDone: false,
+              fn: async (doStreamSpan2) => ({
+                startTimestampMs: now2(),
+                // get before the call
+                doStreamSpan: doStreamSpan2,
+                result: await model.doStream({
+                  mode,
+                  ...prepareCallSettings(settings),
+                  inputFormat: promptFormat,
+                  responseFormat: output == null ? void 0 : output.responseFormat({ model }),
+                  prompt: promptMessages,
+                  providerMetadata: providerOptions,
+                  abortSignal,
+                  headers
+                })
+              })
+            })
+          );
+          const transformedStream = runToolsTransformation({
+            tools,
+            generatorStream: stream2,
+            toolCallStreaming,
+            tracer,
+            telemetry,
+            system,
+            messages: stepInputMessages,
+            repairToolCall,
+            abortSignal
+          });
+          const stepRequest = request != null ? request : {};
+          const stepToolCalls = [];
+          const stepToolResults = [];
+          const stepReasoning2 = [];
+          let activeReasoningText2 = void 0;
+          let stepFinishReason = "unknown";
+          let stepUsage = {
+            promptTokens: 0,
+            completionTokens: 0,
+            totalTokens: 0
+          };
+          let stepProviderMetadata;
+          let stepFirstChunk = true;
+          let stepText = "";
+          let fullStepText = stepType2 === "continue" ? previousStepText : "";
+          let stepLogProbs;
+          let stepResponse = {
+            id: generateId3(),
+            timestamp: currentDate(),
+            modelId: model.modelId
+          };
+          let chunkBuffer = "";
+          let chunkTextPublished = false;
+          let inWhitespacePrefix = true;
+          let hasWhitespaceSuffix = false;
+          async function publishTextChunk({
+            controller,
+            chunk
+          }) {
+            controller.enqueue(chunk);
+            stepText += chunk.textDelta;
+            fullStepText += chunk.textDelta;
+            chunkTextPublished = true;
+            hasWhitespaceSuffix = chunk.textDelta.trimEnd() !== chunk.textDelta;
+          }
+          self.addStream(
+            transformedStream.pipeThrough(
+              new TransformStream({
+                async transform(chunk, controller) {
+                  var _a19, _b, _c;
+                  if (stepFirstChunk) {
+                    const msToFirstChunk = now2() - startTimestampMs;
+                    stepFirstChunk = false;
+                    doStreamSpan.addEvent("ai.stream.firstChunk", {
+                      "ai.response.msToFirstChunk": msToFirstChunk
+                    });
+                    doStreamSpan.setAttributes({
+                      "ai.response.msToFirstChunk": msToFirstChunk
+                    });
+                    controller.enqueue({
+                      type: "step-start",
+                      messageId,
+                      request: stepRequest,
+                      warnings: warnings != null ? warnings : []
+                    });
+                  }
+                  if (chunk.type === "text-delta" && chunk.textDelta.length === 0) {
+                    return;
+                  }
+                  const chunkType = chunk.type;
+                  switch (chunkType) {
+                    case "text-delta": {
+                      if (continueSteps) {
+                        const trimmedChunkText = inWhitespacePrefix && hasLeadingWhitespace ? chunk.textDelta.trimStart() : chunk.textDelta;
+                        if (trimmedChunkText.length === 0) {
+                          break;
+                        }
+                        inWhitespacePrefix = false;
+                        chunkBuffer += trimmedChunkText;
+                        const split = splitOnLastWhitespace(chunkBuffer);
+                        if (split != null) {
+                          chunkBuffer = split.suffix;
+                          await publishTextChunk({
+                            controller,
+                            chunk: {
+                              type: "text-delta",
+                              textDelta: split.prefix + split.whitespace
+                            }
+                          });
+                        }
+                      } else {
+                        await publishTextChunk({ controller, chunk });
+                      }
+                      break;
+                    }
+                    case "reasoning": {
+                      controller.enqueue(chunk);
+                      if (activeReasoningText2 == null) {
+                        activeReasoningText2 = {
+                          type: "text",
+                          text: chunk.textDelta
+                        };
+                        stepReasoning2.push(activeReasoningText2);
+                      } else {
+                        activeReasoningText2.text += chunk.textDelta;
+                      }
+                      break;
+                    }
+                    case "reasoning-signature": {
+                      controller.enqueue(chunk);
+                      if (activeReasoningText2 == null) {
+                        throw new InvalidStreamPartError({
+                          chunk,
+                          message: "reasoning-signature without reasoning"
+                        });
+                      }
+                      activeReasoningText2.signature = chunk.signature;
+                      activeReasoningText2 = void 0;
+                      break;
+                    }
+                    case "redacted-reasoning": {
+                      controller.enqueue(chunk);
+                      stepReasoning2.push({
+                        type: "redacted",
+                        data: chunk.data
+                      });
+                      break;
+                    }
+                    case "tool-call": {
+                      controller.enqueue(chunk);
+                      stepToolCalls.push(chunk);
+                      break;
+                    }
+                    case "tool-result": {
+                      controller.enqueue(chunk);
+                      stepToolResults.push(chunk);
+                      break;
+                    }
+                    case "response-metadata": {
+                      stepResponse = {
+                        id: (_a19 = chunk.id) != null ? _a19 : stepResponse.id,
+                        timestamp: (_b = chunk.timestamp) != null ? _b : stepResponse.timestamp,
+                        modelId: (_c = chunk.modelId) != null ? _c : stepResponse.modelId
+                      };
+                      break;
+                    }
+                    case "finish": {
+                      stepUsage = chunk.usage;
+                      stepFinishReason = chunk.finishReason;
+                      stepProviderMetadata = chunk.experimental_providerMetadata;
+                      stepLogProbs = chunk.logprobs;
+                      const msToFinish = now2() - startTimestampMs;
+                      doStreamSpan.addEvent("ai.stream.finish");
+                      doStreamSpan.setAttributes({
+                        "ai.response.msToFinish": msToFinish,
+                        "ai.response.avgCompletionTokensPerSecond": 1e3 * stepUsage.completionTokens / msToFinish
+                      });
+                      break;
+                    }
+                    case "source":
+                    case "tool-call-streaming-start":
+                    case "tool-call-delta": {
+                      controller.enqueue(chunk);
+                      break;
+                    }
+                    case "error": {
+                      controller.enqueue(chunk);
+                      stepFinishReason = "error";
+                      break;
+                    }
+                    default: {
+                      const exhaustiveCheck = chunkType;
+                      throw new Error(`Unknown chunk type: ${exhaustiveCheck}`);
+                    }
+                  }
+                },
+                // invoke onFinish callback and resolve toolResults promise when the stream is about to close:
+                async flush(controller) {
+                  const stepToolCallsJson = stepToolCalls.length > 0 ? JSON.stringify(stepToolCalls) : void 0;
+                  let nextStepType = "done";
+                  if (currentStep + 1 < maxSteps) {
+                    if (continueSteps && stepFinishReason === "length" && // only use continue when there are no tool calls:
+                    stepToolCalls.length === 0) {
+                      nextStepType = "continue";
+                    } else if (
+                      // there are tool calls:
+                      stepToolCalls.length > 0 && // all current tool calls have results:
+                      stepToolResults.length === stepToolCalls.length
+                    ) {
+                      nextStepType = "tool-result";
+                    }
+                  }
+                  if (continueSteps && chunkBuffer.length > 0 && (nextStepType !== "continue" || // when the next step is a regular step, publish the buffer
+                  stepType2 === "continue" && !chunkTextPublished)) {
+                    await publishTextChunk({
+                      controller,
+                      chunk: {
+                        type: "text-delta",
+                        textDelta: chunkBuffer
+                      }
+                    });
+                    chunkBuffer = "";
+                  }
+                  try {
+                    doStreamSpan.setAttributes(
+                      selectTelemetryAttributes({
+                        telemetry,
+                        attributes: {
+                          "ai.response.finishReason": stepFinishReason,
+                          "ai.response.text": { output: () => stepText },
+                          "ai.response.toolCalls": {
+                            output: () => stepToolCallsJson
+                          },
+                          "ai.response.id": stepResponse.id,
+                          "ai.response.model": stepResponse.modelId,
+                          "ai.response.timestamp": stepResponse.timestamp.toISOString(),
+                          "ai.usage.promptTokens": stepUsage.promptTokens,
+                          "ai.usage.completionTokens": stepUsage.completionTokens,
+                          // standardized gen-ai llm span attributes:
+                          "gen_ai.response.finish_reasons": [stepFinishReason],
+                          "gen_ai.response.id": stepResponse.id,
+                          "gen_ai.response.model": stepResponse.modelId,
+                          "gen_ai.usage.input_tokens": stepUsage.promptTokens,
+                          "gen_ai.usage.output_tokens": stepUsage.completionTokens
+                        }
+                      })
+                    );
+                  } catch (error) {
+                  } finally {
+                    doStreamSpan.end();
+                  }
+                  controller.enqueue({
+                    type: "step-finish",
+                    finishReason: stepFinishReason,
+                    usage: stepUsage,
+                    providerMetadata: stepProviderMetadata,
+                    experimental_providerMetadata: stepProviderMetadata,
+                    logprobs: stepLogProbs,
+                    request: stepRequest,
+                    response: {
+                      ...stepResponse,
+                      headers: rawResponse == null ? void 0 : rawResponse.headers
+                    },
+                    warnings,
+                    isContinued: nextStepType === "continue",
+                    messageId
+                  });
+                  const combinedUsage = addLanguageModelUsage(usage, stepUsage);
+                  if (nextStepType === "done") {
+                    controller.enqueue({
+                      type: "finish",
+                      finishReason: stepFinishReason,
+                      usage: combinedUsage,
+                      providerMetadata: stepProviderMetadata,
+                      experimental_providerMetadata: stepProviderMetadata,
+                      logprobs: stepLogProbs,
+                      response: {
+                        ...stepResponse,
+                        headers: rawResponse == null ? void 0 : rawResponse.headers
+                      }
+                    });
+                    self.closeStream();
+                  } else {
+                    if (stepType2 === "continue") {
+                      const lastMessage = responseMessages[responseMessages.length - 1];
+                      if (typeof lastMessage.content === "string") {
+                        lastMessage.content += stepText;
+                      } else {
+                        lastMessage.content.push({
+                          text: stepText,
+                          type: "text"
+                        });
+                      }
+                    } else {
+                      responseMessages.push(
+                        ...toResponseMessages({
+                          text: stepText,
+                          reasoning: stepReasoning2,
+                          tools: tools != null ? tools : {},
+                          toolCalls: stepToolCalls,
+                          toolResults: stepToolResults,
+                          messageId,
+                          generateMessageId
+                        })
+                      );
+                    }
+                    await streamStep({
+                      currentStep: currentStep + 1,
+                      responseMessages,
+                      usage: combinedUsage,
+                      stepType: nextStepType,
+                      previousStepText: fullStepText,
+                      hasLeadingWhitespace: hasWhitespaceSuffix,
+                      messageId: (
+                        // keep the same id when continuing a step:
+                        nextStepType === "continue" ? messageId : generateMessageId()
+                      )
+                    });
+                  }
+                }
+              })
+            )
+          );
+        }
+        await streamStep({
+          currentStep: 0,
+          responseMessages: [],
+          usage: {
+            promptTokens: 0,
+            completionTokens: 0,
+            totalTokens: 0
+          },
+          previousStepText: "",
+          stepType: "initial",
+          hasLeadingWhitespace: false,
+          messageId: generateMessageId()
+        });
+      }
+    }).catch((error) => {
+      self.addStream(
+        new ReadableStream({
+          start(controller) {
+            controller.enqueue({ type: "error", error });
+            controller.close();
+          }
+        })
+      );
+      self.closeStream();
+    });
+  }
+  get warnings() {
+    return this.warningsPromise.value;
+  }
+  get usage() {
+    return this.usagePromise.value;
+  }
+  get finishReason() {
+    return this.finishReasonPromise.value;
+  }
+  get experimental_providerMetadata() {
+    return this.providerMetadataPromise.value;
+  }
+  get providerMetadata() {
+    return this.providerMetadataPromise.value;
+  }
+  get text() {
+    return this.textPromise.value;
+  }
+  get reasoning() {
+    return this.reasoningPromise.value;
+  }
+  get reasoningDetails() {
+    return this.reasoningDetailsPromise.value;
+  }
+  get sources() {
+    return this.sourcesPromise.value;
+  }
+  get toolCalls() {
+    return this.toolCallsPromise.value;
+  }
+  get toolResults() {
+    return this.toolResultsPromise.value;
+  }
+  get request() {
+    return this.requestPromise.value;
+  }
+  get response() {
+    return this.responsePromise.value;
+  }
+  get steps() {
+    return this.stepsPromise.value;
+  }
+  /**
+  Split out a new stream from the original stream.
+  The original stream is replaced to allow for further splitting,
+  since we do not know how many times the stream will be split.
+  
+  Note: this leads to buffering the stream content on the server.
+  However, the LLM results are expected to be small enough to not cause issues.
+     */
+  teeStream() {
+    const [stream1, stream2] = this.baseStream.tee();
+    this.baseStream = stream2;
+    return stream1;
+  }
+  get textStream() {
+    return createAsyncIterableStream(
+      this.teeStream().pipeThrough(
+        new TransformStream({
+          transform({ part }, controller) {
+            if (part.type === "text-delta") {
+              controller.enqueue(part.textDelta);
+            }
+          }
+        })
+      )
+    );
+  }
+  get fullStream() {
+    return createAsyncIterableStream(
+      this.teeStream().pipeThrough(
+        new TransformStream({
+          transform({ part }, controller) {
+            controller.enqueue(part);
+          }
+        })
+      )
+    );
+  }
+  async consumeStream() {
+    const stream = this.fullStream;
+    for await (const part of stream) {
+    }
+  }
+  get experimental_partialOutputStream() {
+    if (this.output == null) {
+      throw new NoOutputSpecifiedError();
+    }
+    return createAsyncIterableStream(
+      this.teeStream().pipeThrough(
+        new TransformStream({
+          transform({ partialOutput }, controller) {
+            if (partialOutput != null) {
+              controller.enqueue(partialOutput);
+            }
+          }
+        })
+      )
+    );
+  }
+  toDataStreamInternal({
+    getErrorMessage: getErrorMessage5 = () => "An error occurred.",
+    // mask error messages for safety by default
+    sendUsage = true,
+    sendReasoning = false,
+    sendSources = false,
+    experimental_sendFinish = true
+  }) {
+    return this.fullStream.pipeThrough(
+      new TransformStream({
+        transform: async (chunk, controller) => {
+          const chunkType = chunk.type;
+          switch (chunkType) {
+            case "text-delta": {
+              controller.enqueue(formatDataStreamPart("text", chunk.textDelta));
+              break;
+            }
+            case "reasoning": {
+              if (sendReasoning) {
+                controller.enqueue(
+                  formatDataStreamPart("reasoning", chunk.textDelta)
+                );
+              }
+              break;
+            }
+            case "redacted-reasoning": {
+              if (sendReasoning) {
+                controller.enqueue(
+                  formatDataStreamPart("redacted_reasoning", {
+                    data: chunk.data
+                  })
+                );
+              }
+              break;
+            }
+            case "reasoning-signature": {
+              if (sendReasoning) {
+                controller.enqueue(
+                  formatDataStreamPart("reasoning_signature", {
+                    signature: chunk.signature
+                  })
+                );
+              }
+              break;
+            }
+            case "source": {
+              if (sendSources) {
+                controller.enqueue(
+                  formatDataStreamPart("source", chunk.source)
+                );
+              }
+              break;
+            }
+            case "tool-call-streaming-start": {
+              controller.enqueue(
+                formatDataStreamPart("tool_call_streaming_start", {
+                  toolCallId: chunk.toolCallId,
+                  toolName: chunk.toolName
+                })
+              );
+              break;
+            }
+            case "tool-call-delta": {
+              controller.enqueue(
+                formatDataStreamPart("tool_call_delta", {
+                  toolCallId: chunk.toolCallId,
+                  argsTextDelta: chunk.argsTextDelta
+                })
+              );
+              break;
+            }
+            case "tool-call": {
+              controller.enqueue(
+                formatDataStreamPart("tool_call", {
+                  toolCallId: chunk.toolCallId,
+                  toolName: chunk.toolName,
+                  args: chunk.args
+                })
+              );
+              break;
+            }
+            case "tool-result": {
+              controller.enqueue(
+                formatDataStreamPart("tool_result", {
+                  toolCallId: chunk.toolCallId,
+                  result: chunk.result
+                })
+              );
+              break;
+            }
+            case "error": {
+              controller.enqueue(
+                formatDataStreamPart("error", getErrorMessage5(chunk.error))
+              );
+              break;
+            }
+            case "step-start": {
+              controller.enqueue(
+                formatDataStreamPart("start_step", {
+                  messageId: chunk.messageId
+                })
+              );
+              break;
+            }
+            case "step-finish": {
+              controller.enqueue(
+                formatDataStreamPart("finish_step", {
+                  finishReason: chunk.finishReason,
+                  usage: sendUsage ? {
+                    promptTokens: chunk.usage.promptTokens,
+                    completionTokens: chunk.usage.completionTokens
+                  } : void 0,
+                  isContinued: chunk.isContinued
+                })
+              );
+              break;
+            }
+            case "finish": {
+              if (experimental_sendFinish) {
+                controller.enqueue(
+                  formatDataStreamPart("finish_message", {
+                    finishReason: chunk.finishReason,
+                    usage: sendUsage ? {
+                      promptTokens: chunk.usage.promptTokens,
+                      completionTokens: chunk.usage.completionTokens
+                    } : void 0
+                  })
+                );
+              }
+              break;
+            }
+            default: {
+              const exhaustiveCheck = chunkType;
+              throw new Error(`Unknown chunk type: ${exhaustiveCheck}`);
+            }
+          }
+        }
+      })
+    );
+  }
+  pipeDataStreamToResponse(response, {
+    status,
+    statusText,
+    headers,
+    data,
+    getErrorMessage: getErrorMessage5,
+    sendUsage,
+    sendReasoning,
+    sendSources,
+    experimental_sendFinish
+  } = {}) {
+    writeToServerResponse({
+      response,
+      status,
+      statusText,
+      headers: prepareOutgoingHttpHeaders(headers, {
+        contentType: "text/plain; charset=utf-8",
+        dataStreamVersion: "v1"
+      }),
+      stream: this.toDataStream({
+        data,
+        getErrorMessage: getErrorMessage5,
+        sendUsage,
+        sendReasoning,
+        sendSources,
+        experimental_sendFinish
+      })
+    });
+  }
+  pipeTextStreamToResponse(response, init) {
+    writeToServerResponse({
+      response,
+      status: init == null ? void 0 : init.status,
+      statusText: init == null ? void 0 : init.statusText,
+      headers: prepareOutgoingHttpHeaders(init == null ? void 0 : init.headers, {
+        contentType: "text/plain; charset=utf-8"
+      }),
+      stream: this.textStream.pipeThrough(new TextEncoderStream())
+    });
+  }
+  // TODO breaking change 5.0: remove pipeThrough(new TextEncoderStream())
+  toDataStream(options) {
+    const stream = this.toDataStreamInternal({
+      getErrorMessage: options == null ? void 0 : options.getErrorMessage,
+      sendUsage: options == null ? void 0 : options.sendUsage,
+      sendReasoning: options == null ? void 0 : options.sendReasoning,
+      sendSources: options == null ? void 0 : options.sendSources,
+      experimental_sendFinish: options == null ? void 0 : options.experimental_sendFinish
+    }).pipeThrough(new TextEncoderStream());
+    return (options == null ? void 0 : options.data) ? mergeStreams(options == null ? void 0 : options.data.stream, stream) : stream;
+  }
+  mergeIntoDataStream(writer, options) {
+    writer.merge(
+      this.toDataStreamInternal({
+        getErrorMessage: writer.onError,
+        sendUsage: options == null ? void 0 : options.sendUsage,
+        sendReasoning: options == null ? void 0 : options.sendReasoning,
+        sendSources: options == null ? void 0 : options.sendSources,
+        experimental_sendFinish: options == null ? void 0 : options.experimental_sendFinish
+      })
+    );
+  }
+  toDataStreamResponse({
+    headers,
+    status,
+    statusText,
+    data,
+    getErrorMessage: getErrorMessage5,
+    sendUsage,
+    sendReasoning,
+    sendSources,
+    experimental_sendFinish
+  } = {}) {
+    return new Response(
+      this.toDataStream({
+        data,
+        getErrorMessage: getErrorMessage5,
+        sendUsage,
+        sendReasoning,
+        sendSources,
+        experimental_sendFinish
+      }),
+      {
+        status,
+        statusText,
+        headers: prepareResponseHeaders(headers, {
+          contentType: "text/plain; charset=utf-8",
+          dataStreamVersion: "v1"
+        })
+      }
+    );
+  }
+  toTextStreamResponse(init) {
+    var _a17;
+    return new Response(this.textStream.pipeThrough(new TextEncoderStream()), {
+      status: (_a17 = init == null ? void 0 : init.status) != null ? _a17 : 200,
+      headers: prepareResponseHeaders(init == null ? void 0 : init.headers, {
+        contentType: "text/plain; charset=utf-8"
+      })
+    });
+  }
+};
+var name16 = "AI_NoSuchProviderError";
+var marker16 = `vercel.ai.error.${name16}`;
+var symbol16 = Symbol.for(marker16);
+var _a16;
+_a16 = symbol16;
+var JSONRPC_VERSION = "2.0";
+var ClientOrServerImplementationSchema = z.object({
+  name: z.string(),
+  version: z.string()
+}).passthrough();
+var BaseParamsSchema = z.object({
+  _meta: z.optional(z.object({}).passthrough())
+}).passthrough();
+var RequestSchema = z.object({
+  method: z.string(),
+  params: z.optional(BaseParamsSchema)
+});
+var ResultSchema = BaseParamsSchema;
+var NotificationSchema = z.object({
+  method: z.string(),
+  params: z.optional(BaseParamsSchema)
+});
+var RequestIdSchema = z.union([z.string(), z.number().int()]);
+var JSONRPCRequestSchema = z.object({
+  jsonrpc: z.literal(JSONRPC_VERSION),
+  id: RequestIdSchema
+}).merge(RequestSchema).strict();
+var JSONRPCResponseSchema = z.object({
+  jsonrpc: z.literal(JSONRPC_VERSION),
+  id: RequestIdSchema,
+  result: ResultSchema
+}).strict();
+var JSONRPCErrorSchema = z.object({
+  jsonrpc: z.literal(JSONRPC_VERSION),
+  id: RequestIdSchema,
+  error: z.object({
+    code: z.number().int(),
+    message: z.string(),
+    data: z.optional(z.unknown())
+  })
+}).strict();
+var JSONRPCNotificationSchema = z.object({
+  jsonrpc: z.literal(JSONRPC_VERSION)
+}).merge(NotificationSchema).strict();
+var JSONRPCMessageSchema = z.union([
+  JSONRPCRequestSchema,
+  JSONRPCNotificationSchema,
+  JSONRPCResponseSchema,
+  JSONRPCErrorSchema
+]);
+var ServerCapabilitiesSchema = z.object({
+  experimental: z.optional(z.object({}).passthrough()),
+  logging: z.optional(z.object({}).passthrough()),
+  prompts: z.optional(
+    z.object({
+      listChanged: z.optional(z.boolean())
+    }).passthrough()
+  ),
+  resources: z.optional(
+    z.object({
+      subscribe: z.optional(z.boolean()),
+      listChanged: z.optional(z.boolean())
+    }).passthrough()
+  ),
+  tools: z.optional(
+    z.object({
+      listChanged: z.optional(z.boolean())
+    }).passthrough()
+  )
+}).passthrough();
+var InitializeResultSchema = ResultSchema.extend({
+  protocolVersion: z.string(),
+  capabilities: ServerCapabilitiesSchema,
+  serverInfo: ClientOrServerImplementationSchema,
+  instructions: z.optional(z.string())
+});
+var PaginatedResultSchema = ResultSchema.extend({
+  nextCursor: z.optional(z.string())
+});
+var ToolSchema = z.object({
+  name: z.string(),
+  description: z.optional(z.string()),
+  inputSchema: z.object({
+    type: z.literal("object"),
+    properties: z.optional(z.object({}).passthrough())
+  }).passthrough()
+}).passthrough();
+var ListToolsResultSchema = PaginatedResultSchema.extend({
+  tools: z.array(ToolSchema)
+});
+var TextContentSchema = z.object({
+  type: z.literal("text"),
+  text: z.string()
+}).passthrough();
+var ImageContentSchema = z.object({
+  type: z.literal("image"),
+  data: z.string().base64(),
+  mimeType: z.string()
+}).passthrough();
+var ResourceContentsSchema = z.object({
+  /**
+   * The URI of this resource.
+   */
+  uri: z.string(),
+  /**
+   * The MIME type of this resource, if known.
+   */
+  mimeType: z.optional(z.string())
+}).passthrough();
+var TextResourceContentsSchema = ResourceContentsSchema.extend({
+  text: z.string()
+});
+var BlobResourceContentsSchema = ResourceContentsSchema.extend({
+  blob: z.string().base64()
+});
+var EmbeddedResourceSchema = z.object({
+  type: z.literal("resource"),
+  resource: z.union([TextResourceContentsSchema, BlobResourceContentsSchema])
+}).passthrough();
+var CallToolResultSchema = ResultSchema.extend({
+  content: z.array(
+    z.union([TextContentSchema, ImageContentSchema, EmbeddedResourceSchema])
+  ),
+  isError: z.boolean().default(false).optional()
+}).or(
+  ResultSchema.extend({
+    toolResult: z.unknown()
+  })
+);
 var langchain_adapter_exports = {};
 __export(langchain_adapter_exports, {
   mergeIntoDataStream: () => mergeIntoDataStream,
@@ -11128,7 +12421,7 @@ function toDataStreamInternal(stream, callbacks) {
   return stream.pipeThrough(
     new TransformStream({
       transform: async (value, controller) => {
-        var _a16;
+        var _a17;
         if (typeof value === "string") {
           controller.enqueue(value);
           return;
@@ -11136,7 +12429,7 @@ function toDataStreamInternal(stream, callbacks) {
         if ("event" in value) {
           if (value.event === "on_chat_model_stream") {
             forwardAIMessageChunk(
-              (_a16 = value.data) == null ? void 0 : _a16.chunk,
+              (_a17 = value.data) == null ? void 0 : _a17.chunk,
               controller
             );
           }
@@ -11159,7 +12452,7 @@ function toDataStream(stream, callbacks) {
   );
 }
 function toDataStreamResponse(stream, options) {
-  var _a16;
+  var _a17;
   const dataStream = toDataStreamInternal(
     stream,
     options == null ? void 0 : options.callbacks
@@ -11168,7 +12461,7 @@ function toDataStreamResponse(stream, options) {
   const init = options == null ? void 0 : options.init;
   const responseStream = data ? mergeStreams(data.stream, dataStream) : dataStream;
   return new Response(responseStream, {
-    status: (_a16 = init == null ? void 0 : init.status) != null ? _a16 : 200,
+    status: (_a17 = init == null ? void 0 : init.status) != null ? _a17 : 200,
     statusText: init == null ? void 0 : init.statusText,
     headers: prepareResponseHeaders(init == null ? void 0 : init.headers, {
       contentType: "text/plain; charset=utf-8",
@@ -11219,14 +12512,14 @@ function toDataStream2(stream, callbacks) {
   );
 }
 function toDataStreamResponse2(stream, options = {}) {
-  var _a16;
+  var _a17;
   const { init, data, callbacks } = options;
   const dataStream = toDataStreamInternal2(stream, callbacks).pipeThrough(
     new TextEncoderStream()
   );
   const responseStream = data ? mergeStreams(data.stream, dataStream) : dataStream;
   return new Response(responseStream, {
-    status: (_a16 = init == null ? void 0 : init.status) != null ? _a16 : 200,
+    status: (_a17 = init == null ? void 0 : init.status) != null ? _a17 : 200,
     statusText: init == null ? void 0 : init.statusText,
     headers: prepareResponseHeaders(init == null ? void 0 : init.headers, {
       contentType: "text/plain; charset=utf-8",
@@ -11253,22 +12546,27 @@ var HANGING_STREAM_WARNING_TIME_MS = 15 * 1e3;
 // tasks/LLM/main.ts
 async function main_default(params, context) {
   const models = context.OOMOL_LLM_ENV.models;
-  const baseURL = context.OOMOL_LLM_ENV.baseUrl;
+  const baseURL = context.OOMOL_LLM_ENV.baseUrlV1;
   const apiKey = context.OOMOL_LLM_ENV.apiKey;
-  const input = (params.input || "").trim();
+  const input = String(params.input || "").trim();
   const model = params.model.model || models.shift();
   const messages = typeof params.messages === "string" ? [{ role: "user", content: params.messages }] : params.messages.map((e) => {
     e.content = e.content.replaceAll("{{input}}", input);
     return e;
   });
-  const { text: text2 } = await generateText({
+  const response = streamText({
     model: createOpenAICompatible({ name: "oomol", baseURL, apiKey }).chatModel(model),
     messages,
     temperature: params.model.temperature,
     topP: params.model.top_p,
     maxTokens: params.model.max_tokens
   });
-  return { output: text2 };
+  let output = "";
+  for await (const textPart of response.textStream) {
+    output += textPart;
+    context.preview({ type: "markdown", data: output });
+  }
+  return { output: await response.text };
 }
 export {
   main_default as default

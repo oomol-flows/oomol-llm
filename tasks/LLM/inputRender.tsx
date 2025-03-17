@@ -6,12 +6,14 @@ import OOMOLSVG from "./icons/oomol.svg";
 import QwenSVG from "./icons/qwen.svg";
 import SiliconFlowSVG from "./icons/silicon-flow.svg";
 
+import type { InputRenderContext } from '@oomol/types/inputRender'
+import type { IModelOptions } from "./main";
+
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { createRoot } from "react-dom/client";
 import Select, { components, SelectInstance } from "react-select";
 import Editor from "react-simple-code-editor";
 import clsx from "clsx";
-import { IModelOptions } from "./main";
 
 type Model = {
   model_name: string;
@@ -23,14 +25,6 @@ type Model = {
   ratio: number;
   channel_name: string;
 };
-
-interface InputRenderContext {
-  store: {
-    value$: { value: IModelOptions; set(v: any): void };
-    description$: { value: string };
-  };
-  postMessage: (message: any, ...args: any[]) => void;
-}
 
 // See https://github.com/JedWatson/react-select/blob/-/packages/react-select/src/builtins.ts
 export interface IBasicOption {
@@ -74,7 +68,7 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
         temperature: temperature,
         top_p: topP,
         max_tokens: maxTokens,
-      });
+      } satisfies IModelOptions);
     }, [selectedModel, temperature, topP, maxTokens]);
 
     const customSelectLabel = ({ value }: { value: Model }) => {
@@ -110,7 +104,7 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
               value: model.model_name,
               label: customSelectLabel({ value: model }),
             }))}
-            onChange={(selectedOption) => {
+            onChange={(selectedOption: IBasicOption) => {
               setSelectedModel(selectedOption.value);
             }}
           />
@@ -134,7 +128,7 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
                 min: 0,
                 max: 1,
                 step: 0.01,
-                onChange: (value) => setTemperature(parseFloat(value)),
+                onChange: (value: any) => setTemperature(parseFloat(value)),
                 defaultValue: 0.5,
               },
               {
@@ -143,7 +137,7 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
                 min: 0,
                 max: 1,
                 step: 0.01,
-                onChange: (value) => setTopP(parseFloat(value)),
+                onChange: (value: any) => setTopP(parseFloat(value)),
                 defaultValue: 1,
               },
               {
@@ -152,7 +146,7 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
                 min: 1,
                 max: 4096,
                 step: 1,
-                onChange: (value) => setMaxTokens(Number(value)),
+                onChange: (value: any) => setMaxTokens(Number(value)),
                 defaultValue: 2048,
               },
             ].map((props) => (
@@ -170,8 +164,7 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
   return () => root.unmount();
 }
 
-function labelOfModel(model) {
-  if (model === "oomol-chat") return "oomol-chat";
+function labelOfModel(model: string): string {
   model = model.replace(/\W/g, " ").replace(/\s+/g, " ").toLowerCase();
   model = model
     .split(" ")
@@ -226,7 +219,7 @@ export function messages(dom: HTMLElement, context: InputRenderContext) {
       setMessages((m) => [...m, { role: "user", content: "" }]);
     }, []);
 
-    const deleteMessage = useCallback((index) => {
+    const deleteMessage = useCallback((index: number) => {
       setMessages((m) => {
         m = m.slice();
         m.splice(index, 1);
@@ -246,7 +239,7 @@ export function messages(dom: HTMLElement, context: InputRenderContext) {
               <TheSelect
                 value={{ value: a.role, label: a.role }}
                 options={Role.map((role) => ({ value: role, label: role }))}
-                onChange={(e) => updateRole(i, e.value)}
+                onChange={(e: IBasicOption) => updateRole(i, e.value!)}
               />
               <button onClick={() => deleteMessage(i)}>
                 <i className="codicon codicon-trash" />
@@ -276,7 +269,7 @@ export function messages(dom: HTMLElement, context: InputRenderContext) {
   return () => root.unmount();
 }
 
-function doHighlight(content) {
+function doHighlight(content: string): string {
   return content
     .replace(/&/g, "&amp;")
     .replace(/"/g, "&quot;")
@@ -299,24 +292,24 @@ function customSingleValue<Option extends IBasicOption = IBasicOption>(
 }
 
 const customComponents = {
-  DropdownIndicator: (props) => (
+  DropdownIndicator: (props: any) => (
     <components.DropdownIndicator {...props}>
       <i className="i-codicon:chevron-down" />
     </components.DropdownIndicator>
   ),
-  Menu: (props) => (
+  Menu: (props: any) => (
     <components.Menu {...props} className={clsx(props.className, "nowheel")}>
       {props.children}
     </components.Menu>
   ),
-  SingleValue: (props) => (
+  SingleValue: (props: any) => (
     <components.SingleValue {...props}>
       {customSingleValue(props.data)}
     </components.SingleValue>
   ),
 };
 
-function TheSelect(props) {
+function TheSelect(props: any) {
   const [menuWidth, setMenuWidth] = useState(0);
   const innerRef = useRef<SelectInstance<any, any>>(null);
 
@@ -383,7 +376,7 @@ const modelIconMap = {
   qwq: QwenSVG,
 };
 
-function getModelIcon(model) {
+function getModelIcon(model: string) {
   if (model === "oomol-chat" || model === "Default") return "oomol";
   const parsedLabel = model
     .replace(/\W/g, " ")
@@ -468,10 +461,9 @@ function RangeInput({
               onChange(min);
             } else {
               const clampedValue = Math.min(Math.max(numValue, min), max);
-              const isInteger = step % 1 === 0;
-              const finalValue = isInteger ? 
-                Math.round(clampedValue) : 
-                parseFloat(clampedValue.toFixed(2));
+              const finalValue = Number.isInteger(step)
+                ? Math.round(clampedValue)
+                : Number.parseFloat(clampedValue.toFixed(2));
               onChange(finalValue);
             }
           }}
@@ -482,7 +474,7 @@ function RangeInput({
   );
 }
 
-function parseMessages(value) {
+function parseMessages(value: unknown) {
   if (typeof value === "string") {
     return [{ role: "user", content: value }];
   } else if (Array.isArray(value)) {

@@ -13313,7 +13313,6 @@ function model(dom, context) {
   return () => root.unmount();
 }
 function labelOfModel(model2) {
-  if (model2 === "oomol-chat") return "oomol-chat";
   model2 = model2.replace(/\W/g, " ").replace(/\s+/g, " ").toLowerCase();
   model2 = model2.split(" ").map((word) => {
     if (word === "oomol") return "OOMOL";
@@ -13524,8 +13523,7 @@ function RangeInput({
           onChange2(min2);
         } else {
           const clampedValue = Math.min(Math.max(numValue, min2), max2);
-          const isInteger = step % 1 === 0;
-          const finalValue = isInteger ? Math.round(clampedValue) : parseFloat(clampedValue.toFixed(2));
+          const finalValue = Number.isInteger(step) ? Math.round(clampedValue) : Number.parseFloat(clampedValue.toFixed(2));
           onChange2(finalValue);
         }
       },

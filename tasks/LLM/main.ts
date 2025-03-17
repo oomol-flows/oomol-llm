@@ -1,7 +1,7 @@
 /// <reference lib="esnext" />
 import type { Context } from '@oomol/types/oocana'
 import { createOpenAICompatible } from '@ai-sdk/openai-compatible'
-import { generateText } from 'ai'
+import { streamText } from 'ai'
 
 export interface IModelOptions {
     model?: string
@@ -30,10 +30,10 @@ export default async function (
     context: Context<Input, Output>,
 ): Promise<Output> {
     const models = context.OOMOL_LLM_ENV.models
-    const baseURL = context.OOMOL_LLM_ENV.baseUrl
+    const baseURL = context.OOMOL_LLM_ENV.baseUrlV1
     const apiKey = context.OOMOL_LLM_ENV.apiKey
 
-    const input = (params.input || '').trim()
+    const input = String(params.input || '').trim()
     const model = params.model.model || models.shift()!
     const messages: Message[] = typeof params.messages === 'string'
         ? [{ role: 'user', content: params.messages }]
@@ -42,7 +42,7 @@ export default async function (
             return e
         })
 
-    const { text } = await generateText({
+    const response = streamText({
         model: createOpenAICompatible({ name: 'oomol', baseURL, apiKey }).chatModel(model),
         messages: messages,
         temperature: params.model.temperature,
@@ -50,5 +50,11 @@ export default async function (
         maxTokens: params.model.max_tokens
     });
 
-    return { output: text }
+    let output = ''
+    for await (const textPart of response.textStream) {
+        output += textPart
+        context.preview({ type: 'markdown', data: output })
+    }
+
+    return { output: await response.text }
 }
