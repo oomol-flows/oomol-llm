@@ -467,7 +467,12 @@ function RangeInput({
             if (e.target.value === "" || isNaN(numValue)) {
               onChange(min);
             } else {
-              onChange(Math.min(Math.max(numValue, min), max));
+              const clampedValue = Math.min(Math.max(numValue, min), max);
+              const isInteger = step % 1 === 0;
+              const finalValue = isInteger ? 
+                Math.round(clampedValue) : 
+                parseFloat(clampedValue.toFixed(2));
+              onChange(finalValue);
             }
           }}
           style={{ width: "60px", margin: 0, border: "none" }}
