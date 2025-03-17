@@ -13523,7 +13523,10 @@ function RangeInput({
         if (e.target.value === "" || isNaN(numValue)) {
           onChange2(min2);
         } else {
-          onChange2(Math.min(Math.max(numValue, min2), max2));
+          const clampedValue = Math.min(Math.max(numValue, min2), max2);
+          const isInteger = step % 1 === 0;
+          const finalValue = isInteger ? Math.round(clampedValue) : parseFloat(clampedValue.toFixed(2));
+          onChange2(finalValue);
         }
       },
       style: { width: "60px", margin: 0, border: "none" }
