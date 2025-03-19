@@ -8,3 +8,18 @@ icon: "./icon.png"
 repository: https://github.com/oomol/oomol-llm
 dependencies:
   {}
+contributes:
+  input_widgets:
+    render: ./tasks/LLM/bundled/inputRender.js
+    widgets:
+      - name: model
+        json_schema:
+          ui:options:
+            title: Model
+      - name: messages
+        json_schema:
+          anyOf:
+            - type: string
+            - type: array
+          ui:options:
+            title: Prompt

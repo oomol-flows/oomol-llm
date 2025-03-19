@@ -27,4 +27,3 @@ outputs_def:
   - handle: output
     json_schema:
       type: string
-input_render: ./bundled/inputRender.js
