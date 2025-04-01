@@ -13349,14 +13349,27 @@ async function main_default(params, context) {
   }
   return { output: await response.text };
 }
+var print = (x) => {
+  if (typeof x === "string") return x;
+  if (x == null) return "";
+  try {
+    return JSON.stringify(x, null, 2);
+  } catch {
+    return x + "";
+  }
+};
+function isModelOrMessagesLike(value) {
+  return !!(value && typeof value === "object") && ("model" in value && typeof value["model"] === "string" || Array.isArray(value) && value.every((item) => isMessageLike(item)));
+}
+function isMessageLike(value) {
+  return !!(value && typeof value === "object") && ("role" in value && typeof value["role"] === "string" && "content" in value && typeof value["content"] === "string");
+}
 function getReplacements(params) {
   const replacements = [];
   for (const key of Object.keys(params)) {
-    if (key !== "model" && key !== "messages") {
-      const value = params[key];
-      if (typeof value === "string") {
-        replacements.push([`{{${key}}}`, value.trim()]);
-      }
+    const value = params[key];
+    if (!isModelOrMessagesLike(value)) {
+      replacements.push([`{{${key}}}`, print(value).trim()]);
     }
   }
   replacements.push(["{{input}}", params.input || ""]);

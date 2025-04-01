@@ -187,11 +187,7 @@ export function messages(dom: HTMLElement, context: InputRenderContext) {
     const allHandleNames = useVal(context.allHandleNames);
 
     const doHighlight = useCallback((text: string): string => {
-      const names = new Set(allHandleNames);
-      names.delete('model')
-      names.delete('messages')
-      names.add('input')
-      return doHighlight_(text, Array.from(names, v => `{{${v}}}`));
+      return doHighlight_(text, allHandleNames.map(v => `{{${v}}}`));
     }, [allHandleNames]);
 
     const updateRole = useCallback(

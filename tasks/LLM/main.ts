@@ -57,14 +57,42 @@ export default async function (
     return { output: await response.text }
 }
 
+/**
+ * Returns `x` if `x` is string, otherwise returns `''` (empty string) if
+ * `x` is `null` or `undefined`, otherwise returns `JSON.stringify(x)`.
+ * This is very useful to show a value inside a React component.
+ */
+const print = (x: unknown): string => {
+    if (typeof x === 'string') return x;
+    if (x == null) return "";
+    try {
+        return JSON.stringify(x, null, 2);
+    } catch {
+        // Insane case is not handled: x = { toString: () => { throw x } }
+        return x + "";
+    }
+};
+
+function isModelOrMessagesLike(value: unknown): boolean {
+    return !!(value && typeof value === 'object') && (
+        'model' in value && typeof value['model'] === 'string' ||
+        Array.isArray(value) && value.every(item => isMessageLike(item))
+    )
+}
+
+function isMessageLike(value: unknown): boolean {
+    return !!(value && typeof value === 'object') && (
+        'role' in value && typeof value['role'] === 'string' &&
+        'content' in value && typeof value['content'] === 'string'
+    )
+}
+
 function getReplacements(params: Input): [string, string][] {
     const replacements: [string, string][] = []
     for (const key of Object.keys(params)) {
-        if (key !== 'model' && key !== 'messages') {
-            const value = params[key]
-            if (typeof value === 'string') {
-                replacements.push([`{{${key}}}`, value.trim()])
-            }
+        const value = params[key]
+        if (!isModelOrMessagesLike(value)) {
+            replacements.push([`{{${key}}}`, print(value).trim()])
         }
     }
     replacements.push(['{{input}}', params.input || ''])

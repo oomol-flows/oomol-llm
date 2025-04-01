@@ -14,4 +14,15 @@ nodes:
       - handle: messages
         value:
           - role: user
-            content: Hi, I'm {{input}}.
+            content: Hi, I'm {{input}}. What's the result of {{a}} plus {{b}}?
+      - handle: a
+        value: 123
+      - handle: b
+        value: -456
+    inputs_def:
+      - handle: a
+        json_schema:
+          type: number
+      - handle: b
+        json_schema:
+          type: number

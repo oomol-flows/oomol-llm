@@ -13372,11 +13372,7 @@ function messages(dom, context) {
     const [messages2, setMessages] = (0, import_react10.useState)(initialMessages);
     const allHandleNames = useVal(context.allHandleNames);
     const doHighlight = (0, import_react10.useCallback)((text) => {
-      const names = new Set(allHandleNames);
-      names.delete("model");
-      names.delete("messages");
-      names.add("input");
-      return doHighlight_(text, Array.from(names, (v) => `{{${v}}}`));
+      return doHighlight_(text, allHandleNames.map((v) => `{{${v}}}`));
     }, [allHandleNames]);
     const updateRole = (0, import_react10.useCallback)(
       (index2, role) => {
