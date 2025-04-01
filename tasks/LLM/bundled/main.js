@@ -4,7 +4,7 @@ var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __commonJS = (cb, mod) => function __require2() {
+var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
 var __copyProps = (to, from, except, desc) => {
@@ -417,17 +417,18 @@ var customAlphabet = (alphabet, defaultSize = 21) => {
 var import_secure_json_parse = __toESM(require_secure_json_parse(), 1);
 
 // node_modules/eventsource-parser/dist/index.js
-var __defProp2 = Object.defineProperty;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key != "symbol" ? key + "" : key, value);
 var ParseError = class extends Error {
   constructor(message, options) {
-    super(message), __publicField(this, "type"), __publicField(this, "field"), __publicField(this, "value"), __publicField(this, "line"), this.name = "ParseError", this.type = options.type, this.field = options.field, this.value = options.value, this.line = options.line;
+    super(message), this.name = "ParseError", this.type = options.type, this.field = options.field, this.value = options.value, this.line = options.line;
   }
 };
 function noop(_arg) {
 }
 function createParser(callbacks) {
+  if (typeof callbacks == "function")
+    throw new TypeError(
+      "`callbacks` must be an object, got a function instead. Did you mean `{onEvent: fn}`?"
+    );
   const { onEvent = noop, onError = noop, onRetry = noop, onComment } = callbacks;
   let incompleteLine = "", isFirstChunk = true, id, data = "", eventType = "";
   function feed(newChunk) {
@@ -495,19 +496,25 @@ function createParser(callbacks) {
     }), id = void 0, data = "", eventType = "";
   }
   function reset(options = {}) {
-    incompleteLine && options.consume && parseLine(incompleteLine), id = void 0, data = "", eventType = "", incompleteLine = "";
+    incompleteLine && options.consume && parseLine(incompleteLine), isFirstChunk = true, id = void 0, data = "", eventType = "", incompleteLine = "";
   }
   return { feed, reset };
 }
 function splitLines(chunk) {
   const lines = [];
-  let incompleteLine = "";
-  const totalLength = chunk.length;
-  for (let i = 0; i < totalLength; i++) {
-    const char = chunk[i];
-    char === "\r" && chunk[i + 1] === `
-` ? (lines.push(incompleteLine), incompleteLine = "", i++) : char === "\r" || char === `
-` ? (lines.push(incompleteLine), incompleteLine = "") : incompleteLine += char;
+  let incompleteLine = "", searchIndex = 0;
+  for (; searchIndex < chunk.length; ) {
+    const crIndex = chunk.indexOf("\r", searchIndex), lfIndex = chunk.indexOf(`
+`, searchIndex);
+    let lineEnd = -1;
+    if (crIndex !== -1 && lfIndex !== -1 ? lineEnd = Math.min(crIndex, lfIndex) : crIndex !== -1 ? lineEnd = crIndex : lfIndex !== -1 && (lineEnd = lfIndex), lineEnd === -1) {
+      incompleteLine = chunk.slice(searchIndex);
+      break;
+    } else {
+      const line = chunk.slice(searchIndex, lineEnd);
+      lines.push(line), searchIndex = lineEnd + 1, chunk[searchIndex - 1] === "\r" && chunk[searchIndex] === `
+` && searchIndex++;
+    }
   }
   return [lines, incompleteLine];
 }
@@ -546,36 +553,6 @@ function combineHeaders(...headers) {
     {}
   );
 }
-function convertAsyncIteratorToReadableStream(iterator) {
-  return new ReadableStream({
-    /**
-     * Called when the consumer wants to pull more data from the stream.
-     *
-     * @param {ReadableStreamDefaultController<T>} controller - The controller to enqueue data into the stream.
-     * @returns {Promise<void>}
-     */
-    async pull(controller) {
-      try {
-        const { value, done } = await iterator.next();
-        if (done) {
-          controller.close();
-        } else {
-          controller.enqueue(value);
-        }
-      } catch (error) {
-        controller.error(error);
-      }
-    },
-    /**
-     * Called when the consumer cancels the stream.
-     */
-    cancel() {
-    }
-  });
-}
-async function delay(delayInMs) {
-  return delayInMs == null ? Promise.resolve() : new Promise((resolve2) => setTimeout(resolve2, delayInMs));
-}
 function extractResponseHeaders(response) {
   const headers = {};
   response.headers.forEach((value, key) => {
@@ -602,18 +579,6 @@ var createIdGenerator = ({
   return (size) => `${prefix}${separator}${generator(size)}`;
 };
 var generateId = createIdGenerator();
-function getErrorMessage2(error) {
-  if (error == null) {
-    return "unknown error";
-  }
-  if (typeof error === "string") {
-    return error;
-  }
-  if (error instanceof Error) {
-    return error.message;
-  }
-  return JSON.stringify(error);
-}
 function removeUndefinedEntries(record) {
   return Object.fromEntries(
     Object.entries(record).filter(([_key, value]) => value != null)
@@ -652,12 +617,12 @@ function safeValidateTypes({
   value,
   schema
 }) {
-  const validator2 = asValidator(schema);
+  const validator22 = asValidator(schema);
   try {
-    if (validator2.validate == null) {
+    if (validator22.validate == null) {
       return { success: true, value };
     }
-    const result = validator2.validate(value);
+    const result = validator22.validate(value);
     if (result.success) {
       return result;
     }
@@ -923,11 +888,6 @@ var createJsonResponseHandler = (responseSchema) => async ({ response, url, requ
   };
 };
 var { btoa, atob: atob2 } = globalThis;
-function convertBase64ToUint8Array(base64String) {
-  const base64Url = base64String.replace(/-/g, "+").replace(/_/g, "/");
-  const latin1string = atob2(base64Url);
-  return Uint8Array.from(latin1string, (byte) => byte.codePointAt(0));
-}
 function convertUint8ArrayToBase64(array) {
   let latin1string = "";
   for (let i = 0; i < array.length; i++) {
@@ -1465,13 +1425,13 @@ function processCreateParams(params) {
   if (errorMap2)
     return { errorMap: errorMap2, description };
   const customMap = (iss, ctx) => {
-    var _a17, _b;
+    var _a18, _b;
     const { message } = params;
     if (iss.code === "invalid_enum_value") {
       return { message: message !== null && message !== void 0 ? message : ctx.defaultError };
     }
     if (typeof ctx.data === "undefined") {
-      return { message: (_a17 = message !== null && message !== void 0 ? message : required_error) !== null && _a17 !== void 0 ? _a17 : ctx.defaultError };
+      return { message: (_a18 = message !== null && message !== void 0 ? message : required_error) !== null && _a18 !== void 0 ? _a18 : ctx.defaultError };
     }
     if (iss.code !== "invalid_type")
       return { message: ctx.defaultError };
@@ -1527,11 +1487,11 @@ var ZodType = class {
     throw result.error;
   }
   safeParse(data, params) {
-    var _a17;
+    var _a18;
     const ctx = {
       common: {
         issues: [],
-        async: (_a17 = params === null || params === void 0 ? void 0 : params.async) !== null && _a17 !== void 0 ? _a17 : false,
+        async: (_a18 = params === null || params === void 0 ? void 0 : params.async) !== null && _a18 !== void 0 ? _a18 : false,
         contextualErrorMap: params === null || params === void 0 ? void 0 : params.errorMap
       },
       path: (params === null || params === void 0 ? void 0 : params.path) || [],
@@ -1544,7 +1504,7 @@ var ZodType = class {
     return handleResult(ctx, result);
   }
   "~validate"(data) {
-    var _a17, _b;
+    var _a18, _b;
     const ctx = {
       common: {
         issues: [],
@@ -1565,7 +1525,7 @@ var ZodType = class {
           issues: ctx.common.issues
         };
       } catch (err) {
-        if ((_b = (_a17 = err === null || err === void 0 ? void 0 : err.message) === null || _a17 === void 0 ? void 0 : _a17.toLowerCase()) === null || _b === void 0 ? void 0 : _b.includes("encountered")) {
+        if ((_b = (_a18 = err === null || err === void 0 ? void 0 : err.message) === null || _a18 === void 0 ? void 0 : _a18.toLowerCase()) === null || _b === void 0 ? void 0 : _b.includes("encountered")) {
           this["~standard"].async = true;
         }
         ctx.common = {
@@ -1826,7 +1786,7 @@ function isValidJWT(jwt, alg) {
     if (alg && decoded.alg !== alg)
       return false;
     return true;
-  } catch (_a17) {
+  } catch (_a18) {
     return false;
   }
 }
@@ -1985,7 +1945,7 @@ var ZodString = class _ZodString extends ZodType {
       } else if (check.kind === "url") {
         try {
           new URL(input.data);
-        } catch (_a17) {
+        } catch (_a18) {
           ctx = this._getOrReturnCtx(input, ctx);
           addIssueToContext(ctx, {
             validation: "url",
@@ -2197,7 +2157,7 @@ var ZodString = class _ZodString extends ZodType {
     return this._addCheck({ kind: "cidr", ...errorUtil.errToObj(options) });
   }
   datetime(options) {
-    var _a17, _b;
+    var _a18, _b;
     if (typeof options === "string") {
       return this._addCheck({
         kind: "datetime",
@@ -2210,7 +2170,7 @@ var ZodString = class _ZodString extends ZodType {
     return this._addCheck({
       kind: "datetime",
       precision: typeof (options === null || options === void 0 ? void 0 : options.precision) === "undefined" ? null : options === null || options === void 0 ? void 0 : options.precision,
-      offset: (_a17 = options === null || options === void 0 ? void 0 : options.offset) !== null && _a17 !== void 0 ? _a17 : false,
+      offset: (_a18 = options === null || options === void 0 ? void 0 : options.offset) !== null && _a18 !== void 0 ? _a18 : false,
       local: (_b = options === null || options === void 0 ? void 0 : options.local) !== null && _b !== void 0 ? _b : false,
       ...errorUtil.errToObj(options === null || options === void 0 ? void 0 : options.message)
     });
@@ -2379,11 +2339,11 @@ var ZodString = class _ZodString extends ZodType {
   }
 };
 ZodString.create = (params) => {
-  var _a17;
+  var _a18;
   return new ZodString({
     checks: [],
     typeName: ZodFirstPartyTypeKind.ZodString,
-    coerce: (_a17 = params === null || params === void 0 ? void 0 : params.coerce) !== null && _a17 !== void 0 ? _a17 : false,
+    coerce: (_a18 = params === null || params === void 0 ? void 0 : params.coerce) !== null && _a18 !== void 0 ? _a18 : false,
     ...processCreateParams(params)
   });
 };
@@ -2636,7 +2596,7 @@ var ZodBigInt = class _ZodBigInt extends ZodType {
     if (this._def.coerce) {
       try {
         input.data = BigInt(input.data);
-      } catch (_a17) {
+      } catch (_a18) {
         return this._getInvalidInput(input);
       }
     }
@@ -2791,11 +2751,11 @@ var ZodBigInt = class _ZodBigInt extends ZodType {
   }
 };
 ZodBigInt.create = (params) => {
-  var _a17;
+  var _a18;
   return new ZodBigInt({
     checks: [],
     typeName: ZodFirstPartyTypeKind.ZodBigInt,
-    coerce: (_a17 = params === null || params === void 0 ? void 0 : params.coerce) !== null && _a17 !== void 0 ? _a17 : false,
+    coerce: (_a18 = params === null || params === void 0 ? void 0 : params.coerce) !== null && _a18 !== void 0 ? _a18 : false,
     ...processCreateParams(params)
   });
 };
@@ -3301,8 +3261,8 @@ var ZodObject = class _ZodObject extends ZodType {
       unknownKeys: "strict",
       ...message !== void 0 ? {
         errorMap: (issue, ctx) => {
-          var _a17, _b, _c, _d;
-          const defaultError = (_c = (_b = (_a17 = this._def).errorMap) === null || _b === void 0 ? void 0 : _b.call(_a17, issue, ctx).message) !== null && _c !== void 0 ? _c : ctx.defaultError;
+          var _a18, _b, _c, _d;
+          const defaultError = (_c = (_b = (_a18 = this._def).errorMap) === null || _b === void 0 ? void 0 : _b.call(_a18, issue, ctx).message) !== null && _c !== void 0 ? _c : ctx.defaultError;
           if (issue.code === "unrecognized_keys")
             return {
               message: (_d = errorUtil.errToObj(message).message) !== null && _d !== void 0 ? _d : defaultError
@@ -4768,21 +4728,21 @@ function cleanParams(params, data) {
 function custom(check, _params = {}, fatal) {
   if (check)
     return ZodAny.create().superRefine((data, ctx) => {
-      var _a17, _b;
+      var _a18, _b;
       const r = check(data);
       if (r instanceof Promise) {
         return r.then((r2) => {
-          var _a18, _b2;
+          var _a19, _b2;
           if (!r2) {
             const params = cleanParams(_params, data);
-            const _fatal = (_b2 = (_a18 = params.fatal) !== null && _a18 !== void 0 ? _a18 : fatal) !== null && _b2 !== void 0 ? _b2 : true;
+            const _fatal = (_b2 = (_a19 = params.fatal) !== null && _a19 !== void 0 ? _a19 : fatal) !== null && _b2 !== void 0 ? _b2 : true;
             ctx.addIssue({ code: "custom", ...params, fatal: _fatal });
           }
         });
       }
       if (!r) {
         const params = cleanParams(_params, data);
-        const _fatal = (_b = (_a17 = params.fatal) !== null && _a17 !== void 0 ? _a17 : fatal) !== null && _b !== void 0 ? _b : true;
+        const _fatal = (_b = (_a18 = params.fatal) !== null && _a18 !== void 0 ? _a18 : fatal) !== null && _b !== void 0 ? _b : true;
         ctx.addIssue({ code: "custom", ...params, fatal: _fatal });
       }
       return;
@@ -5001,8 +4961,8 @@ var z = /* @__PURE__ */ Object.freeze({
 
 // node_modules/@ai-sdk/openai-compatible/dist/index.mjs
 function getOpenAIMetadata(message) {
-  var _a17, _b;
-  return (_b = (_a17 = message == null ? void 0 : message.providerMetadata) == null ? void 0 : _a17.openaiCompatible) != null ? _b : {};
+  var _a18, _b;
+  return (_b = (_a18 = message == null ? void 0 : message.providerMetadata) == null ? void 0 : _a18.openaiCompatible) != null ? _b : {};
 }
 function convertToOpenAICompatibleChatMessages(prompt) {
   const messages = [];
@@ -5025,7 +4985,7 @@ function convertToOpenAICompatibleChatMessages(prompt) {
         messages.push({
           role: "user",
           content: content.map((part) => {
-            var _a17;
+            var _a18;
             const partMetadata = getOpenAIMetadata(part);
             switch (part.type) {
               case "text": {
@@ -5035,7 +4995,7 @@ function convertToOpenAICompatibleChatMessages(prompt) {
                 return {
                   type: "image_url",
                   image_url: {
-                    url: part.image instanceof URL ? part.image.toString() : `data:${(_a17 = part.mimeType) != null ? _a17 : "image/jpeg"};base64,${convertUint8ArrayToBase64(part.image)}`
+                    url: part.image instanceof URL ? part.image.toString() : `data:${(_a18 = part.mimeType) != null ? _a18 : "image/jpeg"};base64,${convertUint8ArrayToBase64(part.image)}`
                   },
                   ...partMetadata
                 };
@@ -5061,10 +5021,6 @@ function convertToOpenAICompatibleChatMessages(prompt) {
               text2 += part.text;
               break;
             }
-            case "redacted-reasoning":
-            case "reasoning": {
-              break;
-            }
             case "tool-call": {
               toolCalls.push({
                 id: part.toolCallId,
@@ -5076,10 +5032,6 @@ function convertToOpenAICompatibleChatMessages(prompt) {
                 ...partMetadata
               });
               break;
-            }
-            default: {
-              const _exhaustiveCheck = part;
-              throw new Error(`Unsupported part: ${_exhaustiveCheck}`);
             }
           }
         }
@@ -5156,8 +5108,8 @@ function prepareTools({
   mode,
   structuredOutputs
 }) {
-  var _a17;
-  const tools = ((_a17 = mode.tools) == null ? void 0 : _a17.length) ? mode.tools : void 0;
+  var _a18;
+  const tools = ((_a18 = mode.tools) == null ? void 0 : _a18.length) ? mode.tools : void 0;
   const toolWarnings = [];
   if (tools == null) {
     return { tools: void 0, tool_choice: void 0, toolWarnings };
@@ -5210,11 +5162,11 @@ var OpenAICompatibleChatLanguageModel = class {
   // type inferred via constructor
   constructor(modelId, settings, config) {
     this.specificationVersion = "v1";
-    var _a17, _b;
+    var _a18, _b;
     this.modelId = modelId;
     this.settings = settings;
     this.config = config;
-    const errorStructure = (_a17 = config.errorStructure) != null ? _a17 : defaultOpenAICompatibleErrorStructure;
+    const errorStructure = (_a18 = config.errorStructure) != null ? _a18 : defaultOpenAICompatibleErrorStructure;
     this.chunkSchema = createOpenAICompatibleChatChunkSchema(
       errorStructure.errorSchema
     );
@@ -5244,7 +5196,7 @@ var OpenAICompatibleChatLanguageModel = class {
     responseFormat,
     seed
   }) {
-    var _a17, _b;
+    var _a18, _b;
     const type = mode.type;
     const warnings = [];
     if (topK != null) {
@@ -5275,7 +5227,7 @@ var OpenAICompatibleChatLanguageModel = class {
         type: "json_schema",
         json_schema: {
           schema: responseFormat.schema,
-          name: (_a17 = responseFormat.name) != null ? _a17 : "response",
+          name: (_a18 = responseFormat.name) != null ? _a18 : "response",
           description: responseFormat.description
         }
       } : { type: "json_object" } : void 0,
@@ -5341,7 +5293,7 @@ var OpenAICompatibleChatLanguageModel = class {
     }
   }
   async doGenerate(options) {
-    var _a17, _b, _c, _d, _e, _f, _g, _h, _i;
+    var _a18, _b, _c, _d, _e, _f, _g, _h, _i;
     const { args, warnings } = this.getArgs({ ...options });
     const body = JSON.stringify(args);
     const {
@@ -5364,17 +5316,17 @@ var OpenAICompatibleChatLanguageModel = class {
     });
     const { messages: rawPrompt, ...rawSettings } = args;
     const choice = responseBody.choices[0];
-    const providerMetadata = (_b = (_a17 = this.config.metadataExtractor) == null ? void 0 : _a17.extractMetadata) == null ? void 0 : _b.call(_a17, {
+    const providerMetadata = (_b = (_a18 = this.config.metadataExtractor) == null ? void 0 : _a18.extractMetadata) == null ? void 0 : _b.call(_a18, {
       parsedBody: rawResponse
     });
     return {
       text: (_c = choice.message.content) != null ? _c : void 0,
       reasoning: (_d = choice.message.reasoning_content) != null ? _d : void 0,
       toolCalls: (_e = choice.message.tool_calls) == null ? void 0 : _e.map((toolCall) => {
-        var _a23;
+        var _a25;
         return {
           toolCallType: "function",
-          toolCallId: (_a23 = toolCall.id) != null ? _a23 : generateId(),
+          toolCallId: (_a25 = toolCall.id) != null ? _a25 : generateId(),
           toolName: toolCall.function.name,
           args: toolCall.function.arguments
         };
@@ -5393,7 +5345,7 @@ var OpenAICompatibleChatLanguageModel = class {
     };
   }
   async doStream(options) {
-    var _a17;
+    var _a18;
     if (this.settings.simulateStreaming) {
       const result = await this.doGenerate(options);
       const simulatedStream = new ReadableStream({
@@ -5449,7 +5401,7 @@ var OpenAICompatibleChatLanguageModel = class {
     }
     const { args, warnings } = this.getArgs({ ...options });
     const body = JSON.stringify({ ...args, stream: true });
-    const metadataExtractor = (_a17 = this.config.metadataExtractor) == null ? void 0 : _a17.createStreamExtractor();
+    const metadataExtractor = (_a18 = this.config.metadataExtractor) == null ? void 0 : _a18.createStreamExtractor();
     const { responseHeaders, value: response } = await postJsonToApi({
       url: this.config.url({
         path: "/chat/completions",
@@ -5480,7 +5432,7 @@ var OpenAICompatibleChatLanguageModel = class {
         new TransformStream({
           // TODO we lost type safety on Chunk, most likely due to the error schema. MUST FIX
           transform(chunk, controller) {
-            var _a23, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
+            var _a25, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
             if (!chunk.success) {
               finishReason = "error";
               controller.enqueue({ type: "error", error: chunk.error });
@@ -5502,7 +5454,7 @@ var OpenAICompatibleChatLanguageModel = class {
             }
             if (value.usage != null) {
               usage = {
-                promptTokens: (_a23 = value.usage.prompt_tokens) != null ? _a23 : void 0,
+                promptTokens: (_a25 = value.usage.prompt_tokens) != null ? _a25 : void 0,
                 completionTokens: (_b = value.usage.completion_tokens) != null ? _b : void 0
               };
             }
@@ -5611,13 +5563,13 @@ var OpenAICompatibleChatLanguageModel = class {
             }
           },
           flush(controller) {
-            var _a23, _b;
+            var _a25, _b;
             const metadata = metadataExtractor == null ? void 0 : metadataExtractor.buildMetadata();
             controller.enqueue({
               type: "finish",
               finishReason,
               usage: {
-                promptTokens: (_a23 = usage.promptTokens) != null ? _a23 : NaN,
+                promptTokens: (_a25 = usage.promptTokens) != null ? _a25 : NaN,
                 completionTokens: (_b = usage.completionTokens) != null ? _b : NaN
               },
               ...metadata && { providerMetadata: metadata }
@@ -5780,11 +5732,11 @@ var OpenAICompatibleCompletionLanguageModel = class {
   constructor(modelId, settings, config) {
     this.specificationVersion = "v1";
     this.defaultObjectGenerationMode = void 0;
-    var _a17;
+    var _a18;
     this.modelId = modelId;
     this.settings = settings;
     this.config = config;
-    const errorStructure = (_a17 = config.errorStructure) != null ? _a17 : defaultOpenAICompatibleErrorStructure;
+    const errorStructure = (_a18 = config.errorStructure) != null ? _a18 : defaultOpenAICompatibleErrorStructure;
     this.chunkSchema = createOpenAICompatibleCompletionChunkSchema(
       errorStructure.errorSchema
     );
@@ -5811,7 +5763,7 @@ var OpenAICompatibleCompletionLanguageModel = class {
     seed,
     providerMetadata
   }) {
-    var _a17;
+    var _a18;
     const type = mode.type;
     const warnings = [];
     if (topK != null) {
@@ -5852,7 +5804,7 @@ var OpenAICompatibleCompletionLanguageModel = class {
     };
     switch (type) {
       case "regular": {
-        if ((_a17 = mode.tools) == null ? void 0 : _a17.length) {
+        if ((_a18 = mode.tools) == null ? void 0 : _a18.length) {
           throw new UnsupportedFunctionalityError({
             functionality: "tools"
           });
@@ -5881,7 +5833,7 @@ var OpenAICompatibleCompletionLanguageModel = class {
     }
   }
   async doGenerate(options) {
-    var _a17, _b, _c, _d;
+    var _a18, _b, _c, _d;
     const { args, warnings } = this.getArgs(options);
     const {
       responseHeaders,
@@ -5906,7 +5858,7 @@ var OpenAICompatibleCompletionLanguageModel = class {
     return {
       text: choice.text,
       usage: {
-        promptTokens: (_b = (_a17 = response.usage) == null ? void 0 : _a17.prompt_tokens) != null ? _b : NaN,
+        promptTokens: (_b = (_a18 = response.usage) == null ? void 0 : _a18.prompt_tokens) != null ? _b : NaN,
         completionTokens: (_d = (_c = response.usage) == null ? void 0 : _c.completion_tokens) != null ? _d : NaN
       },
       finishReason: mapOpenAICompatibleFinishReason(choice.finish_reason),
@@ -6046,19 +5998,19 @@ var OpenAICompatibleEmbeddingModel = class {
     return this.config.provider;
   }
   get maxEmbeddingsPerCall() {
-    var _a17;
-    return (_a17 = this.config.maxEmbeddingsPerCall) != null ? _a17 : 2048;
+    var _a18;
+    return (_a18 = this.config.maxEmbeddingsPerCall) != null ? _a18 : 2048;
   }
   get supportsParallelCalls() {
-    var _a17;
-    return (_a17 = this.config.supportsParallelCalls) != null ? _a17 : true;
+    var _a18;
+    return (_a18 = this.config.supportsParallelCalls) != null ? _a18 : true;
   }
   async doEmbed({
     values,
     headers,
     abortSignal
   }) {
-    var _a17;
+    var _a18;
     if (values.length > this.maxEmbeddingsPerCall) {
       throw new TooManyEmbeddingValuesForCallError({
         provider: this.provider,
@@ -6081,7 +6033,7 @@ var OpenAICompatibleEmbeddingModel = class {
         user: this.settings.user
       },
       failedResponseHandler: createJsonErrorResponseHandler(
-        (_a17 = this.config.errorStructure) != null ? _a17 : defaultOpenAICompatibleErrorStructure
+        (_a18 = this.config.errorStructure) != null ? _a18 : defaultOpenAICompatibleErrorStructure
       ),
       successfulResponseHandler: createJsonResponseHandler(
         openaiTextEmbeddingResponseSchema
@@ -6141,6 +6093,623 @@ function createOpenAICompatible(options) {
   provider.textEmbeddingModel = createEmbeddingModel;
   return provider;
 }
+
+// node_modules/ai/node_modules/@ai-sdk/provider/dist/index.mjs
+var marker15 = "vercel.ai.error";
+var symbol15 = Symbol.for(marker15);
+var _a15;
+var _AISDKError3 = class _AISDKError4 extends Error {
+  /**
+   * Creates an AI SDK Error.
+   *
+   * @param {Object} params - The parameters for creating the error.
+   * @param {string} params.name - The name of the error.
+   * @param {string} params.message - The error message.
+   * @param {unknown} [params.cause] - The underlying cause of the error.
+   */
+  constructor({
+    name: name143,
+    message,
+    cause
+  }) {
+    super(message);
+    this[_a15] = true;
+    this.name = name143;
+    this.cause = cause;
+  }
+  /**
+   * Checks if the given error is an AI SDK Error.
+   * @param {unknown} error - The error to check.
+   * @returns {boolean} True if the error is an AI SDK Error, false otherwise.
+   */
+  static isInstance(error) {
+    return _AISDKError4.hasMarker(error, marker15);
+  }
+  static hasMarker(error, marker153) {
+    const markerSymbol = Symbol.for(marker153);
+    return error != null && typeof error === "object" && markerSymbol in error && typeof error[markerSymbol] === "boolean" && error[markerSymbol] === true;
+  }
+};
+_a15 = symbol15;
+var AISDKError2 = _AISDKError3;
+var name14 = "AI_APICallError";
+var marker22 = `vercel.ai.error.${name14}`;
+var symbol22 = Symbol.for(marker22);
+var _a22;
+var APICallError2 = class extends AISDKError2 {
+  constructor({
+    message,
+    url,
+    requestBodyValues,
+    statusCode,
+    responseHeaders,
+    responseBody,
+    cause,
+    isRetryable = statusCode != null && (statusCode === 408 || // request timeout
+    statusCode === 409 || // conflict
+    statusCode === 429 || // too many requests
+    statusCode >= 500),
+    // server error
+    data
+  }) {
+    super({ name: name14, message, cause });
+    this[_a22] = true;
+    this.url = url;
+    this.requestBodyValues = requestBodyValues;
+    this.statusCode = statusCode;
+    this.responseHeaders = responseHeaders;
+    this.responseBody = responseBody;
+    this.isRetryable = isRetryable;
+    this.data = data;
+  }
+  static isInstance(error) {
+    return AISDKError2.hasMarker(error, marker22);
+  }
+};
+_a22 = symbol22;
+var name22 = "AI_EmptyResponseBodyError";
+var marker32 = `vercel.ai.error.${name22}`;
+var symbol32 = Symbol.for(marker32);
+var _a32;
+_a32 = symbol32;
+function getErrorMessage2(error) {
+  if (error == null) {
+    return "unknown error";
+  }
+  if (typeof error === "string") {
+    return error;
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return JSON.stringify(error);
+}
+var name32 = "AI_InvalidArgumentError";
+var marker42 = `vercel.ai.error.${name32}`;
+var symbol42 = Symbol.for(marker42);
+var _a42;
+var InvalidArgumentError2 = class extends AISDKError2 {
+  constructor({
+    message,
+    cause,
+    argument
+  }) {
+    super({ name: name32, message, cause });
+    this[_a42] = true;
+    this.argument = argument;
+  }
+  static isInstance(error) {
+    return AISDKError2.hasMarker(error, marker42);
+  }
+};
+_a42 = symbol42;
+var name42 = "AI_InvalidPromptError";
+var marker52 = `vercel.ai.error.${name42}`;
+var symbol52 = Symbol.for(marker52);
+var _a52;
+var InvalidPromptError2 = class extends AISDKError2 {
+  constructor({
+    prompt,
+    message,
+    cause
+  }) {
+    super({ name: name42, message: `Invalid prompt: ${message}`, cause });
+    this[_a52] = true;
+    this.prompt = prompt;
+  }
+  static isInstance(error) {
+    return AISDKError2.hasMarker(error, marker52);
+  }
+};
+_a52 = symbol52;
+var name52 = "AI_InvalidResponseDataError";
+var marker62 = `vercel.ai.error.${name52}`;
+var symbol62 = Symbol.for(marker62);
+var _a62;
+_a62 = symbol62;
+var name62 = "AI_JSONParseError";
+var marker72 = `vercel.ai.error.${name62}`;
+var symbol72 = Symbol.for(marker72);
+var _a72;
+var JSONParseError2 = class extends AISDKError2 {
+  constructor({ text: text2, cause }) {
+    super({
+      name: name62,
+      message: `JSON parsing failed: Text: ${text2}.
+Error message: ${getErrorMessage2(cause)}`,
+      cause
+    });
+    this[_a72] = true;
+    this.text = text2;
+  }
+  static isInstance(error) {
+    return AISDKError2.hasMarker(error, marker72);
+  }
+};
+_a72 = symbol72;
+var name72 = "AI_LoadAPIKeyError";
+var marker82 = `vercel.ai.error.${name72}`;
+var symbol82 = Symbol.for(marker82);
+var _a82;
+_a82 = symbol82;
+var name82 = "AI_LoadSettingError";
+var marker92 = `vercel.ai.error.${name82}`;
+var symbol92 = Symbol.for(marker92);
+var _a92;
+_a92 = symbol92;
+var name92 = "AI_NoContentGeneratedError";
+var marker102 = `vercel.ai.error.${name92}`;
+var symbol102 = Symbol.for(marker102);
+var _a102;
+_a102 = symbol102;
+var name102 = "AI_NoSuchModelError";
+var marker112 = `vercel.ai.error.${name102}`;
+var symbol112 = Symbol.for(marker112);
+var _a112;
+_a112 = symbol112;
+var name112 = "AI_TooManyEmbeddingValuesForCallError";
+var marker122 = `vercel.ai.error.${name112}`;
+var symbol122 = Symbol.for(marker122);
+var _a122;
+_a122 = symbol122;
+var name122 = "AI_TypeValidationError";
+var marker132 = `vercel.ai.error.${name122}`;
+var symbol132 = Symbol.for(marker132);
+var _a132;
+var _TypeValidationError3 = class _TypeValidationError4 extends AISDKError2 {
+  constructor({ value, cause }) {
+    super({
+      name: name122,
+      message: `Type validation failed: Value: ${JSON.stringify(value)}.
+Error message: ${getErrorMessage2(cause)}`,
+      cause
+    });
+    this[_a132] = true;
+    this.value = value;
+  }
+  static isInstance(error) {
+    return AISDKError2.hasMarker(error, marker132);
+  }
+  /**
+   * Wraps an error into a TypeValidationError.
+   * If the cause is already a TypeValidationError with the same value, it returns the cause.
+   * Otherwise, it creates a new TypeValidationError.
+   *
+   * @param {Object} params - The parameters for wrapping the error.
+   * @param {unknown} params.value - The value that failed validation.
+   * @param {unknown} params.cause - The original error or cause of the validation failure.
+   * @returns {TypeValidationError} A TypeValidationError instance.
+   */
+  static wrap({
+    value,
+    cause
+  }) {
+    return _TypeValidationError4.isInstance(cause) && cause.value === value ? cause : new _TypeValidationError4({ value, cause });
+  }
+};
+_a132 = symbol132;
+var TypeValidationError2 = _TypeValidationError3;
+var name132 = "AI_UnsupportedFunctionalityError";
+var marker142 = `vercel.ai.error.${name132}`;
+var symbol142 = Symbol.for(marker142);
+var _a142;
+_a142 = symbol142;
+
+// node_modules/ai/node_modules/@ai-sdk/provider-utils/dist/index.mjs
+var import_secure_json_parse2 = __toESM(require_secure_json_parse(), 1);
+function convertAsyncIteratorToReadableStream(iterator) {
+  return new ReadableStream({
+    /**
+     * Called when the consumer wants to pull more data from the stream.
+     *
+     * @param {ReadableStreamDefaultController<T>} controller - The controller to enqueue data into the stream.
+     * @returns {Promise<void>}
+     */
+    async pull(controller) {
+      try {
+        const { value, done } = await iterator.next();
+        if (done) {
+          controller.close();
+        } else {
+          controller.enqueue(value);
+        }
+      } catch (error) {
+        controller.error(error);
+      }
+    },
+    /**
+     * Called when the consumer cancels the stream.
+     */
+    cancel() {
+    }
+  });
+}
+async function delay(delayInMs) {
+  return delayInMs == null ? Promise.resolve() : new Promise((resolve2) => setTimeout(resolve2, delayInMs));
+}
+var createIdGenerator2 = ({
+  prefix,
+  size: defaultSize = 16,
+  alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+  separator = "-"
+} = {}) => {
+  const generator = customAlphabet(alphabet, defaultSize);
+  if (prefix == null) {
+    return generator;
+  }
+  if (alphabet.includes(separator)) {
+    throw new InvalidArgumentError2({
+      argument: "separator",
+      message: `The separator "${separator}" must not be part of the alphabet "${alphabet}".`
+    });
+  }
+  return (size) => `${prefix}${separator}${generator(size)}`;
+};
+var generateId2 = createIdGenerator2();
+function getErrorMessage3(error) {
+  if (error == null) {
+    return "unknown error";
+  }
+  if (typeof error === "string") {
+    return error;
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return JSON.stringify(error);
+}
+function isAbortError2(error) {
+  return error instanceof Error && (error.name === "AbortError" || error.name === "TimeoutError");
+}
+var validatorSymbol2 = Symbol.for("vercel.ai.validator");
+function validator2(validate) {
+  return { [validatorSymbol2]: true, validate };
+}
+function isValidator2(value) {
+  return typeof value === "object" && value !== null && validatorSymbol2 in value && value[validatorSymbol2] === true && "validate" in value;
+}
+function asValidator2(value) {
+  return isValidator2(value) ? value : zodValidator2(value);
+}
+function zodValidator2(zodSchema2) {
+  return validator2((value) => {
+    const result = zodSchema2.safeParse(value);
+    return result.success ? { success: true, value: result.data } : { success: false, error: result.error };
+  });
+}
+function safeValidateTypes2({
+  value,
+  schema
+}) {
+  const validator22 = asValidator2(schema);
+  try {
+    if (validator22.validate == null) {
+      return { success: true, value };
+    }
+    const result = validator22.validate(value);
+    if (result.success) {
+      return result;
+    }
+    return {
+      success: false,
+      error: TypeValidationError2.wrap({ value, cause: result.error })
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: TypeValidationError2.wrap({ value, cause: error })
+    };
+  }
+}
+function safeParseJSON2({
+  text: text2,
+  schema
+}) {
+  try {
+    const value = import_secure_json_parse2.default.parse(text2);
+    if (schema == null) {
+      return { success: true, value, rawValue: value };
+    }
+    const validationResult = safeValidateTypes2({ value, schema });
+    return validationResult.success ? { ...validationResult, rawValue: value } : validationResult;
+  } catch (error) {
+    return {
+      success: false,
+      error: JSONParseError2.isInstance(error) ? error : new JSONParseError2({ text: text2, cause: error })
+    };
+  }
+}
+var { btoa: btoa2, atob: atob3 } = globalThis;
+function convertBase64ToUint8Array(base64String) {
+  const base64Url = base64String.replace(/-/g, "+").replace(/_/g, "/");
+  const latin1string = atob3(base64Url);
+  return Uint8Array.from(latin1string, (byte) => byte.codePointAt(0));
+}
+function convertUint8ArrayToBase642(array) {
+  let latin1string = "";
+  for (let i = 0; i < array.length; i++) {
+    latin1string += String.fromCodePoint(array[i]);
+  }
+  return btoa2(latin1string);
+}
+
+// node_modules/@ai-sdk/ui-utils/node_modules/@ai-sdk/provider/dist/index.mjs
+var marker16 = "vercel.ai.error";
+var symbol16 = Symbol.for(marker16);
+var _a16;
+var _AISDKError5 = class _AISDKError6 extends Error {
+  /**
+   * Creates an AI SDK Error.
+   *
+   * @param {Object} params - The parameters for creating the error.
+   * @param {string} params.name - The name of the error.
+   * @param {string} params.message - The error message.
+   * @param {unknown} [params.cause] - The underlying cause of the error.
+   */
+  constructor({
+    name: name143,
+    message,
+    cause
+  }) {
+    super(message);
+    this[_a16] = true;
+    this.name = name143;
+    this.cause = cause;
+  }
+  /**
+   * Checks if the given error is an AI SDK Error.
+   * @param {unknown} error - The error to check.
+   * @returns {boolean} True if the error is an AI SDK Error, false otherwise.
+   */
+  static isInstance(error) {
+    return _AISDKError6.hasMarker(error, marker16);
+  }
+  static hasMarker(error, marker153) {
+    const markerSymbol = Symbol.for(marker153);
+    return error != null && typeof error === "object" && markerSymbol in error && typeof error[markerSymbol] === "boolean" && error[markerSymbol] === true;
+  }
+};
+_a16 = symbol16;
+var AISDKError3 = _AISDKError5;
+var name15 = "AI_APICallError";
+var marker23 = `vercel.ai.error.${name15}`;
+var symbol23 = Symbol.for(marker23);
+var _a23;
+_a23 = symbol23;
+var name23 = "AI_EmptyResponseBodyError";
+var marker33 = `vercel.ai.error.${name23}`;
+var symbol33 = Symbol.for(marker33);
+var _a33;
+_a33 = symbol33;
+function getErrorMessage4(error) {
+  if (error == null) {
+    return "unknown error";
+  }
+  if (typeof error === "string") {
+    return error;
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return JSON.stringify(error);
+}
+var name33 = "AI_InvalidArgumentError";
+var marker43 = `vercel.ai.error.${name33}`;
+var symbol43 = Symbol.for(marker43);
+var _a43;
+var InvalidArgumentError3 = class extends AISDKError3 {
+  constructor({
+    message,
+    cause,
+    argument
+  }) {
+    super({ name: name33, message, cause });
+    this[_a43] = true;
+    this.argument = argument;
+  }
+  static isInstance(error) {
+    return AISDKError3.hasMarker(error, marker43);
+  }
+};
+_a43 = symbol43;
+var name43 = "AI_InvalidPromptError";
+var marker53 = `vercel.ai.error.${name43}`;
+var symbol53 = Symbol.for(marker53);
+var _a53;
+_a53 = symbol53;
+var name53 = "AI_InvalidResponseDataError";
+var marker63 = `vercel.ai.error.${name53}`;
+var symbol63 = Symbol.for(marker63);
+var _a63;
+_a63 = symbol63;
+var name63 = "AI_JSONParseError";
+var marker73 = `vercel.ai.error.${name63}`;
+var symbol73 = Symbol.for(marker73);
+var _a73;
+var JSONParseError3 = class extends AISDKError3 {
+  constructor({ text: text2, cause }) {
+    super({
+      name: name63,
+      message: `JSON parsing failed: Text: ${text2}.
+Error message: ${getErrorMessage4(cause)}`,
+      cause
+    });
+    this[_a73] = true;
+    this.text = text2;
+  }
+  static isInstance(error) {
+    return AISDKError3.hasMarker(error, marker73);
+  }
+};
+_a73 = symbol73;
+var name73 = "AI_LoadAPIKeyError";
+var marker83 = `vercel.ai.error.${name73}`;
+var symbol83 = Symbol.for(marker83);
+var _a83;
+_a83 = symbol83;
+var name83 = "AI_LoadSettingError";
+var marker93 = `vercel.ai.error.${name83}`;
+var symbol93 = Symbol.for(marker93);
+var _a93;
+_a93 = symbol93;
+var name93 = "AI_NoContentGeneratedError";
+var marker103 = `vercel.ai.error.${name93}`;
+var symbol103 = Symbol.for(marker103);
+var _a103;
+_a103 = symbol103;
+var name103 = "AI_NoSuchModelError";
+var marker113 = `vercel.ai.error.${name103}`;
+var symbol113 = Symbol.for(marker113);
+var _a113;
+_a113 = symbol113;
+var name113 = "AI_TooManyEmbeddingValuesForCallError";
+var marker123 = `vercel.ai.error.${name113}`;
+var symbol123 = Symbol.for(marker123);
+var _a123;
+_a123 = symbol123;
+var name123 = "AI_TypeValidationError";
+var marker133 = `vercel.ai.error.${name123}`;
+var symbol133 = Symbol.for(marker133);
+var _a133;
+var _TypeValidationError5 = class _TypeValidationError6 extends AISDKError3 {
+  constructor({ value, cause }) {
+    super({
+      name: name123,
+      message: `Type validation failed: Value: ${JSON.stringify(value)}.
+Error message: ${getErrorMessage4(cause)}`,
+      cause
+    });
+    this[_a133] = true;
+    this.value = value;
+  }
+  static isInstance(error) {
+    return AISDKError3.hasMarker(error, marker133);
+  }
+  /**
+   * Wraps an error into a TypeValidationError.
+   * If the cause is already a TypeValidationError with the same value, it returns the cause.
+   * Otherwise, it creates a new TypeValidationError.
+   *
+   * @param {Object} params - The parameters for wrapping the error.
+   * @param {unknown} params.value - The value that failed validation.
+   * @param {unknown} params.cause - The original error or cause of the validation failure.
+   * @returns {TypeValidationError} A TypeValidationError instance.
+   */
+  static wrap({
+    value,
+    cause
+  }) {
+    return _TypeValidationError6.isInstance(cause) && cause.value === value ? cause : new _TypeValidationError6({ value, cause });
+  }
+};
+_a133 = symbol133;
+var TypeValidationError3 = _TypeValidationError5;
+var name133 = "AI_UnsupportedFunctionalityError";
+var marker143 = `vercel.ai.error.${name133}`;
+var symbol143 = Symbol.for(marker143);
+var _a143;
+_a143 = symbol143;
+
+// node_modules/@ai-sdk/ui-utils/node_modules/@ai-sdk/provider-utils/dist/index.mjs
+var import_secure_json_parse3 = __toESM(require_secure_json_parse(), 1);
+var createIdGenerator3 = ({
+  prefix,
+  size: defaultSize = 16,
+  alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+  separator = "-"
+} = {}) => {
+  const generator = customAlphabet(alphabet, defaultSize);
+  if (prefix == null) {
+    return generator;
+  }
+  if (alphabet.includes(separator)) {
+    throw new InvalidArgumentError3({
+      argument: "separator",
+      message: `The separator "${separator}" must not be part of the alphabet "${alphabet}".`
+    });
+  }
+  return (size) => `${prefix}${separator}${generator(size)}`;
+};
+var generateId3 = createIdGenerator3();
+var validatorSymbol3 = Symbol.for("vercel.ai.validator");
+function validator3(validate) {
+  return { [validatorSymbol3]: true, validate };
+}
+function isValidator3(value) {
+  return typeof value === "object" && value !== null && validatorSymbol3 in value && value[validatorSymbol3] === true && "validate" in value;
+}
+function asValidator3(value) {
+  return isValidator3(value) ? value : zodValidator3(value);
+}
+function zodValidator3(zodSchema2) {
+  return validator3((value) => {
+    const result = zodSchema2.safeParse(value);
+    return result.success ? { success: true, value: result.data } : { success: false, error: result.error };
+  });
+}
+function safeValidateTypes3({
+  value,
+  schema
+}) {
+  const validator22 = asValidator3(schema);
+  try {
+    if (validator22.validate == null) {
+      return { success: true, value };
+    }
+    const result = validator22.validate(value);
+    if (result.success) {
+      return result;
+    }
+    return {
+      success: false,
+      error: TypeValidationError3.wrap({ value, cause: result.error })
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: TypeValidationError3.wrap({ value, cause: error })
+    };
+  }
+}
+function safeParseJSON3({
+  text: text2,
+  schema
+}) {
+  try {
+    const value = import_secure_json_parse3.default.parse(text2);
+    if (schema == null) {
+      return { success: true, value, rawValue: value };
+    }
+    const validationResult = safeValidateTypes3({ value, schema });
+    return validationResult.success ? { ...validationResult, rawValue: value } : validationResult;
+  } catch (error) {
+    return {
+      success: false,
+      error: JSONParseError3.isInstance(error) ? error : new JSONParseError3({ text: text2, cause: error })
+    };
+  }
+}
+var { btoa: btoa3, atob: atob4 } = globalThis;
 
 // node_modules/zod-to-json-schema/dist/esm/Options.js
 var ignoreOverride = Symbol("Let zodToJsonSchema decide on which parser to use");
@@ -7806,11 +8375,11 @@ function parsePartialJson(jsonText) {
   if (jsonText === void 0) {
     return { value: void 0, state: "undefined-input" };
   }
-  let result = safeParseJSON({ text: jsonText });
+  let result = safeParseJSON3({ text: jsonText });
   if (result.success) {
     return { value: result.value, state: "successful-parse" };
   }
-  result = safeParseJSON({ text: fixJson(jsonText) });
+  result = safeParseJSON3({ text: fixJson(jsonText) });
   if (result.success) {
     return { value: result.value, state: "repaired-parse" };
   }
@@ -8035,6 +8604,18 @@ var reasoningSignatureStreamPart = {
     };
   }
 };
+var fileStreamPart = {
+  code: "k",
+  name: "file",
+  parse: (value) => {
+    if (value == null || typeof value !== "object" || !("data" in value) || typeof value.data !== "string" || !("mimeType" in value) || typeof value.mimeType !== "string") {
+      throw new Error(
+        '"file" parts expect an object with a "data" and "mimeType" property.'
+      );
+    }
+    return { type: "file", value };
+  }
+};
 var dataStreamParts = [
   textStreamPart2,
   dataStreamPart,
@@ -8050,7 +8631,8 @@ var dataStreamParts = [
   reasoningStreamPart,
   sourcePart,
   redactedReasoningStreamPart,
-  reasoningSignatureStreamPart
+  reasoningSignatureStreamPart,
+  fileStreamPart
 ];
 var dataStreamPartsByCode = Object.fromEntries(
   dataStreamParts.map((part) => [part.code, part])
@@ -8070,8 +8652,8 @@ function formatDataStreamPart(type, value) {
 var NEWLINE = "\n".charCodeAt(0);
 var NEWLINE2 = "\n".charCodeAt(0);
 function zodSchema(zodSchema2, options) {
-  var _a17;
-  const useReferences = (_a17 = options == null ? void 0 : options.useReferences) != null ? _a17 : false;
+  var _a18;
+  const useReferences = (_a18 = options == null ? void 0 : options.useReferences) != null ? _a18 : false;
   return jsonSchema(
     esm_default(zodSchema2, {
       $refStrategy: useReferences ? "root" : "none",
@@ -8094,7 +8676,7 @@ function jsonSchema(jsonSchema2, {
     [schemaSymbol]: true,
     _type: void 0,
     // should never be used directly
-    [validatorSymbol]: true,
+    [validatorSymbol3]: true,
     jsonSchema: jsonSchema2,
     validate
   };
@@ -8184,11 +8766,11 @@ var major = VERSION.split(".")[0];
 var GLOBAL_OPENTELEMETRY_API_KEY = Symbol.for("opentelemetry.js.api." + major);
 var _global = _globalThis;
 function registerGlobal(type, instance, diag, allowOverride) {
-  var _a17;
+  var _a18;
   if (allowOverride === void 0) {
     allowOverride = false;
   }
-  var api = _global[GLOBAL_OPENTELEMETRY_API_KEY] = (_a17 = _global[GLOBAL_OPENTELEMETRY_API_KEY]) !== null && _a17 !== void 0 ? _a17 : {
+  var api = _global[GLOBAL_OPENTELEMETRY_API_KEY] = (_a18 = _global[GLOBAL_OPENTELEMETRY_API_KEY]) !== null && _a18 !== void 0 ? _a18 : {
     version: VERSION
   };
   if (!allowOverride && api[type]) {
@@ -8206,8 +8788,8 @@ function registerGlobal(type, instance, diag, allowOverride) {
   return true;
 }
 function getGlobal(type) {
-  var _a17, _b;
-  var globalVersion = (_a17 = _global[GLOBAL_OPENTELEMETRY_API_KEY]) === null || _a17 === void 0 ? void 0 : _a17.version;
+  var _a18, _b;
+  var globalVersion = (_a18 = _global[GLOBAL_OPENTELEMETRY_API_KEY]) === null || _a18 === void 0 ? void 0 : _a18.version;
   if (!globalVersion || !isCompatible(globalVersion)) {
     return;
   }
@@ -8384,13 +8966,13 @@ var DiagAPI = (
       }
       var self = this;
       var setLogger = function(logger, optionsOrLogLevel) {
-        var _a17, _b, _c;
+        var _a18, _b, _c;
         if (optionsOrLogLevel === void 0) {
           optionsOrLogLevel = { logLevel: DiagLogLevel.INFO };
         }
         if (logger === self) {
           var err = new Error("Cannot use diag as the logger for itself. Please use a DiagLogger implementation like ConsoleDiagLogger or a custom implementation");
-          self.error((_a17 = err.stack) !== null && _a17 !== void 0 ? _a17 : err.message);
+          self.error((_a18 = err.stack) !== null && _a18 !== void 0 ? _a18 : err.message);
           return false;
         }
         if (typeof optionsOrLogLevel === "number") {
@@ -8561,12 +9143,12 @@ var ContextAPI = (
       return this._getContextManager().active();
     };
     ContextAPI2.prototype.with = function(context, fn, thisArg) {
-      var _a17;
+      var _a18;
       var args = [];
       for (var _i = 3; _i < arguments.length; _i++) {
         args[_i - 3] = arguments[_i];
       }
-      return (_a17 = this._getContextManager()).with.apply(_a17, __spreadArray4([context, fn, thisArg], __read4(args), false));
+      return (_a18 = this._getContextManager()).with.apply(_a18, __spreadArray4([context, fn, thisArg], __read4(args), false));
     };
     ContextAPI2.prototype.bind = function(context, target) {
       return this._getContextManager().bind(context, target);
@@ -8661,8 +9243,8 @@ function setSpanContext(context, spanContext) {
   return setSpan(context, new NonRecordingSpan(spanContext));
 }
 function getSpanContext(context) {
-  var _a17;
-  return (_a17 = getSpan(context)) === null || _a17 === void 0 ? void 0 : _a17.spanContext();
+  var _a18;
+  return (_a18 = getSpan(context)) === null || _a18 === void 0 ? void 0 : _a18.spanContext();
 }
 
 // node_modules/@opentelemetry/api/build/esm/trace/spancontext-utils.js
@@ -8785,19 +9367,19 @@ var ProxyTracerProvider = (
     function ProxyTracerProvider2() {
     }
     ProxyTracerProvider2.prototype.getTracer = function(name17, version, options) {
-      var _a17;
-      return (_a17 = this.getDelegateTracer(name17, version, options)) !== null && _a17 !== void 0 ? _a17 : new ProxyTracer(this, name17, version, options);
+      var _a18;
+      return (_a18 = this.getDelegateTracer(name17, version, options)) !== null && _a18 !== void 0 ? _a18 : new ProxyTracer(this, name17, version, options);
     };
     ProxyTracerProvider2.prototype.getDelegate = function() {
-      var _a17;
-      return (_a17 = this._delegate) !== null && _a17 !== void 0 ? _a17 : NOOP_TRACER_PROVIDER;
+      var _a18;
+      return (_a18 = this._delegate) !== null && _a18 !== void 0 ? _a18 : NOOP_TRACER_PROVIDER;
     };
     ProxyTracerProvider2.prototype.setDelegate = function(delegate) {
       this._delegate = delegate;
     };
     ProxyTracerProvider2.prototype.getDelegateTracer = function(name17, version, options) {
-      var _a17;
-      return (_a17 = this._delegate) === null || _a17 === void 0 ? void 0 : _a17.getTracer(name17, version, options);
+      var _a18;
+      return (_a18 = this._delegate) === null || _a18 === void 0 ? void 0 : _a18.getTracer(name17, version, options);
     };
     return ProxyTracerProvider2;
   }()
@@ -8858,10 +9440,10 @@ var TraceAPI = (
 var trace = TraceAPI.getInstance();
 
 // node_modules/ai/dist/index.mjs
-var __defProp3 = Object.defineProperty;
+var __defProp2 = Object.defineProperty;
 var __export = (target, all) => {
   for (var name17 in all)
-    __defProp3(target, name17, { get: all[name17], enumerable: true });
+    __defProp2(target, name17, { get: all[name17], enumerable: true });
 };
 function prepareResponseHeaders(headers, {
   contentType,
@@ -8919,50 +9501,50 @@ function writeToServerResponse({
   };
   read();
 }
-var name14 = "AI_InvalidArgumentError";
-var marker15 = `vercel.ai.error.${name14}`;
-var symbol15 = Symbol.for(marker15);
-var _a15;
-var InvalidArgumentError2 = class extends AISDKError {
+var name16 = "AI_InvalidArgumentError";
+var marker17 = `vercel.ai.error.${name16}`;
+var symbol17 = Symbol.for(marker17);
+var _a17;
+var InvalidArgumentError4 = class extends AISDKError2 {
   constructor({
     parameter,
     value,
     message
   }) {
     super({
-      name: name14,
+      name: name16,
       message: `Invalid argument for parameter ${parameter}: ${message}`
     });
-    this[_a15] = true;
+    this[_a17] = true;
     this.parameter = parameter;
     this.value = value;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, marker15);
+    return AISDKError2.hasMarker(error, marker17);
   }
 };
-_a15 = symbol15;
-var name22 = "AI_RetryError";
-var marker22 = `vercel.ai.error.${name22}`;
-var symbol22 = Symbol.for(marker22);
-var _a22;
-var RetryError = class extends AISDKError {
+_a17 = symbol17;
+var name24 = "AI_RetryError";
+var marker24 = `vercel.ai.error.${name24}`;
+var symbol24 = Symbol.for(marker24);
+var _a24;
+var RetryError = class extends AISDKError2 {
   constructor({
     message,
     reason,
     errors
   }) {
-    super({ name: name22, message });
-    this[_a22] = true;
+    super({ name: name24, message });
+    this[_a24] = true;
     this.reason = reason;
     this.errors = errors;
     this.lastError = errors[errors.length - 1];
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, marker22);
+    return AISDKError2.hasMarker(error, marker24);
   }
 };
-_a22 = symbol22;
+_a24 = symbol24;
 var retryWithExponentialBackoff = ({
   maxRetries = 2,
   initialDelayInMs = 2e3,
@@ -8980,13 +9562,13 @@ async function _retryWithExponentialBackoff(f, {
   try {
     return await f();
   } catch (error) {
-    if (isAbortError(error)) {
+    if (isAbortError2(error)) {
       throw error;
     }
     if (maxRetries === 0) {
       throw error;
     }
-    const errorMessage = getErrorMessage2(error);
+    const errorMessage = getErrorMessage3(error);
     const newErrors = [...errors, error];
     const tryNumber = newErrors.length;
     if (tryNumber > maxRetries) {
@@ -8996,7 +9578,7 @@ async function _retryWithExponentialBackoff(f, {
         errors: newErrors
       });
     }
-    if (error instanceof Error && APICallError.isInstance(error) && error.isRetryable === true && tryNumber <= maxRetries) {
+    if (error instanceof Error && APICallError2.isInstance(error) && error.isRetryable === true && tryNumber <= maxRetries) {
       await delay(delayInMs);
       return _retryWithExponentialBackoff(
         f,
@@ -9019,14 +9601,14 @@ function prepareRetries({
 }) {
   if (maxRetries != null) {
     if (!Number.isInteger(maxRetries)) {
-      throw new InvalidArgumentError2({
+      throw new InvalidArgumentError4({
         parameter: "maxRetries",
         value: maxRetries,
         message: "maxRetries must be an integer"
       });
     }
     if (maxRetries < 0) {
-      throw new InvalidArgumentError2({
+      throw new InvalidArgumentError4({
         parameter: "maxRetries",
         value: maxRetries,
         message: "maxRetries must be >= 0"
@@ -9058,7 +9640,7 @@ function getBaseTelemetryAttributes({
   telemetry,
   headers
 }) {
-  var _a17;
+  var _a172;
   return {
     "ai.model.provider": model.provider,
     "ai.model.id": model.modelId,
@@ -9068,7 +9650,7 @@ function getBaseTelemetryAttributes({
       return attributes;
     }, {}),
     // add metadata as attributes:
-    ...Object.entries((_a17 = telemetry == null ? void 0 : telemetry.metadata) != null ? _a17 : {}).reduce(
+    ...Object.entries((_a172 = telemetry == null ? void 0 : telemetry.metadata) != null ? _a172 : {}).reduce(
       (attributes, [key, value]) => {
         attributes[`ai.telemetry.metadata.${key}`] = value;
         return attributes;
@@ -9216,16 +9798,128 @@ function selectTelemetryAttributes({
     return { ...attributes2, [key]: value };
   }, {});
 }
-var name32 = "AI_NoImageGeneratedError";
-var marker32 = `vercel.ai.error.${name32}`;
-var symbol32 = Symbol.for(marker32);
-var _a32;
-_a32 = symbol32;
-var name42 = "AI_NoObjectGeneratedError";
-var marker42 = `vercel.ai.error.${name42}`;
-var symbol42 = Symbol.for(marker42);
-var _a42;
-var NoObjectGeneratedError = class extends AISDKError {
+var name34 = "AI_NoImageGeneratedError";
+var marker34 = `vercel.ai.error.${name34}`;
+var symbol34 = Symbol.for(marker34);
+var _a34;
+_a34 = symbol34;
+var DefaultGeneratedFile = class {
+  constructor({
+    data,
+    mimeType
+  }) {
+    const isUint8Array = data instanceof Uint8Array;
+    this.base64Data = isUint8Array ? void 0 : data;
+    this.uint8ArrayData = isUint8Array ? data : void 0;
+    this.mimeType = mimeType;
+  }
+  // lazy conversion with caching to avoid unnecessary conversion overhead:
+  get base64() {
+    if (this.base64Data == null) {
+      this.base64Data = convertUint8ArrayToBase642(this.uint8ArrayData);
+    }
+    return this.base64Data;
+  }
+  // lazy conversion with caching to avoid unnecessary conversion overhead:
+  get uint8Array() {
+    if (this.uint8ArrayData == null) {
+      this.uint8ArrayData = convertBase64ToUint8Array(this.base64Data);
+    }
+    return this.uint8ArrayData;
+  }
+};
+var DefaultGeneratedFileWithType = class extends DefaultGeneratedFile {
+  constructor(options) {
+    super(options);
+    this.type = "file";
+  }
+};
+var mimeTypeSignatures = [
+  {
+    mimeType: "image/gif",
+    bytesPrefix: [71, 73, 70],
+    base64Prefix: "R0lG"
+  },
+  {
+    mimeType: "image/png",
+    bytesPrefix: [137, 80, 78, 71],
+    base64Prefix: "iVBORw"
+  },
+  {
+    mimeType: "image/jpeg",
+    bytesPrefix: [255, 216],
+    base64Prefix: "/9j/"
+  },
+  {
+    mimeType: "image/webp",
+    bytesPrefix: [82, 73, 70, 70],
+    base64Prefix: "UklGRg"
+  },
+  {
+    mimeType: "image/bmp",
+    bytesPrefix: [66, 77],
+    base64Prefix: "Qk"
+  },
+  {
+    mimeType: "image/tiff",
+    bytesPrefix: [73, 73, 42, 0],
+    base64Prefix: "SUkqAA"
+  },
+  {
+    mimeType: "image/tiff",
+    bytesPrefix: [77, 77, 0, 42],
+    base64Prefix: "TU0AKg"
+  },
+  {
+    mimeType: "image/avif",
+    bytesPrefix: [
+      0,
+      0,
+      0,
+      32,
+      102,
+      116,
+      121,
+      112,
+      97,
+      118,
+      105,
+      102
+    ],
+    base64Prefix: "AAAAIGZ0eXBhdmlm"
+  },
+  {
+    mimeType: "image/heic",
+    bytesPrefix: [
+      0,
+      0,
+      0,
+      32,
+      102,
+      116,
+      121,
+      112,
+      104,
+      101,
+      105,
+      99
+    ],
+    base64Prefix: "AAAAIGZ0eXBoZWlj"
+  }
+];
+function detectImageMimeType(image) {
+  for (const signature of mimeTypeSignatures) {
+    if (typeof image === "string" ? image.startsWith(signature.base64Prefix) : image.length >= signature.bytesPrefix.length && signature.bytesPrefix.every((byte, index) => image[index] === byte)) {
+      return signature.mimeType;
+    }
+  }
+  return void 0;
+}
+var name44 = "AI_NoObjectGeneratedError";
+var marker44 = `vercel.ai.error.${name44}`;
+var symbol44 = Symbol.for(marker44);
+var _a44;
+var NoObjectGeneratedError = class extends AISDKError2 {
   constructor({
     message = "No object generated.",
     cause,
@@ -9233,22 +9927,22 @@ var NoObjectGeneratedError = class extends AISDKError {
     response,
     usage
   }) {
-    super({ name: name42, message, cause });
-    this[_a42] = true;
+    super({ name: name44, message, cause });
+    this[_a44] = true;
     this.text = text2;
     this.response = response;
     this.usage = usage;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, marker42);
+    return AISDKError2.hasMarker(error, marker44);
   }
 };
-_a42 = symbol42;
-var name52 = "AI_DownloadError";
-var marker52 = `vercel.ai.error.${name52}`;
-var symbol52 = Symbol.for(marker52);
-var _a52;
-var DownloadError = class extends AISDKError {
+_a44 = symbol44;
+var name54 = "AI_DownloadError";
+var marker54 = `vercel.ai.error.${name54}`;
+var symbol54 = Symbol.for(marker54);
+var _a54;
+var DownloadError = class extends AISDKError2 {
   constructor({
     url,
     statusCode,
@@ -9256,22 +9950,22 @@ var DownloadError = class extends AISDKError {
     cause,
     message = cause == null ? `Failed to download ${url}: ${statusCode} ${statusText}` : `Failed to download ${url}: ${cause}`
   }) {
-    super({ name: name52, message, cause });
-    this[_a52] = true;
+    super({ name: name54, message, cause });
+    this[_a54] = true;
     this.url = url;
     this.statusCode = statusCode;
     this.statusText = statusText;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, marker52);
+    return AISDKError2.hasMarker(error, marker54);
   }
 };
-_a52 = symbol52;
+_a54 = symbol54;
 async function download({
   url,
   fetchImplementation = fetch
 }) {
-  var _a17;
+  var _a172;
   const urlText = url.toString();
   try {
     const response = await fetchImplementation(urlText);
@@ -9284,7 +9978,7 @@ async function download({
     }
     return {
       data: new Uint8Array(await response.arrayBuffer()),
-      mimeType: (_a17 = response.headers.get("content-type")) != null ? _a17 : void 0
+      mimeType: (_a172 = response.headers.get("content-type")) != null ? _a172 : void 0
     };
   } catch (error) {
     if (DownloadError.isInstance(error)) {
@@ -9293,39 +9987,25 @@ async function download({
     throw new DownloadError({ url: urlText, cause: error });
   }
 }
-var mimeTypeSignatures = [
-  { mimeType: "image/gif", bytes: [71, 73, 70] },
-  { mimeType: "image/png", bytes: [137, 80, 78, 71] },
-  { mimeType: "image/jpeg", bytes: [255, 216] },
-  { mimeType: "image/webp", bytes: [82, 73, 70, 70] }
-];
-function detectImageMimeType(image) {
-  for (const { bytes, mimeType } of mimeTypeSignatures) {
-    if (image.length >= bytes.length && bytes.every((byte, index) => image[index] === byte)) {
-      return mimeType;
-    }
-  }
-  return void 0;
-}
-var name62 = "AI_InvalidDataContentError";
-var marker62 = `vercel.ai.error.${name62}`;
-var symbol62 = Symbol.for(marker62);
-var _a62;
-var InvalidDataContentError = class extends AISDKError {
+var name64 = "AI_InvalidDataContentError";
+var marker64 = `vercel.ai.error.${name64}`;
+var symbol64 = Symbol.for(marker64);
+var _a64;
+var InvalidDataContentError = class extends AISDKError2 {
   constructor({
     content,
     cause,
     message = `Invalid data content. Expected a base64 string, Uint8Array, ArrayBuffer, or Buffer, but got ${typeof content}.`
   }) {
-    super({ name: name62, message, cause });
-    this[_a62] = true;
+    super({ name: name64, message, cause });
+    this[_a64] = true;
     this.content = content;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, marker62);
+    return AISDKError2.hasMarker(error, marker64);
   }
 };
-_a62 = symbol62;
+_a64 = symbol64;
 var dataContentSchema = z.union([
   z.string(),
   z.instanceof(Uint8Array),
@@ -9333,8 +10013,8 @@ var dataContentSchema = z.union([
   z.custom(
     // Buffer might not be available in some environments such as CloudFlare:
     (value) => {
-      var _a17, _b;
-      return (_b = (_a17 = globalThis.Buffer) == null ? void 0 : _a17.isBuffer(value)) != null ? _b : false;
+      var _a172, _b;
+      return (_b = (_a172 = globalThis.Buffer) == null ? void 0 : _a172.isBuffer(value)) != null ? _b : false;
     },
     { message: "Must be a Buffer" }
   )
@@ -9344,9 +10024,9 @@ function convertDataContentToBase64String(content) {
     return content;
   }
   if (content instanceof ArrayBuffer) {
-    return convertUint8ArrayToBase64(new Uint8Array(content));
+    return convertUint8ArrayToBase642(new Uint8Array(content));
   }
-  return convertUint8ArrayToBase64(content);
+  return convertUint8ArrayToBase642(content);
 }
 function convertDataContentToUint8Array(content) {
   if (content instanceof Uint8Array) {
@@ -9375,24 +10055,24 @@ function convertUint8ArrayToText(uint8Array) {
     throw new Error("Error decoding Uint8Array to text");
   }
 }
-var name72 = "AI_InvalidMessageRoleError";
-var marker72 = `vercel.ai.error.${name72}`;
-var symbol72 = Symbol.for(marker72);
-var _a72;
-var InvalidMessageRoleError = class extends AISDKError {
+var name74 = "AI_InvalidMessageRoleError";
+var marker74 = `vercel.ai.error.${name74}`;
+var symbol74 = Symbol.for(marker74);
+var _a74;
+var InvalidMessageRoleError = class extends AISDKError2 {
   constructor({
     role,
     message = `Invalid message role: '${role}'. Must be one of: "system", "user", "assistant", "tool".`
   }) {
-    super({ name: name72, message });
-    this[_a72] = true;
+    super({ name: name74, message });
+    this[_a74] = true;
     this.role = role;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, marker72);
+    return AISDKError2.hasMarker(error, marker74);
   }
 };
-_a72 = symbol72;
+_a74 = symbol74;
 function splitDataUrl(dataUrl) {
   try {
     const [header, base64Content] = dataUrl.split(",");
@@ -9427,14 +10107,14 @@ async function convertToLanguageModelPrompt({
   ];
 }
 function convertToLanguageModelMessage(message, downloadedAssets) {
-  var _a17, _b, _c, _d, _e, _f;
+  var _a172, _b, _c, _d, _e, _f;
   const role = message.role;
   switch (role) {
     case "system": {
       return {
         role: "system",
         content: message.content,
-        providerMetadata: (_a17 = message.providerOptions) != null ? _a17 : message.experimental_providerMetadata
+        providerMetadata: (_a172 = message.providerOptions) != null ? _a172 : message.experimental_providerMetadata
       };
     }
     case "user": {
@@ -9465,11 +10145,50 @@ function convertToLanguageModelMessage(message, downloadedAssets) {
           // remove empty text parts:
           (part) => part.type !== "text" || part.text !== ""
         ).map((part) => {
-          const { experimental_providerMetadata, providerOptions, ...rest } = part;
-          return {
-            ...rest,
-            providerMetadata: providerOptions != null ? providerOptions : experimental_providerMetadata
-          };
+          var _a18;
+          const providerOptions = (_a18 = part.providerOptions) != null ? _a18 : part.experimental_providerMetadata;
+          switch (part.type) {
+            case "file": {
+              return {
+                type: "file",
+                data: part.data instanceof URL ? part.data : convertDataContentToBase64String(part.data),
+                filename: part.filename,
+                mimeType: part.mimeType,
+                providerMetadata: providerOptions
+              };
+            }
+            case "reasoning": {
+              return {
+                type: "reasoning",
+                text: part.text,
+                signature: part.signature,
+                providerMetadata: providerOptions
+              };
+            }
+            case "redacted-reasoning": {
+              return {
+                type: "redacted-reasoning",
+                data: part.data,
+                providerMetadata: providerOptions
+              };
+            }
+            case "text": {
+              return {
+                type: "text",
+                text: part.text,
+                providerMetadata: providerOptions
+              };
+            }
+            case "tool-call": {
+              return {
+                type: "tool-call",
+                toolCallId: part.toolCallId,
+                toolName: part.toolName,
+                args: part.args,
+                providerMetadata: providerOptions
+              };
+            }
+          }
         }),
         providerMetadata: (_e = message.providerOptions) != null ? _e : message.experimental_providerMetadata
       };
@@ -9522,12 +10241,12 @@ async function downloadAssets(messages, downloadImplementation, modelSupportsIma
   );
 }
 function convertPartToLanguageModelPart(part, downloadedAssets) {
-  var _a17, _b, _c, _d;
+  var _a172, _b, _c, _d;
   if (part.type === "text") {
     return {
       type: "text",
       text: part.text,
-      providerMetadata: (_a17 = part.providerOptions) != null ? _a17 : part.experimental_providerMetadata
+      providerMetadata: (_a172 = part.providerOptions) != null ? _a172 : part.experimental_providerMetadata
     };
   }
   let mimeType = part.mimeType;
@@ -9610,14 +10329,14 @@ function prepareCallSettings({
 }) {
   if (maxTokens != null) {
     if (!Number.isInteger(maxTokens)) {
-      throw new InvalidArgumentError2({
+      throw new InvalidArgumentError4({
         parameter: "maxTokens",
         value: maxTokens,
         message: "maxTokens must be an integer"
       });
     }
     if (maxTokens < 1) {
-      throw new InvalidArgumentError2({
+      throw new InvalidArgumentError4({
         parameter: "maxTokens",
         value: maxTokens,
         message: "maxTokens must be >= 1"
@@ -9626,7 +10345,7 @@ function prepareCallSettings({
   }
   if (temperature != null) {
     if (typeof temperature !== "number") {
-      throw new InvalidArgumentError2({
+      throw new InvalidArgumentError4({
         parameter: "temperature",
         value: temperature,
         message: "temperature must be a number"
@@ -9635,7 +10354,7 @@ function prepareCallSettings({
   }
   if (topP != null) {
     if (typeof topP !== "number") {
-      throw new InvalidArgumentError2({
+      throw new InvalidArgumentError4({
         parameter: "topP",
         value: topP,
         message: "topP must be a number"
@@ -9644,7 +10363,7 @@ function prepareCallSettings({
   }
   if (topK != null) {
     if (typeof topK !== "number") {
-      throw new InvalidArgumentError2({
+      throw new InvalidArgumentError4({
         parameter: "topK",
         value: topK,
         message: "topK must be a number"
@@ -9653,7 +10372,7 @@ function prepareCallSettings({
   }
   if (presencePenalty != null) {
     if (typeof presencePenalty !== "number") {
-      throw new InvalidArgumentError2({
+      throw new InvalidArgumentError4({
         parameter: "presencePenalty",
         value: presencePenalty,
         message: "presencePenalty must be a number"
@@ -9662,7 +10381,7 @@ function prepareCallSettings({
   }
   if (frequencyPenalty != null) {
     if (typeof frequencyPenalty !== "number") {
-      throw new InvalidArgumentError2({
+      throw new InvalidArgumentError4({
         parameter: "frequencyPenalty",
         value: frequencyPenalty,
         message: "frequencyPenalty must be a number"
@@ -9671,7 +10390,7 @@ function prepareCallSettings({
   }
   if (seed != null) {
     if (!Number.isInteger(seed)) {
-      throw new InvalidArgumentError2({
+      throw new InvalidArgumentError4({
         parameter: "seed",
         value: seed,
         message: "seed must be an integer"
@@ -9691,7 +10410,7 @@ function prepareCallSettings({
   };
 }
 function attachmentsToParts(attachments) {
-  var _a17, _b, _c;
+  var _a172, _b, _c;
   const parts = [];
   for (const attachment of attachments) {
     let url;
@@ -9703,7 +10422,7 @@ function attachmentsToParts(attachments) {
     switch (url.protocol) {
       case "http:":
       case "https:": {
-        if ((_a17 = attachment.contentType) == null ? void 0 : _a17.startsWith("image/")) {
+        if ((_a172 = attachment.contentType) == null ? void 0 : _a172.startsWith("image/")) {
           parts.push({ type: "image", image: url });
         } else {
           if (!attachment.contentType) {
@@ -9765,27 +10484,27 @@ function attachmentsToParts(attachments) {
   }
   return parts;
 }
-var name82 = "AI_MessageConversionError";
-var marker82 = `vercel.ai.error.${name82}`;
-var symbol82 = Symbol.for(marker82);
-var _a82;
-var MessageConversionError = class extends AISDKError {
+var name84 = "AI_MessageConversionError";
+var marker84 = `vercel.ai.error.${name84}`;
+var symbol84 = Symbol.for(marker84);
+var _a84;
+var MessageConversionError = class extends AISDKError2 {
   constructor({
     originalMessage,
     message
   }) {
-    super({ name: name82, message });
-    this[_a82] = true;
+    super({ name: name84, message });
+    this[_a84] = true;
     this.originalMessage = originalMessage;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, marker82);
+    return AISDKError2.hasMarker(error, marker84);
   }
 };
-_a82 = symbol82;
+_a84 = symbol84;
 function convertToCoreMessages(messages, options) {
-  var _a17, _b;
-  const tools = (_a17 = options == null ? void 0 : options.tools) != null ? _a17 : {};
+  var _a172, _b;
+  const tools = (_a172 = options == null ? void 0 : options.tools) != null ? _a172 : {};
   const coreMessages = [];
   for (let i = 0; i < messages.length; i++) {
     const message = messages[i];
@@ -9800,13 +10519,24 @@ function convertToCoreMessages(messages, options) {
         break;
       }
       case "user": {
-        coreMessages.push({
-          role: "user",
-          content: experimental_attachments ? [
-            { type: "text", text: content },
-            ...attachmentsToParts(experimental_attachments)
-          ] : content
-        });
+        if (message.parts == null) {
+          coreMessages.push({
+            role: "user",
+            content: experimental_attachments ? [
+              { type: "text", text: content },
+              ...attachmentsToParts(experimental_attachments)
+            ] : content
+          });
+        } else {
+          const textParts = message.parts.filter((part) => part.type === "text").map((part) => ({
+            type: "text",
+            text: part.text
+          }));
+          coreMessages.push({
+            role: "user",
+            content: experimental_attachments ? [...textParts, ...attachmentsToParts(experimental_attachments)] : textParts
+          });
+        }
         break;
       }
       case "assistant": {
@@ -9815,12 +10545,11 @@ function convertToCoreMessages(messages, options) {
             const content2 = [];
             for (const part of block) {
               switch (part.type) {
-                case "text":
-                  content2.push({
-                    type: "text",
-                    text: part.text
-                  });
+                case "file":
+                case "text": {
+                  content2.push(part);
                   break;
+                }
                 case "reasoning": {
                   for (const detail of part.details) {
                     switch (detail.type) {
@@ -9901,13 +10630,15 @@ function convertToCoreMessages(messages, options) {
           let block = [];
           for (const part of message.parts) {
             switch (part.type) {
-              case "reasoning":
-                block.push(part);
-                break;
               case "text": {
                 if (blockHasToolInvocations) {
                   processBlock2();
                 }
+                block.push(part);
+                break;
+              }
+              case "file":
+              case "reasoning": {
                 block.push(part);
                 break;
               }
@@ -10024,6 +10755,7 @@ function detectSingleMessageCharacteristics(message) {
   if (typeof message === "object" && message !== null && (message.role === "function" || // UI-only role
   message.role === "data" || // UI-only role
   "toolInvocations" in message || // UI-specific field
+  "parts" in message || // UI-specific field
   "experimental_attachments" in message)) {
     return "has-ui-specific-parts";
   } else if (typeof message === "object" && message !== null && "content" in message && (Array.isArray(message.content) || // Core messages can have array content
@@ -10132,6 +10864,7 @@ var coreAssistantMessageSchema = z.object({
     z.array(
       z.union([
         textPartSchema,
+        filePartSchema,
         reasoningPartSchema,
         redactedReasoningPartSchema,
         toolCallPartSchema
@@ -10158,26 +10891,26 @@ function standardizePrompt({
   tools
 }) {
   if (prompt.prompt == null && prompt.messages == null) {
-    throw new InvalidPromptError({
+    throw new InvalidPromptError2({
       prompt,
       message: "prompt or messages must be defined"
     });
   }
   if (prompt.prompt != null && prompt.messages != null) {
-    throw new InvalidPromptError({
+    throw new InvalidPromptError2({
       prompt,
       message: "prompt and messages cannot be defined at the same time"
     });
   }
   if (prompt.system != null && typeof prompt.system !== "string") {
-    throw new InvalidPromptError({
+    throw new InvalidPromptError2({
       prompt,
       message: "system must be a string"
     });
   }
   if (prompt.prompt != null) {
     if (typeof prompt.prompt !== "string") {
-      throw new InvalidPromptError({
+      throw new InvalidPromptError2({
         prompt,
         message: "prompt must be a string"
       });
@@ -10196,7 +10929,7 @@ function standardizePrompt({
   if (prompt.messages != null) {
     const promptType = detectPromptType(prompt.messages);
     if (promptType === "other") {
-      throw new InvalidPromptError({
+      throw new InvalidPromptError2({
         prompt,
         message: "messages must be an array of CoreMessage or UIMessage"
       });
@@ -10204,12 +10937,18 @@ function standardizePrompt({
     const messages = promptType === "ui-messages" ? convertToCoreMessages(prompt.messages, {
       tools
     }) : prompt.messages;
-    const validationResult = safeValidateTypes({
+    if (messages.length === 0) {
+      throw new InvalidPromptError2({
+        prompt,
+        message: "messages must not be empty"
+      });
+    }
+    const validationResult = safeValidateTypes2({
       value: messages,
       schema: z.array(coreMessageSchema)
     });
     if (!validationResult.success) {
-      throw new InvalidPromptError({
+      throw new InvalidPromptError2({
         prompt,
         message: "messages must be an array of CoreMessage or UIMessage",
         cause: validationResult.error
@@ -10271,7 +11010,7 @@ function createAsyncIterableStream(source) {
   };
   return stream;
 }
-var originalGenerateId = createIdGenerator({ prefix: "aiobj", size: 24 });
+var originalGenerateId = createIdGenerator2({ prefix: "aiobj", size: 24 });
 var DelayedPromise = class {
   constructor() {
     this.status = { type: "pending" };
@@ -10294,17 +11033,17 @@ var DelayedPromise = class {
     return this.promise;
   }
   resolve(value) {
-    var _a17;
+    var _a172;
     this.status = { type: "resolved", value };
     if (this.promise) {
-      (_a17 = this._resolve) == null ? void 0 : _a17.call(this, value);
+      (_a172 = this._resolve) == null ? void 0 : _a172.call(this, value);
     }
   }
   reject(error) {
-    var _a17;
+    var _a172;
     this.status = { type: "rejected", error };
     if (this.promise) {
-      (_a17 = this._reject) == null ? void 0 : _a17.call(this, error);
+      (_a172 = this._reject) == null ? void 0 : _a172.call(this, error);
     }
   }
 };
@@ -10402,48 +11141,48 @@ function createStitchableStream() {
   };
 }
 function now() {
-  var _a17, _b;
-  return (_b = (_a17 = globalThis == null ? void 0 : globalThis.performance) == null ? void 0 : _a17.now()) != null ? _b : Date.now();
+  var _a172, _b;
+  return (_b = (_a172 = globalThis == null ? void 0 : globalThis.performance) == null ? void 0 : _a172.now()) != null ? _b : Date.now();
 }
-var originalGenerateId2 = createIdGenerator({ prefix: "aiobj", size: 24 });
-var name92 = "AI_NoOutputSpecifiedError";
-var marker92 = `vercel.ai.error.${name92}`;
-var symbol92 = Symbol.for(marker92);
-var _a92;
-var NoOutputSpecifiedError = class extends AISDKError {
+var originalGenerateId2 = createIdGenerator2({ prefix: "aiobj", size: 24 });
+var name94 = "AI_NoOutputSpecifiedError";
+var marker94 = `vercel.ai.error.${name94}`;
+var symbol94 = Symbol.for(marker94);
+var _a94;
+var NoOutputSpecifiedError = class extends AISDKError2 {
   // used in isInstance
   constructor({ message = "No output specified." } = {}) {
-    super({ name: name92, message });
-    this[_a92] = true;
+    super({ name: name94, message });
+    this[_a94] = true;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, marker92);
+    return AISDKError2.hasMarker(error, marker94);
   }
 };
-_a92 = symbol92;
-var name102 = "AI_ToolExecutionError";
-var marker102 = `vercel.ai.error.${name102}`;
-var symbol102 = Symbol.for(marker102);
-var _a102;
-var ToolExecutionError = class extends AISDKError {
+_a94 = symbol94;
+var name104 = "AI_ToolExecutionError";
+var marker104 = `vercel.ai.error.${name104}`;
+var symbol104 = Symbol.for(marker104);
+var _a104;
+var ToolExecutionError = class extends AISDKError2 {
   constructor({
     toolArgs,
     toolName,
     toolCallId,
     cause,
-    message = `Error executing tool ${toolName}: ${getErrorMessage(cause)}`
+    message = `Error executing tool ${toolName}: ${getErrorMessage2(cause)}`
   }) {
-    super({ name: name102, message, cause });
-    this[_a102] = true;
+    super({ name: name104, message, cause });
+    this[_a104] = true;
     this.toolArgs = toolArgs;
     this.toolName = toolName;
     this.toolCallId = toolCallId;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, marker102);
+    return AISDKError2.hasMarker(error, marker104);
   }
 };
-_a102 = symbol102;
+_a104 = symbol104;
 function isNonEmptyObject(object2) {
   return object2 != null && Object.keys(object2).length > 0;
 }
@@ -10494,68 +11233,68 @@ function splitOnLastWhitespace(text2) {
   const match = text2.match(lastWhitespaceRegexp);
   return match ? { prefix: match[1], whitespace: match[2], suffix: match[3] } : void 0;
 }
-var name112 = "AI_InvalidToolArgumentsError";
-var marker112 = `vercel.ai.error.${name112}`;
-var symbol112 = Symbol.for(marker112);
-var _a112;
-var InvalidToolArgumentsError = class extends AISDKError {
+var name114 = "AI_InvalidToolArgumentsError";
+var marker114 = `vercel.ai.error.${name114}`;
+var symbol114 = Symbol.for(marker114);
+var _a114;
+var InvalidToolArgumentsError = class extends AISDKError2 {
   constructor({
     toolArgs,
     toolName,
     cause,
-    message = `Invalid arguments for tool ${toolName}: ${getErrorMessage(
+    message = `Invalid arguments for tool ${toolName}: ${getErrorMessage2(
       cause
     )}`
   }) {
-    super({ name: name112, message, cause });
-    this[_a112] = true;
+    super({ name: name114, message, cause });
+    this[_a114] = true;
     this.toolArgs = toolArgs;
     this.toolName = toolName;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, marker112);
+    return AISDKError2.hasMarker(error, marker114);
   }
 };
-_a112 = symbol112;
-var name122 = "AI_NoSuchToolError";
-var marker122 = `vercel.ai.error.${name122}`;
-var symbol122 = Symbol.for(marker122);
-var _a122;
-var NoSuchToolError = class extends AISDKError {
+_a114 = symbol114;
+var name124 = "AI_NoSuchToolError";
+var marker124 = `vercel.ai.error.${name124}`;
+var symbol124 = Symbol.for(marker124);
+var _a124;
+var NoSuchToolError = class extends AISDKError2 {
   constructor({
     toolName,
     availableTools = void 0,
     message = `Model tried to call unavailable tool '${toolName}'. ${availableTools === void 0 ? "No tools are available." : `Available tools: ${availableTools.join(", ")}.`}`
   }) {
-    super({ name: name122, message });
-    this[_a122] = true;
+    super({ name: name124, message });
+    this[_a124] = true;
     this.toolName = toolName;
     this.availableTools = availableTools;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, marker122);
+    return AISDKError2.hasMarker(error, marker124);
   }
 };
-_a122 = symbol122;
-var name132 = "AI_ToolCallRepairError";
-var marker132 = `vercel.ai.error.${name132}`;
-var symbol132 = Symbol.for(marker132);
-var _a132;
-var ToolCallRepairError = class extends AISDKError {
+_a124 = symbol124;
+var name134 = "AI_ToolCallRepairError";
+var marker134 = `vercel.ai.error.${name134}`;
+var symbol134 = Symbol.for(marker134);
+var _a134;
+var ToolCallRepairError = class extends AISDKError2 {
   constructor({
     cause,
     originalError,
-    message = `Error repairing tool call: ${getErrorMessage(cause)}`
+    message = `Error repairing tool call: ${getErrorMessage2(cause)}`
   }) {
-    super({ name: name132, message, cause });
-    this[_a132] = true;
+    super({ name: name134, message, cause });
+    this[_a134] = true;
     this.originalError = originalError;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, marker132);
+    return AISDKError2.hasMarker(error, marker134);
   }
 };
-_a132 = symbol132;
+_a134 = symbol134;
 async function parseToolCall({
   toolCall,
   tools,
@@ -10607,7 +11346,7 @@ async function doParseToolCall({
     });
   }
   const schema = asSchema(tool2.parameters);
-  const parseResult = toolCall.args.trim() === "" ? safeValidateTypes({ value: {}, schema }) : safeParseJSON({ text: toolCall.args, schema });
+  const parseResult = toolCall.args.trim() === "" ? safeValidateTypes2({ value: {}, schema }) : safeParseJSON2({ text: toolCall.args, schema });
   if (parseResult.success === false) {
     throw new InvalidToolArgumentsError({
       toolName,
@@ -10628,6 +11367,7 @@ function asReasoningText(reasoning) {
 }
 function toResponseMessages({
   text: text2 = "",
+  files,
   reasoning,
   tools,
   toolCalls,
@@ -10642,6 +11382,12 @@ function toResponseMessages({
       ...reasoning.map(
         (part) => part.type === "text" ? { ...part, type: "reasoning" } : { ...part, type: "redacted-reasoning" }
       ),
+      // TODO language model v2: switch to order response content (instead of type-based ordering)
+      ...files.map((file) => ({
+        type: "file",
+        data: file.base64,
+        mimeType: file.mimeType
+      })),
       { type: "text", text: text2 },
       ...toolCalls
     ],
@@ -10672,11 +11418,11 @@ function toResponseMessages({
   }
   return responseMessages;
 }
-var originalGenerateId3 = createIdGenerator({
+var originalGenerateId3 = createIdGenerator2({
   prefix: "aitxt",
   size: 24
 });
-var originalGenerateMessageId = createIdGenerator({
+var originalGenerateMessageId = createIdGenerator2({
   prefix: "msg",
   size: 24
 });
@@ -10686,25 +11432,25 @@ __export(output_exports, {
   text: () => text
 });
 var name142 = "AI_InvalidStreamPartError";
-var marker142 = `vercel.ai.error.${name142}`;
-var symbol142 = Symbol.for(marker142);
-var _a142;
-var InvalidStreamPartError = class extends AISDKError {
+var marker144 = `vercel.ai.error.${name142}`;
+var symbol144 = Symbol.for(marker144);
+var _a144;
+var InvalidStreamPartError = class extends AISDKError2 {
   constructor({
     chunk,
     message
   }) {
     super({ name: name142, message });
-    this[_a142] = true;
+    this[_a144] = true;
     this.chunk = chunk;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, marker142);
+    return AISDKError2.hasMarker(error, marker144);
   }
 };
-_a142 = symbol142;
-var name15 = "AI_MCPClientError";
-var marker152 = `vercel.ai.error.${name15}`;
+_a144 = symbol144;
+var name152 = "AI_MCPClientError";
+var marker152 = `vercel.ai.error.${name152}`;
 var symbol152 = Symbol.for(marker152);
 var _a152;
 _a152 = symbol152;
@@ -10756,7 +11502,7 @@ var object = ({
       }
     },
     parseOutput({ text: text2 }, context) {
-      const parseResult = safeParseJSON({ text: text2 });
+      const parseResult = safeParseJSON2({ text: text2 });
       if (!parseResult.success) {
         throw new NoObjectGeneratedError({
           message: "No object generated: could not parse the response.",
@@ -10766,7 +11512,7 @@ var object = ({
           usage: context.usage
         });
       }
-      const validationResult = safeValidateTypes({
+      const validationResult = safeValidateTypes2({
         value: parseResult.value,
         schema
       });
@@ -10915,6 +11661,15 @@ function runToolsTransformation({
           controller.enqueue(chunk);
           break;
         }
+        case "file": {
+          controller.enqueue(
+            new DefaultGeneratedFileWithType({
+              data: chunk.data,
+              mimeType: chunk.mimeType
+            })
+          );
+          break;
+        }
         case "tool-call-delta": {
           if (toolCallStreaming) {
             if (!activeToolCalls[chunk.toolCallId]) {
@@ -10946,7 +11701,7 @@ function runToolsTransformation({
             controller.enqueue(toolCall);
             const tool2 = tools[toolCall.toolName];
             if (tool2.execute != null) {
-              const toolExecutionId = generateId();
+              const toolExecutionId = generateId3();
               outstandingToolResults.add(toolExecutionId);
               recordSpan({
                 name: "ai.toolCall",
@@ -11063,11 +11818,11 @@ function runToolsTransformation({
     }
   });
 }
-var originalGenerateId4 = createIdGenerator({
+var originalGenerateId4 = createIdGenerator2({
   prefix: "aitxt",
   size: 24
 });
-var originalGenerateMessageId2 = createIdGenerator({
+var originalGenerateMessageId2 = createIdGenerator2({
   prefix: "msg",
   size: 24
 });
@@ -11099,7 +11854,7 @@ function streamText({
   onStepFinish,
   _internal: {
     now: now2 = now,
-    generateId: generateId3 = originalGenerateId4,
+    generateId: generateId32 = originalGenerateId4,
     currentDate = () => /* @__PURE__ */ new Date()
   } = {},
   ...settings
@@ -11130,7 +11885,7 @@ function streamText({
     onStepFinish,
     now: now2,
     currentDate,
-    generateId: generateId3,
+    generateId: generateId32,
     generateMessageId
   });
 }
@@ -11205,7 +11960,7 @@ var DefaultStreamTextResult = class {
     providerOptions,
     now: now2,
     currentDate,
-    generateId: generateId3,
+    generateId: generateId32,
     generateMessageId,
     onChunk,
     onError,
@@ -11220,14 +11975,15 @@ var DefaultStreamTextResult = class {
     this.reasoningPromise = new DelayedPromise();
     this.reasoningDetailsPromise = new DelayedPromise();
     this.sourcesPromise = new DelayedPromise();
+    this.filesPromise = new DelayedPromise();
     this.toolCallsPromise = new DelayedPromise();
     this.toolResultsPromise = new DelayedPromise();
     this.requestPromise = new DelayedPromise();
     this.responsePromise = new DelayedPromise();
     this.stepsPromise = new DelayedPromise();
-    var _a17;
+    var _a172;
     if (maxSteps < 1) {
-      throw new InvalidArgumentError2({
+      throw new InvalidArgumentError4({
         parameter: "maxSteps",
         value: maxSteps,
         message: "maxSteps must be at least 1"
@@ -11238,11 +11994,12 @@ var DefaultStreamTextResult = class {
     let recordedContinuationText = "";
     let recordedFullText = "";
     let stepReasoning = [];
+    let stepFiles = [];
     let activeReasoningText = void 0;
     let recordedStepSources = [];
     const recordedSources = [];
     const recordedResponse = {
-      id: generateId3(),
+      id: generateId32(),
       timestamp: currentDate(),
       modelId: model.modelId,
       messages: []
@@ -11279,7 +12036,7 @@ var DefaultStreamTextResult = class {
         }
         if (part.type === "reasoning-signature") {
           if (activeReasoningText == null) {
-            throw new AISDKError({
+            throw new AISDKError2({
               name: "InvalidStreamPart",
               message: "reasoning-signature without reasoning"
             });
@@ -11289,6 +12046,9 @@ var DefaultStreamTextResult = class {
         }
         if (part.type === "redacted-reasoning") {
           stepReasoning.push({ type: "redacted", data: part.data });
+        }
+        if (part.type === "file") {
+          stepFiles.push(part);
         }
         if (part.type === "source") {
           recordedSources.push(part.source);
@@ -11303,6 +12063,7 @@ var DefaultStreamTextResult = class {
         if (part.type === "step-finish") {
           const stepMessages = toResponseMessages({
             text: recordedContinuationText,
+            files: stepFiles,
             reasoning: stepReasoning,
             tools: tools != null ? tools : {},
             toolCalls: recordedToolCalls,
@@ -11329,6 +12090,7 @@ var DefaultStreamTextResult = class {
             text: recordedStepText,
             reasoning: asReasoningText(stepReasoning),
             reasoningDetails: stepReasoning,
+            files: stepFiles,
             sources: recordedStepSources,
             toolCalls: recordedToolCalls,
             toolResults: recordedToolResults,
@@ -11352,6 +12114,7 @@ var DefaultStreamTextResult = class {
           recordedStepText = "";
           recordedStepSources = [];
           stepReasoning = [];
+          stepFiles = [];
           activeReasoningText = void 0;
           if (nextStepType !== "done") {
             stepType = nextStepType;
@@ -11397,6 +12160,7 @@ var DefaultStreamTextResult = class {
           self.usagePromise.resolve(usage);
           self.textPromise.resolve(recordedFullText);
           self.sourcesPromise.resolve(recordedSources);
+          self.filesPromise.resolve(lastStep.files);
           self.stepsPromise.resolve(recordedSteps);
           await (onFinish == null ? void 0 : onFinish({
             finishReason,
@@ -11405,6 +12169,7 @@ var DefaultStreamTextResult = class {
             text: recordedFullText,
             reasoning: lastStep.reasoning,
             reasoningDetails: lastStep.reasoningDetails,
+            files: lastStep.files,
             sources: lastStep.sources,
             toolCalls: lastStep.toolCalls,
             toolResults: lastStep.toolResults,
@@ -11466,7 +12231,7 @@ var DefaultStreamTextResult = class {
     });
     const initialPrompt = standardizePrompt({
       prompt: {
-        system: (_a17 = output == null ? void 0 : output.injectIntoSystemPrompt({ system, model })) != null ? _a17 : system,
+        system: (_a172 = output == null ? void 0 : output.injectIntoSystemPrompt({ system, model })) != null ? _a172 : system,
         prompt,
         messages
       },
@@ -11597,6 +12362,7 @@ var DefaultStreamTextResult = class {
           const stepToolCalls = [];
           const stepToolResults = [];
           const stepReasoning2 = [];
+          const stepFiles2 = [];
           let activeReasoningText2 = void 0;
           let stepFinishReason = "unknown";
           let stepUsage = {
@@ -11610,7 +12376,7 @@ var DefaultStreamTextResult = class {
           let fullStepText = stepType2 === "continue" ? previousStepText : "";
           let stepLogProbs;
           let stepResponse = {
-            id: generateId3(),
+            id: generateId32(),
             timestamp: currentDate(),
             modelId: model.modelId
           };
@@ -11742,6 +12508,11 @@ var DefaultStreamTextResult = class {
                       });
                       break;
                     }
+                    case "file": {
+                      stepFiles2.push(chunk);
+                      controller.enqueue(chunk);
+                      break;
+                    }
                     case "source":
                     case "tool-call-streaming-start":
                     case "tool-call-delta": {
@@ -11860,6 +12631,7 @@ var DefaultStreamTextResult = class {
                       responseMessages.push(
                         ...toResponseMessages({
                           text: stepText,
+                          files: stepFiles2,
                           reasoning: stepReasoning2,
                           tools: tools != null ? tools : {},
                           toolCalls: stepToolCalls,
@@ -11939,6 +12711,9 @@ var DefaultStreamTextResult = class {
   }
   get sources() {
     return this.sourcesPromise.value;
+  }
+  get files() {
+    return this.filesPromise.value;
   }
   get toolCalls() {
     return this.toolCallsPromise.value;
@@ -12056,6 +12831,15 @@ var DefaultStreamTextResult = class {
                   })
                 );
               }
+              break;
+            }
+            case "file": {
+              controller.enqueue(
+                formatDataStreamPart("file", {
+                  mimeType: chunk.mimeType,
+                  data: chunk.base64
+                })
+              );
               break;
             }
             case "source": {
@@ -12246,21 +13030,20 @@ var DefaultStreamTextResult = class {
     );
   }
   toTextStreamResponse(init) {
-    var _a17;
+    var _a172;
     return new Response(this.textStream.pipeThrough(new TextEncoderStream()), {
-      status: (_a17 = init == null ? void 0 : init.status) != null ? _a17 : 200,
+      status: (_a172 = init == null ? void 0 : init.status) != null ? _a172 : 200,
       headers: prepareResponseHeaders(init == null ? void 0 : init.headers, {
         contentType: "text/plain; charset=utf-8"
       })
     });
   }
 };
-var name16 = "AI_NoSuchProviderError";
-var marker16 = `vercel.ai.error.${name16}`;
-var symbol16 = Symbol.for(marker16);
-var _a16;
-_a16 = symbol16;
-var JSONRPC_VERSION = "2.0";
+var name162 = "AI_NoSuchProviderError";
+var marker162 = `vercel.ai.error.${name162}`;
+var symbol162 = Symbol.for(marker162);
+var _a162;
+_a162 = symbol162;
 var ClientOrServerImplementationSchema = z.object({
   name: z.string(),
   version: z.string()
@@ -12268,43 +13051,11 @@ var ClientOrServerImplementationSchema = z.object({
 var BaseParamsSchema = z.object({
   _meta: z.optional(z.object({}).passthrough())
 }).passthrough();
+var ResultSchema = BaseParamsSchema;
 var RequestSchema = z.object({
   method: z.string(),
   params: z.optional(BaseParamsSchema)
 });
-var ResultSchema = BaseParamsSchema;
-var NotificationSchema = z.object({
-  method: z.string(),
-  params: z.optional(BaseParamsSchema)
-});
-var RequestIdSchema = z.union([z.string(), z.number().int()]);
-var JSONRPCRequestSchema = z.object({
-  jsonrpc: z.literal(JSONRPC_VERSION),
-  id: RequestIdSchema
-}).merge(RequestSchema).strict();
-var JSONRPCResponseSchema = z.object({
-  jsonrpc: z.literal(JSONRPC_VERSION),
-  id: RequestIdSchema,
-  result: ResultSchema
-}).strict();
-var JSONRPCErrorSchema = z.object({
-  jsonrpc: z.literal(JSONRPC_VERSION),
-  id: RequestIdSchema,
-  error: z.object({
-    code: z.number().int(),
-    message: z.string(),
-    data: z.optional(z.unknown())
-  })
-}).strict();
-var JSONRPCNotificationSchema = z.object({
-  jsonrpc: z.literal(JSONRPC_VERSION)
-}).merge(NotificationSchema).strict();
-var JSONRPCMessageSchema = z.union([
-  JSONRPCRequestSchema,
-  JSONRPCNotificationSchema,
-  JSONRPCResponseSchema,
-  JSONRPCErrorSchema
-]);
 var ServerCapabilitiesSchema = z.object({
   experimental: z.optional(z.object({}).passthrough()),
   logging: z.optional(z.object({}).passthrough()),
@@ -12384,6 +13135,39 @@ var CallToolResultSchema = ResultSchema.extend({
     toolResult: z.unknown()
   })
 );
+var JSONRPC_VERSION = "2.0";
+var JSONRPCRequestSchema = z.object({
+  jsonrpc: z.literal(JSONRPC_VERSION),
+  id: z.union([z.string(), z.number().int()])
+}).merge(RequestSchema).strict();
+var JSONRPCResponseSchema = z.object({
+  jsonrpc: z.literal(JSONRPC_VERSION),
+  id: z.union([z.string(), z.number().int()]),
+  result: ResultSchema
+}).strict();
+var JSONRPCErrorSchema = z.object({
+  jsonrpc: z.literal(JSONRPC_VERSION),
+  id: z.union([z.string(), z.number().int()]),
+  error: z.object({
+    code: z.number().int(),
+    message: z.string(),
+    data: z.optional(z.unknown())
+  })
+}).strict();
+var JSONRPCNotificationSchema = z.object({
+  jsonrpc: z.literal(JSONRPC_VERSION)
+}).merge(
+  z.object({
+    method: z.string(),
+    params: z.optional(BaseParamsSchema)
+  })
+).strict();
+var JSONRPCMessageSchema = z.union([
+  JSONRPCRequestSchema,
+  JSONRPCNotificationSchema,
+  JSONRPCResponseSchema,
+  JSONRPCErrorSchema
+]);
 var langchain_adapter_exports = {};
 __export(langchain_adapter_exports, {
   mergeIntoDataStream: () => mergeIntoDataStream,
@@ -12421,7 +13205,7 @@ function toDataStreamInternal(stream, callbacks) {
   return stream.pipeThrough(
     new TransformStream({
       transform: async (value, controller) => {
-        var _a17;
+        var _a172;
         if (typeof value === "string") {
           controller.enqueue(value);
           return;
@@ -12429,7 +13213,7 @@ function toDataStreamInternal(stream, callbacks) {
         if ("event" in value) {
           if (value.event === "on_chat_model_stream") {
             forwardAIMessageChunk(
-              (_a17 = value.data) == null ? void 0 : _a17.chunk,
+              (_a172 = value.data) == null ? void 0 : _a172.chunk,
               controller
             );
           }
@@ -12452,7 +13236,7 @@ function toDataStream(stream, callbacks) {
   );
 }
 function toDataStreamResponse(stream, options) {
-  var _a17;
+  var _a172;
   const dataStream = toDataStreamInternal(
     stream,
     options == null ? void 0 : options.callbacks
@@ -12461,7 +13245,7 @@ function toDataStreamResponse(stream, options) {
   const init = options == null ? void 0 : options.init;
   const responseStream = data ? mergeStreams(data.stream, dataStream) : dataStream;
   return new Response(responseStream, {
-    status: (_a17 = init == null ? void 0 : init.status) != null ? _a17 : 200,
+    status: (_a172 = init == null ? void 0 : init.status) != null ? _a172 : 200,
     statusText: init == null ? void 0 : init.statusText,
     headers: prepareResponseHeaders(init == null ? void 0 : init.headers, {
       contentType: "text/plain; charset=utf-8",
@@ -12512,14 +13296,14 @@ function toDataStream2(stream, callbacks) {
   );
 }
 function toDataStreamResponse2(stream, options = {}) {
-  var _a17;
+  var _a172;
   const { init, data, callbacks } = options;
   const dataStream = toDataStreamInternal2(stream, callbacks).pipeThrough(
     new TextEncoderStream()
   );
   const responseStream = data ? mergeStreams(data.stream, dataStream) : dataStream;
   return new Response(responseStream, {
-    status: (_a17 = init == null ? void 0 : init.status) != null ? _a17 : 200,
+    status: (_a172 = init == null ? void 0 : init.status) != null ? _a172 : 200,
     statusText: init == null ? void 0 : init.statusText,
     headers: prepareResponseHeaders(init == null ? void 0 : init.headers, {
       contentType: "text/plain; charset=utf-8",
