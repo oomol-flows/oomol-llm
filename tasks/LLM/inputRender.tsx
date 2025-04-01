@@ -14,6 +14,7 @@ import { createRoot } from "react-dom/client";
 import Select, { components, SelectInstance } from "react-select";
 import Editor from "react-simple-code-editor";
 import clsx from "clsx";
+import { useVal } from "use-value-enhancer";
 
 type Model = {
   model_name: string;
@@ -41,29 +42,20 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
     const [models, setModels] = useState<Model[]>([]);
     const [expanded, setExpanded] = useState(false);
 
-    const [selectedModel, setSelectedModel] = useState(
-      context.store.value$.value?.model || "oomol-chat"
-    );
-    const [temperature, setTemperature] = useState<number>(
-      context.store.value$.value?.temperature || 0
-    );
-    const [topP, setTopP] = useState<number>(
-      context.store.value$.value?.top_p ?? 0.5
-    );
-    const [maxTokens, setMaxTokens] = useState<number>(
-      context.store.value$.value?.max_tokens || 4096
-    );
+    const value = context.store.value$?.value as IModelOptions | undefined;
+    const [selectedModel, setSelectedModel] = useState(value?.model || "oomol-chat");
+    const [temperature, setTemperature] = useState<number>(value?.temperature || 0);
+    const [topP, setTopP] = useState<number>(value?.top_p ?? 0.5);
+    const [maxTokens, setMaxTokens] = useState<number>(value?.max_tokens || 4096);
 
     useEffect(() => {
       context.postMessage("getLLMModels", (models: Model[]) => {
-        if (models?.length) {
-          setModels(models);
-        }
+        if (models?.length) { setModels(models); }
       });
     }, []);
 
     useEffect(() => {
-      context.store.value$.set({
+      context.store.value$?.set({
         model: selectedModel,
         temperature: temperature,
         top_p: topP,
@@ -105,7 +97,7 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
               label: customSelectLabel({ value: model }),
             }))}
             onChange={(selectedOption: IBasicOption) => {
-              setSelectedModel(selectedOption.value);
+              setSelectedModel(selectedOption.value || '');
             }}
           />
           <button onClick={() => setExpanded(!expanded)}>
@@ -189,9 +181,18 @@ export function messages(dom: HTMLElement, context: InputRenderContext) {
   injectStyles();
 
   const Role = ["system", "user", "assistant"];
-  const initialMessages = parseMessages(context.store.value$.value);
+  const initialMessages = parseMessages(context.store.value$?.value);
   function MessagesComponent() {
     const [messages, setMessages] = useState(initialMessages);
+    const allHandleNames = useVal(context.allHandleNames);
+
+    const doHighlight = useCallback((text: string): string => {
+      const names = new Set(allHandleNames);
+      names.delete('model')
+      names.delete('messages')
+      names.add('input')
+      return doHighlight_(text, Array.from(names, v => `{{${v}}}`));
+    }, [allHandleNames]);
 
     const updateRole = useCallback(
       (index: number, role: string) => {
@@ -228,7 +229,7 @@ export function messages(dom: HTMLElement, context: InputRenderContext) {
     }, []);
 
     useEffect(() => {
-      context.store.value$.set(messages);
+      context.store.value$?.set(messages);
     }, [messages]);
 
     return (
@@ -269,14 +270,12 @@ export function messages(dom: HTMLElement, context: InputRenderContext) {
   return () => root.unmount();
 }
 
-function doHighlight(content: string): string {
+function doHighlight_(content: string, keys: Iterable<string>): string {
+  content = content.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+  for (const key of keys) {
+    content = content.replaceAll(key, `<mark>${key}</mark>`);
+  }
   return content
-    .replace(/&/g, "&amp;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/{{input}}/g, "<mark>{{input}}</mark>");
 }
 
 function customSingleValue<Option extends IBasicOption = IBasicOption>(

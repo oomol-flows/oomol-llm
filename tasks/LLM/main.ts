@@ -14,6 +14,7 @@ interface Input {
     input: string | null
     model: IModelOptions
     messages: string | Message[]
+    [key: string]: any
 }
 
 export interface Message {
@@ -33,14 +34,11 @@ export default async function (
     const baseURL = context.OOMOL_LLM_ENV.baseUrlV1
     const apiKey = context.OOMOL_LLM_ENV.apiKey
 
-    const input = String(params.input || '').trim()
+    const replacements = getReplacements(params);
     const model = params.model.model || models.shift()!
     const messages: Message[] = typeof params.messages === 'string'
-        ? [{ role: 'user', content: params.messages }]
-        : params.messages.map(e => {
-            e.content = e.content.replaceAll('{{input}}', input)
-            return e
-        })
+        ? [{ role: 'user', content: applyReplacement(params.messages, replacements) }]
+        : params.messages.map(e => applyReplacement2(e, replacements))
 
     const response = streamText({
         model: createOpenAICompatible({ name: 'oomol', baseURL, apiKey }).chatModel(model),
@@ -57,4 +55,35 @@ export default async function (
     }
 
     return { output: await response.text }
+}
+
+function getReplacements(params: Input): [string, string][] {
+    const replacements: [string, string][] = []
+    for (const key of Object.keys(params)) {
+        if (key !== 'model' && key !== 'messages') {
+            const value = params[key]
+            if (typeof value === 'string') {
+                replacements.push([`{{${key}}}`, value.trim()])
+            }
+        }
+    }
+    replacements.push(['{{input}}', params.input || ''])
+    return replacements
+}
+
+function applyReplacement(message: string, replacements: [string, string][]): string {
+    let content = message
+    for (const [key, value] of replacements) {
+        content = content.replaceAll(key, value);
+    }
+    return content
+}
+
+function applyReplacement2(message: Message, replacements: [string, string][]): Message {
+    let content = message.content
+    for (const [key, value] of replacements) {
+        content = content.replaceAll(key, value);
+    }
+    message.content = content
+    return message;
 }

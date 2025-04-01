@@ -1,5 +1,9 @@
 {
-  "[python]": {
-    "editor.defaultFormatter": "ms-python.black-formatter"
-  }
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "typescript.preferences.quoteStyle": "single",
+  "[typescript][typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.formatOnSave": true
+  },
 }

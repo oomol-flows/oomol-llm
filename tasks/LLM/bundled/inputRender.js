@@ -7876,7 +7876,7 @@ var qwen_default = 'data:image/svg+xml,<svg width="40" height="40" viewBox="0 0 
 var silicon_flow_default = 'data:image/svg+xml,<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">%0A<rect width="40" height="40" rx="8" fill="url(%23pattern0_2130_22425)"/>%0A<defs>%0A<pattern id="pattern0_2130_22425" patternContentUnits="objectBoundingBox" width="1" height="1">%0A<use xlink:href="%23image0_2130_22425" transform="scale(0.005)"/>%0A</pattern>%0A<image id="image0_2130_22425" width="200" height="200" preserveAspectRatio="none" xlink:href="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCADIAMgDAREAAhEBAxEB/8QAHQABAAICAwEBAAAAAAAAAAAAAAECBwgDBgkFBP/EAFAQAAEDAgMGAgUFCQsNAQAAAAEAAgMEEQUGIQcIEjFBUWFxEyIygaEUFUJSkRgjM5SxwdHT8BZTVWJygpKTorLxFyQlJjRDRHSDhMLD0uH/xAAcAQEAAgIDAQAAAAAAAAAAAAAAAQIDBAUGBwj/xAAyEQACAgEDAwIFAwQBBQAAAAAAAQIRAwQFIQYSMRNBFiIyUWEUUpFicYHhIyRCQ1PR/9oADAMBAAIRAxEAPwD46+wDmAgCAIAgCAIAgCAIAgCAIAgISveiRdQrAukq/wAiiCRyVlKSQJVFkXuCCbnop74kEFwChzjXHkmi3JVjkT49xyAslSX1EEoAgCAIAgCAIAgCAIAgCAIAgCAICOawSydrdukSz6mAZWxbNdT8mwfDarEp78PDTxF1vM8h5usFwus3fR6VfPMwSnRl7LO59nvGgx1e2iwOK3/ESh8nvay4P9JdG1fWGKMqxLuRjeQyJhG4zE1v+kc2GX/laEMI973OXBZOsc3/AI8df5I9U+yzcVyva7sw4y53drKdv/rXGS6u198MevRYbjGVbn/WHG7+VP8AqlT4u1/7if1H4OKp3GcvcH3jMeKtfbT00cTh7w1jT8VfH1XrIz73yx+oMObUd1XNOzyF+IUjm5hwmNrnyTUkXDNE3u6M3JaO4JPgBqu57b1hj1M1DPwzIsyZhYEdCCO4NwV6fgz49RBTxu0ZVLu5JWwSEAQBAEAQBAEAQBAEAQBAEBGqwzn2vkng/dgWBYhmbFafDMKo5a/EJ3Wip6dt3ut1J04R4k2XE7jueHSYnPI6ZV0bW7LtzmipaemxDOUvzhO4cRwuAn0LT/HdoX+Wg8CvG9y6q1GZuGPhGGeVLg2XwHL+H5aw6Kjw2jho6dgAEcMYaAO2i6Fl1GTUS7ps0Zy7j6TIw4+CxPhmNHMGgJySBYhTQJslAi1igPzTt4iR3Cxx+SdlkzR7ev2PQZGx+mzFhNMynwnE3lk0MTbMjqeenYP1PmPFezdH7rcnp8jNuE+KNf8AoBe+gF++mvxXrEH6zr7G2uQFkcrdE1RKuQEAQBAEAQBAEAQBAEAQH2co5OxPPWOUmC4TB6asqXG31WsHtPefotHVdV3bcYaGEpzZhlZv7sc2I4RspwOOOnjbU4pOwGsr5B68rvqjswdAvn/dN4zbhlak+PY05SZk2OOwHdcMnNKmYXbOQAEKW/uRRcCyUSLKwIuAgHEPBAVJ1VXxyCCldyBhrezw2Ku2LYu6Rt3U8kM8fg4PC7DsM5YtbDtfkvF8nn43kOpK+l8fyxTXk5SPgnkthK+SbslWAQBAEAQBAEAQBAEBCl8PuRJLIzK8NaC5xNg1upN/25LjNTqFhxyySMTdG+27XscZs2ys2urY2ux/Eo2vqHkfgo7XbEPAcz4lfOm+7pLWZnT4Xj/6a+SfFGb2WLW2FgurV3NM0rORoFlmJJAsgKnmUBa9whBQqrIK6+H2KASDpcpwuWByU1btFka576Gc4sJyDDgDHn5Zik7HFoOrYmHiJ95Ab713TpnRvUaxTXhGXGrkaRj2RfVfQyXdVexyTXsT1WwnZJKAIAgCAIAgCAIAgCAgLE24cskzJutbOhnjaPHW1cIfhWDtbVyhw9V8vKJvlccR8gvNesdx9HAsMHzI1Mro9AYmARt0tovDFz9Rpt2X5FE7XBWizeSheAWVwUcbFCLKlwHVCSOJKstQ4/P7FPaTRV77d1HYn5HaY22n7cct7NaKV9bXR1NdwEx4fA68r9OdhyF+bjoFy227NqtZkSgvlM0Yfc0O2kbRcV2nZllxnFX2eRwRwM9iFnRjettb35km6972TZce1xVe5swjydV8V2uPytr7mdgc1kiqDJQgIAgCAIAgCAIAgCAloubLU1H0+R4N790DKHzBssixGRgE2Lyuq7n6nsx/2QF87dSav1ta4X9PBo5mZ4YAWhdRu+TVLWULgkJ+CCjibq6pA6dtE2n4FsxwZ+IY5ViG+kVOz1pZj2Y3mfyDqt3SaLNrJ+njRdQs1Iz1vl5qxqWWDAI4sBoiTaRwbNU26EO9keVivTNB0lhUU9Q+TZjBfYxfU7Zs84k9xmzZijnk3P8AnJb77NAXb8HTWk7VUF/Bk7T83+VbOX0c14uf+8k/St74Z0n7F/CHacVRtJzZVsLJs04u9hFiPlsov/aUx6d0sOVjX8DtOuyOdNIXPcZHklxc88RJ769Vy+DRw0/EYpGRRIHVb1WZEqJWRIkAWViCVUBAEAQBAEAQBAEAQExRyTyMhibxSyHgYO7jo0faQuE3TI8ONz/BWT4PUfImCRZdydg2GQsDIqWjiia0DQWaL/G6+ZNXkebUTyy92cdkds7Aw3C1DEWPJVBBUv2DOv51zVR5Ky5ieNYjOIqKigMzyB6wt0GupJsAO+nVZ8GnlnzRhH3LwVs83dpO0LFdpmaarFcSnJ4iWwQA8TIY76Nb38+q+idk2TFosMZ1ychGHB1Yd7jnfRdx9PG/maLqNE26dFbh8rgtQtZWHA5Im0B8VH9yQnAJ9yWQEAVQEAQBAEAQBAEBCWSFF/gH3MiUhrs8ZdgAuX4lTXHgJW/muuv7/KtFN/hmtNs9So2hjQ0chovmKXPJos5G8lUqWUAoVWrQNbN9nNEuHZNwvBI3hrMRqfSTAn2ooxci38oxn3LvHSem9fWqTV0bGJGlAAd61rX14T0X0VBdsUjkETdWYF1AJurAjmobBKgBAFYBAFUBAEAQBAEAQBAACe/2LH+pxx4ZIIPin6rEDt+x1npNqWVmHkcQiP5T+ZdT3/N3aTJX2ZqzPTiOxaF83XZovyXCkglAVIVUyTT/AH8LjF8nj6Jp6s/24F6r0Mk8mWf2o2MRqqPZHde1qXdyb6H7c1YEftzUWB+3NWBIRglQAosBSArAKoCAIAgIUX2fkmg1pfIxo9Z7jYADn4W7/Faupz48K7pSor/kyrkHdlzxn1jJ20XzNQOP+04h6jiO7Y/aPvsuhbh1bpdNccTbZjeVIz1lrcky7SxQvxzF67E57D0jafhp4SfAAcfxXQ9T1jrc7/4/lRryzHeqLdY2b0cXD8wCY/WmqHyH7SVwE9+1zdvIyvrMmq3Wtm9Y23zC2LTnDK9nxBSO/a3/ANjHrM+Thu6RlLAs0YbjeFVNfRS0NQ2dsBm9JG8joS67uvdXz79qs2P05u0VeSzOTDZotoF1xcsws5W8lcglAcZJvzVEmrsk1/3m9iWYdrtdl+XBZaJrKGOoZMKuYxn13RFtrNdf2HLt/TW84tqlJ5U+fsZ8ckjCI3Lc+kD79g34479Wu/8AxrpVwov+P9mf1ET9xXnz9/wf8cf+rT42037X/H+x6qH3FefP3/B/xx/6tPjbTftf8f7I9VD7ivPo/wB/g/42/wD+E+N9P+1/x/seqjim3M9oUQPoxhE1heza5wJ8h6P86l9baX7Sv+w9UxfnLZrmfZ/UCLHsGqaDiPqyuaHRuHcPFx7ufguz7b1Dpdcvllz+S6nZ1j9tV2lSeWPcZFIn4Ky55LgK6dkkqCAgCAID7WTcm4tn7HIcKwWjkq6qQnQCzWN+u49GjqfyrrW7b1h0GNu+TDJs3d2P7s+AbN6WKtxFseNZgIDn1MrQY4j0ETTyHidSvC9z37Va+bSdI1ZTZmxkYYLAAeQXWZNsxN2XtfnqqvhFWA3wCjuv2I4J5crJf4FIroo7n9iaLBTbZNFm8lKKllION3NY6ld2CvCOys+fBJIAtyS6I5FvBVcxyTYdlZSHJBA7KrmOQQCCCNFaMm2TyfJzBgFDmPDZ8OxGkirKGdhZJDOwOaQfAq2KebDlWTHIyxdGgm8PsadshzLHJS8ZwCvu+lkkNzG8XLoiepA1B6jyXvXS29y1yeHJ5RsRlaMUkcJte9l6HCXbFmxHkBWiqRdkqSAUBHkiVqyF+T6eXMu1ubMcosJwuF1RXVcgijjA1uTqT2AHVcDuW4x0WGWSTqiG6PQnY5siwvZPlyOjpYxLXSgOqq13tTSdvBo6Dl16r5y3PccmsyuUmaWTJfCMlCNth6q4pWka9tnIGgKPJA4QpBPCEBHCEA4B2QmxwoQSBZASgILQVAHCLKFFLwTZUiysQSBcICDqUAACAtYFVoFSwE3spomzDO9hlqPHdjuLzFo9LhwbWxOtcgsOtvcSPeu09O6iWm10Ox1fBsY5fc8+mAtbwnoTy87/AJ19JY2pQr3N+NUXAWb8AIAgItewWDNPshwQ3RuXue7KGYRlyXN2IRh1dibSKUvb7EF/aHbj5+Vl4F1Vur1Of0cb4iaOSbRszGz1R1810FJPk03bOS5CSd8ILguOSlFyVICAi+tkAQEoAgCAi6AlAQUAFggKnmgHvQEtPdATdAYf3qMyw5f2NY/G8j0lfGKFjTzJkNiR5C5XYNjxPLrsf4Zmxxb5PPQnU6WN19M4l2pSORiqQC2H5sklQAUB9zJGV5c6ZrwnBIG8Tq6pjhJB5NJJcf6Icut73q/0mknlTrgq3aPT3C8NgwnDaWjpmCOCCNsbGgWAaBYL5nyzlkm5S8tnE5G2z9zW2CxVRUtbwRcEEXN+arfsy5X0ljqR9qtTSJqzqeZ9rOUcnS+ixnMVBQTfvc0wDvsW5h0GpzK4xZbtZ+XL+2jJeaqxtJhWZsOq6twNoBMA8+QNlbNoNTgVyiT2M7nFOJBz1/KuOi3bUkVcaOUG45q3jyVLAqQDyUgqSbnVALlRwwTfxSwPelv7AqUsgaIOSL9kteCfY/LiWIwYZSTVNTM2CCJpe+R7g1rQBc3J0U44zyz7IotFWzQzeU22t2o5hhocMkL8v0DvvLi23yiS1jJ/JsSB4EnqF7L0zscsSWaa+azehGkYUB0Gq9bce2PabKJAsgZKEA8kBnPc8wJuK7W21rwCzDqKSUacnOs1p/vLynrLVOGmWBe5gk+DfIWsCvFjj2uS17KCC3EEA0Kq1zYNZ96nb5V5LP7lsvzhmLTMD6moGpgYfZYB0c7W/W1rc7rufT2zS12VZJr5TYxxs0xqauWsqpKmSR80shu+R7rucTzJPU+K91xbZgwxSUTa7EcQc4Oa4aOBuCbGx7i/VTk2zBm+qJHabVbrG3+uqMVp8nZjqn1TZhw4fWTO4pA9o/BPP0rgEgnXTU6heQ9U7AtPebAuDHKHBt3HJxtaQdD4LzWK4qXk1WqOVhupKF0BxnQlQuUx5MJbxW27GdkE+C/NtFS1UNa2bjdUEghzeGwFu4c4+5di2PZ1uUnFszRjZhh2/BmcE2wXDXDp98cPzLvC6J/rMyxqiPu4sz/wHhv9a79Cn4I/rJ9KI+7izR/AeG/1rv0J8Ef1k+lEfdxZntf5jw7+td+hPgj+sejE45t9/NUsLvR4VhsD7Wa4uc/Xy0+y6suiEuXKx6UTFO0DbTnDaS3gx3FXvpBp8kpW+hgPm3mf5xNl27bOldLpfmkuTPGEUdEbcDUW05Bd0hjjhXbBcGVpXwWWT6vISJCl17BhUKgoDZvcYiY/M+bXn2mUdMG++ST9C8V64dSxte9mpPg3KGll5T7WapycIIQoOEICrjYi3dYpPiweZ+27EJsY2s5snqLh4xGWMA/VaeBvwaPtX0d01ijh0eN15SN7Ejow15m/mu8rjwbVCwUt2RSPpZcrpcOzBhdXCXCWnqopY+E2N2yNNh58veutb1GE9NNNezKTqj1OopTNSQyOFnOY1xHYkXXzFONZL9jQfk/W3kqp34MbJKkgofaT2Bq7v1xNOWssvAHEK14v1/Bu/QF6D0XxnkjZxcmnRFjy1XvMPpRu9qCuO1D3K1IdqIuAeQSkTSJB1uND4JSI7UHXcLEkjso7Vdk0gdf/AMWTufgkiyi2TZKggICDyQGxe5HiraXP+N0ROtXQNc3/AKbyT8HheOda47jCX5NaZu4F5F44NFs5AhAKAp1VXHiibNBt7TZ7PlDaZU4sGPOGY24VEUoHqskAs+MnuSOLyOnI29t6Q3fHLTehmfK4RuYpGENRz5r02OVS5RueRZWlkoGQdhGQKrP+0bCqSOJ7qKllbV1co0EcTHX593OAaB117LoXUu7Y8OGWOL5aowTPSOJgbG0AWaBoF4Cm3bZoPyczeSJVwUJPJSChHrFQ/ANT9+zFA2lyrh/V8s0/9ENb/wCa9N6Kxd2ab/sbmFGo/Ne4wVRo3WLeSuQLeSAlAEAQBAEAQBACgMj7vOamZN2uYBWTPbHSTSOpJ3u6B44f73AF531ZopajTd8PYwTVno9GfUbc8wvA3yzj5eTlHJCCUBXhCA65nPJOFZ/weownG6VlXQSi3CTZzHdHNPMOHQhbGDPk001PE6ZZSa8GqOcNyHHKese/LOMU1bSuuWQ4leF8fgXtDg73AL0PSdY5cUUsys2lm4PxZZ3KM010zPnrEsPwynDvWdTOdUPcPAENA81t6jrRyX/FHkn1jafZnsswPZdgAwzB4Czjdx1FRJ+Fnda13nrpoByA0C851+ty67I8uV8mGWRtnc2t4QB2C436uGYWzkbyViCyA4ZHFgc7oBdUdvgg0N3wc1Nx3avPQseHxYVTR05H1ZT67gPMOZfyXt3ROlccbyfc5DCjBYNwvVEbTJUkBAEAQBAEAQBAEAQFmyvjc1zHcDmkFrhzaQbgjxuAVx+qxrJjljkuGVas9Hthu0dm0vZ7hmJte0VkbPk9ZENSyVmh9x5+9fMu66GWi1co+xx+WNMyUOS4kwkoAgK8KAgtCo3fAI4Rax1VU+33FBsbQdAst2LLcNv8VCBIUgEoDq+0LOlHkLKuKY3Xn7zRwl4jHtSO+ixvi51gFtabTT1OaMIeWWjG2eZON4zV5ixiuxStfx1dZM+eQg6cT3EkDwF7DwC+k9s0v6DTxjBHJY1R+IarsS8GVuyVJAQBAEAQBAEAQBAEBCx5knjLJWZX3ctrp2W5w4auUjAsRLY6xvP0Z+jKPEcndx5LzPqXZnqsPrQXzI1smOz0IpMQjrqWOeCRk0cjA9jmG4cDqCD1BC8QmnFuLXg0GqP036qlkKi4UoglSCLIQLBRQFlIoHkhJUki6EWcE0zoiXEgMHUpHl9vuXSs0e3q9tEee8wDLmETiXBcMkLp5o3erPMND5tb07nyXrnSm0OH/UZl58G1jga/vdxOJ7r12FKFGzdcBZYqlRcKwCAIAgCAIAgCAIAgKkJNd0aRK4JaS03B8T4nxWFxjOHZJEto2E3dt5X9whhwHMU0suBO9SnqiLupNdbjmY/iOa8i6l6cTTzaVc+5q5Ydy4N1qHFabE6SKqo6iKqppW8bJYXh7HNtoQ7svIpRnCXZONM0O3tP3xkuaCeoSqILoAgCAi6AXQH5aqrZTMe97g1rdSSbWHU69FaEJNllGzUXeN3n2Ykyqytk+qDoHh0dbisTuYHNkR7dC73BemdO9MyzzWo1SpextwgarPaeIdALW8Oy9iWNYu3HBcGzBckgaLkMkUkoorNclgqxuuS68BWJCAIAgCAIAgCAIAgIskfl8AWUVbsikG6OuddVhnBP5aJMhbLtuWZdlU3Bh1S2sw1x++YfV3dH5tH0T5aeC6HvHTmHU3OMaf4NecO4272cb1+S86RRU9fWjL+KWAfT4jZjHO/iSey656Xv3Xk+u2DWaRtqHcvwaksbXgzFT4nBWMElPNHPGdQ+N4cD7wuuyxyjxJUynazn9MP8Vj5+wpgyi3NFb9iKZ+afEo6Zhkle2OMfTcbD3krIsc5cRRZQbMYZ93msm5GZPF8vZi1fENaPD3CR4PZx9ln84hc5pNl1Wp/7a/uT2Gpe1zeSzLtUE1HC8YPgd7OpKR5+/Dp6R/M/yRp5r0XaemYYZLJkVszwjwYlYSxthp30AuvUceOOOKibUYjmtlJcF6piyV83cHySFYBAEAQBAEAQBAEAQBAEAQEKHzySR43U91qmhwXjkLAQRxAixB5LWyafFP6iJJH1cGzfjWWi35oxWtwxrTxcFJO6NhPi0HhPvC4fPs2j1PEsa/gxqFncqXeQ2k0luHNdU9v1ZIYXD+4uu5Oj9JN2kR6Zer3lNpNZYOzRURC1rRQxN+PBf4rHDo3SryR6Z1LH8/ZkzSJBi2OYhXsebuimqXmM/wAy/D8Fzen6f0mCkoot2HwAbeQ9kdGjwHRc7j0OPEvkQ7ETx6kgBvXRbkEo8FlGiDzKirZe0gFlfBBKgBAEAQBAEAQBAEAQBAEAQBARZSuALJYFlHH2IoWVCy4FlKdCxZS5NiybKlAKVH8giyyRVECx8FL5IpEjkqkhAEAQBAEAQBAEAQBAf//Z"/>%0A</defs>%0A</svg>%0A';
 
 // tasks/LLM/inputRender.tsx
-var import_react9 = __toESM(require_react());
+var import_react10 = __toESM(require_react());
 var import_client = __toESM(require_client());
 
 // node_modules/@babel/runtime/helpers/esm/typeof.js
@@ -13219,43 +13219,82 @@ function clsx() {
 }
 var clsx_default = clsx;
 
+// node_modules/value-enhancer/dist/index.mjs
+var isVal = (val$) => !!val$?.$valCompute;
+if (false) {
+  initDev();
+}
+
+// node_modules/use-value-enhancer/dist/use-value-enhancer.mjs
+var import_react9 = __toESM(require_react(), 1);
+var noop3 = () => {
+};
+var returnsNoop = () => noop3;
+var useValWithUseSyncExternalStore = (val$, eager = true) => {
+  const [subscriber, getSnapshot] = (0, import_react9.useMemo)(
+    () => isVal(val$) ? [
+      (onChange2) => val$.subscribe(onChange2, eager),
+      () => val$.$version
+    ] : [
+      returnsNoop,
+      returnsNoop
+    ],
+    [val$, eager]
+  );
+  import_react9.default.useSyncExternalStore(
+    subscriber,
+    getSnapshot,
+    getSnapshot
+  );
+  const value = isVal(val$) ? val$.get() : val$;
+  (0, import_react9.useDebugValue)(value);
+  return value;
+};
+var useValWithUseEffect = (val$, eager = true) => {
+  const [, setVersion] = (0, import_react9.useState)(() => isVal(val$) ? val$.$version : noop3);
+  (0, import_react9.useEffect)(() => {
+    if (isVal(val$)) {
+      const versionSetter = () => val$.$version;
+      return val$.subscribe(() => setVersion(versionSetter), eager);
+    }
+    setVersion(returnsNoop);
+  }, [val$, eager]);
+  const value = isVal(val$) ? val$.get() : val$;
+  (0, import_react9.useDebugValue)(value);
+  return value;
+};
+var useVal = /* @__PURE__ */ (() => import_react9.default.useSyncExternalStore ? useValWithUseSyncExternalStore : useValWithUseEffect)();
+
 // tasks/LLM/inputRender.tsx
 function model(dom, context) {
   injectStyles();
   function ModelComponent() {
-    const [models, setModels] = (0, import_react9.useState)([]);
-    const [expanded, setExpanded] = (0, import_react9.useState)(false);
-    const [selectedModel, setSelectedModel] = (0, import_react9.useState)(
-      context.store.value$.value?.model || "oomol-chat"
-    );
-    const [temperature, setTemperature] = (0, import_react9.useState)(
-      context.store.value$.value?.temperature || 0
-    );
-    const [topP, setTopP] = (0, import_react9.useState)(
-      context.store.value$.value?.top_p ?? 0.5
-    );
-    const [maxTokens, setMaxTokens] = (0, import_react9.useState)(
-      context.store.value$.value?.max_tokens || 4096
-    );
-    (0, import_react9.useEffect)(() => {
+    const [models, setModels] = (0, import_react10.useState)([]);
+    const [expanded, setExpanded] = (0, import_react10.useState)(false);
+    const value = context.store.value$?.value;
+    const [selectedModel, setSelectedModel] = (0, import_react10.useState)(value?.model || "oomol-chat");
+    const [temperature, setTemperature] = (0, import_react10.useState)(value?.temperature || 0);
+    const [topP, setTopP] = (0, import_react10.useState)(value?.top_p ?? 0.5);
+    const [maxTokens, setMaxTokens] = (0, import_react10.useState)(value?.max_tokens || 4096);
+    (0, import_react10.useEffect)(() => {
       context.postMessage("getLLMModels", (models2) => {
         if (models2?.length) {
           setModels(models2);
         }
       });
     }, []);
-    (0, import_react9.useEffect)(() => {
-      context.store.value$.set({
+    (0, import_react10.useEffect)(() => {
+      context.store.value$?.set({
         model: selectedModel,
         temperature,
         top_p: topP,
         max_tokens: maxTokens
       });
     }, [selectedModel, temperature, topP, maxTokens]);
-    const customSelectLabel = ({ value }) => {
-      return /* @__PURE__ */ import_react9.default.createElement("div", { className: "custom-label" }, /* @__PURE__ */ import_react9.default.createElement(ModelIcon, { modelName: value.model_name }), /* @__PURE__ */ import_react9.default.createElement("div", { className: "custom-label-content" }, /* @__PURE__ */ import_react9.default.createElement("div", { className: "custom-label-header" }, /* @__PURE__ */ import_react9.default.createElement("div", { className: "title-box" }, /* @__PURE__ */ import_react9.default.createElement("span", { className: "title", title: labelOfModel(value.model_name) }, labelOfModel(value.model_name)), /* @__PURE__ */ import_react9.default.createElement(ModelTag, { content: value.channel_name, highlight: true })), /* @__PURE__ */ import_react9.default.createElement("span", { className: "ratio" }, "Ratio: ", value.ratio)), /* @__PURE__ */ import_react9.default.createElement("div", { className: "tags" }, value.tags.map((tag) => /* @__PURE__ */ import_react9.default.createElement(ModelTag, { key: tag, content: tag })))));
+    const customSelectLabel = ({ value: value2 }) => {
+      return /* @__PURE__ */ import_react10.default.createElement("div", { className: "custom-label" }, /* @__PURE__ */ import_react10.default.createElement(ModelIcon, { modelName: value2.model_name }), /* @__PURE__ */ import_react10.default.createElement("div", { className: "custom-label-content" }, /* @__PURE__ */ import_react10.default.createElement("div", { className: "custom-label-header" }, /* @__PURE__ */ import_react10.default.createElement("div", { className: "title-box" }, /* @__PURE__ */ import_react10.default.createElement("span", { className: "title", title: labelOfModel(value2.model_name) }, labelOfModel(value2.model_name)), /* @__PURE__ */ import_react10.default.createElement(ModelTag, { content: value2.channel_name, highlight: true })), /* @__PURE__ */ import_react10.default.createElement("span", { className: "ratio" }, "Ratio: ", value2.ratio)), /* @__PURE__ */ import_react10.default.createElement("div", { className: "tags" }, value2.tags.map((tag) => /* @__PURE__ */ import_react10.default.createElement(ModelTag, { key: tag, content: tag })))));
     };
-    return /* @__PURE__ */ import_react9.default.createElement("div", { className: "llm-container" }, /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "5px", alignItems: "center" } }, /* @__PURE__ */ import_react9.default.createElement(
+    return /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-container" }, /* @__PURE__ */ import_react10.default.createElement("div", { style: { display: "flex", gap: "5px", alignItems: "center" } }, /* @__PURE__ */ import_react10.default.createElement(
       TheSelect,
       {
         value: { value: selectedModel, label: labelOfModel(selectedModel) },
@@ -13264,10 +13303,10 @@ function model(dom, context) {
           label: customSelectLabel({ value: model2 })
         })),
         onChange: (selectedOption) => {
-          setSelectedModel(selectedOption.value);
+          setSelectedModel(selectedOption.value || "");
         }
       }
-    ), /* @__PURE__ */ import_react9.default.createElement("button", { onClick: () => setExpanded(!expanded) }, /* @__PURE__ */ import_react9.default.createElement("i", { className: "codicon codicon-settings" }))), expanded && /* @__PURE__ */ import_react9.default.createElement(
+    ), /* @__PURE__ */ import_react10.default.createElement("button", { onClick: () => setExpanded(!expanded) }, /* @__PURE__ */ import_react10.default.createElement("i", { className: "codicon codicon-settings" }))), expanded && /* @__PURE__ */ import_react10.default.createElement(
       "div",
       {
         style: {
@@ -13284,7 +13323,7 @@ function model(dom, context) {
           min: 0,
           max: 1,
           step: 0.01,
-          onChange: (value) => setTemperature(parseFloat(value)),
+          onChange: (value2) => setTemperature(parseFloat(value2)),
           defaultValue: 0.5
         },
         {
@@ -13293,7 +13332,7 @@ function model(dom, context) {
           min: 0,
           max: 1,
           step: 0.01,
-          onChange: (value) => setTopP(parseFloat(value)),
+          onChange: (value2) => setTopP(parseFloat(value2)),
           defaultValue: 1
         },
         {
@@ -13302,14 +13341,14 @@ function model(dom, context) {
           min: 1,
           max: 4096,
           step: 1,
-          onChange: (value) => setMaxTokens(Number(value)),
+          onChange: (value2) => setMaxTokens(Number(value2)),
           defaultValue: 2048
         }
-      ].map((props) => /* @__PURE__ */ import_react9.default.createElement(RangeInput, { key: props.label, ...props }))
+      ].map((props) => /* @__PURE__ */ import_react10.default.createElement(RangeInput, { key: props.label, ...props }))
     ));
   }
   const root = (0, import_client.createRoot)(dom);
-  root.render(/* @__PURE__ */ import_react9.default.createElement(ModelComponent, null));
+  root.render(/* @__PURE__ */ import_react10.default.createElement(ModelComponent, null));
   return () => root.unmount();
 }
 function labelOfModel(model2) {
@@ -13328,10 +13367,18 @@ function labelOfModel(model2) {
 function messages(dom, context) {
   injectStyles();
   const Role = ["system", "user", "assistant"];
-  const initialMessages = parseMessages(context.store.value$.value);
+  const initialMessages = parseMessages(context.store.value$?.value);
   function MessagesComponent() {
-    const [messages2, setMessages] = (0, import_react9.useState)(initialMessages);
-    const updateRole = (0, import_react9.useCallback)(
+    const [messages2, setMessages] = (0, import_react10.useState)(initialMessages);
+    const allHandleNames = useVal(context.allHandleNames);
+    const doHighlight = (0, import_react10.useCallback)((text) => {
+      const names = new Set(allHandleNames);
+      names.delete("model");
+      names.delete("messages");
+      names.add("input");
+      return doHighlight_(text, Array.from(names, (v) => `{{${v}}}`));
+    }, [allHandleNames]);
+    const updateRole = (0, import_react10.useCallback)(
       (index2, role) => {
         const newMessages = messages2.slice();
         if (newMessages[index2]) {
@@ -13341,7 +13388,7 @@ function messages(dom, context) {
       },
       [messages2]
     );
-    const updateContent = (0, import_react9.useCallback)(
+    const updateContent = (0, import_react10.useCallback)(
       (index2, content) => {
         const newMessages = messages2.slice();
         if (newMessages[index2]) {
@@ -13351,27 +13398,27 @@ function messages(dom, context) {
       },
       [messages2]
     );
-    const addMessage = (0, import_react9.useCallback)(() => {
+    const addMessage = (0, import_react10.useCallback)(() => {
       setMessages((m) => [...m, { role: "user", content: "" }]);
     }, []);
-    const deleteMessage = (0, import_react9.useCallback)((index2) => {
+    const deleteMessage = (0, import_react10.useCallback)((index2) => {
       setMessages((m) => {
         m = m.slice();
         m.splice(index2, 1);
         return m;
       });
     }, []);
-    (0, import_react9.useEffect)(() => {
-      context.store.value$.set(messages2);
+    (0, import_react10.useEffect)(() => {
+      context.store.value$?.set(messages2);
     }, [messages2]);
-    return /* @__PURE__ */ import_react9.default.createElement("div", { className: "llm-container" }, messages2.map((a, i) => /* @__PURE__ */ import_react9.default.createElement("div", { key: i, "data-message-index": i, className: "llm-message-container" }, /* @__PURE__ */ import_react9.default.createElement("div", { className: "llm-message-head" }, /* @__PURE__ */ import_react9.default.createElement(
+    return /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-container" }, messages2.map((a, i) => /* @__PURE__ */ import_react10.default.createElement("div", { key: i, "data-message-index": i, className: "llm-message-container" }, /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-message-head" }, /* @__PURE__ */ import_react10.default.createElement(
       TheSelect,
       {
         value: { value: a.role, label: a.role },
         options: Role.map((role) => ({ value: role, label: role })),
         onChange: (e) => updateRole(i, e.value)
       }
-    ), /* @__PURE__ */ import_react9.default.createElement("button", { onClick: () => deleteMessage(i) }, /* @__PURE__ */ import_react9.default.createElement("i", { className: "codicon codicon-trash" }))), /* @__PURE__ */ import_react9.default.createElement(
+    ), /* @__PURE__ */ import_react10.default.createElement("button", { onClick: () => deleteMessage(i) }, /* @__PURE__ */ import_react10.default.createElement("i", { className: "codicon codicon-trash" }))), /* @__PURE__ */ import_react10.default.createElement(
       import_react_simple_code_editor.default,
       {
         value: a.content,
@@ -13382,28 +13429,32 @@ function messages(dom, context) {
         placeholder: context.store.description$.value,
         style: { minHeight: 100, resize: "vertical" }
       }
-    ))), /* @__PURE__ */ import_react9.default.createElement("button", { className: "llm-btn-add-message", onClick: addMessage }, "Add message"));
+    ))), /* @__PURE__ */ import_react10.default.createElement("button", { className: "llm-btn-add-message", onClick: addMessage }, "Add message"));
   }
   const root = (0, import_client.createRoot)(dom);
-  root.render(/* @__PURE__ */ import_react9.default.createElement(MessagesComponent, null));
+  root.render(/* @__PURE__ */ import_react10.default.createElement(MessagesComponent, null));
   return () => root.unmount();
 }
-function doHighlight(content) {
-  return content.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/{{input}}/g, "<mark>{{input}}</mark>");
+function doHighlight_(content, keys) {
+  content = content.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  for (const key of keys) {
+    content = content.replaceAll(key, `<mark>${key}</mark>`);
+  }
+  return content;
 }
 function customSingleValue(option) {
   const { label, value } = option;
-  return /* @__PURE__ */ import_react9.default.createElement("div", { className: "format-option-container", title: label || value }, value && /* @__PURE__ */ import_react9.default.createElement(ModelIcon, { modelName: value, size: 16 }), /* @__PURE__ */ import_react9.default.createElement("span", { className: "format-option-label" }, label || value));
+  return /* @__PURE__ */ import_react10.default.createElement("div", { className: "format-option-container", title: label || value }, value && /* @__PURE__ */ import_react10.default.createElement(ModelIcon, { modelName: value, size: 16 }), /* @__PURE__ */ import_react10.default.createElement("span", { className: "format-option-label" }, label || value));
 }
 var customComponents = {
-  DropdownIndicator: (props) => /* @__PURE__ */ import_react9.default.createElement(components.DropdownIndicator, { ...props }, /* @__PURE__ */ import_react9.default.createElement("i", { className: "i-codicon:chevron-down" })),
-  Menu: (props) => /* @__PURE__ */ import_react9.default.createElement(components.Menu, { ...props, className: clsx_default(props.className, "nowheel") }, props.children),
-  SingleValue: (props) => /* @__PURE__ */ import_react9.default.createElement(components.SingleValue, { ...props }, customSingleValue(props.data))
+  DropdownIndicator: (props) => /* @__PURE__ */ import_react10.default.createElement(components.DropdownIndicator, { ...props }, /* @__PURE__ */ import_react10.default.createElement("i", { className: "i-codicon:chevron-down" })),
+  Menu: (props) => /* @__PURE__ */ import_react10.default.createElement(components.Menu, { ...props, className: clsx_default(props.className, "nowheel") }, props.children),
+  SingleValue: (props) => /* @__PURE__ */ import_react10.default.createElement(components.SingleValue, { ...props }, customSingleValue(props.data))
 };
 function TheSelect(props) {
-  const [menuWidth, setMenuWidth] = (0, import_react9.useState)(0);
-  const innerRef = (0, import_react9.useRef)(null);
-  (0, import_react9.useEffect)(() => {
+  const [menuWidth, setMenuWidth] = (0, import_react10.useState)(0);
+  const innerRef = (0, import_react10.useRef)(null);
+  (0, import_react10.useEffect)(() => {
     if (innerRef.current?.controlRef) {
       let timer = 0;
       const observer = new ResizeObserver((entries) => {
@@ -13418,7 +13469,7 @@ function TheSelect(props) {
       };
     }
   }, []);
-  return /* @__PURE__ */ import_react9.default.createElement(
+  return /* @__PURE__ */ import_react10.default.createElement(
     "div",
     {
       style: {
@@ -13426,7 +13477,7 @@ function TheSelect(props) {
         ["--menu-width"]: `${menuWidth}px`
       }
     },
-    /* @__PURE__ */ import_react9.default.createElement(
+    /* @__PURE__ */ import_react10.default.createElement(
       StateManagedSelect$1,
       {
         ref: innerRef,
@@ -13446,7 +13497,7 @@ function ModelTag({
   content,
   highlight
 }) {
-  return /* @__PURE__ */ import_react9.default.createElement("div", { className: `model-tag ${highlight ? "highlight" : ""}` }, content);
+  return /* @__PURE__ */ import_react10.default.createElement("div", { className: `model-tag ${highlight ? "highlight" : ""}` }, content);
 }
 var modelIconMap = {
   codestral: codestral_default,
@@ -13466,7 +13517,7 @@ function getModelIcon(model2) {
 function ModelIcon({ modelName, size: size2 }) {
   const iconSize = size2 || 40;
   const iconSrc = getModelIcon(modelName);
-  return iconSrc ? /* @__PURE__ */ import_react9.default.createElement(
+  return iconSrc ? /* @__PURE__ */ import_react10.default.createElement(
     "img",
     {
       src: modelIconMap[iconSrc],
@@ -13484,7 +13535,7 @@ function RangeInput({
   onChange: onChange2,
   defaultValue
 }) {
-  return /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "4px" } }, /* @__PURE__ */ import_react9.default.createElement("label", null, label, ":"), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "8px", alignItems: "center" } }, /* @__PURE__ */ import_react9.default.createElement(
+  return /* @__PURE__ */ import_react10.default.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "4px" } }, /* @__PURE__ */ import_react10.default.createElement("label", null, label, ":"), /* @__PURE__ */ import_react10.default.createElement("div", { style: { display: "flex", gap: "8px", alignItems: "center" } }, /* @__PURE__ */ import_react10.default.createElement(
     "input",
     {
       type: "range",
@@ -13504,7 +13555,7 @@ function RangeInput({
         border: "none"
       }
     }
-  ), /* @__PURE__ */ import_react9.default.createElement(
+  ), /* @__PURE__ */ import_react10.default.createElement(
     "input",
     {
       type: "number",

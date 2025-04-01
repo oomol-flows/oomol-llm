@@ -23,6 +23,7 @@ inputs_def:
       ui:options:
         title: Prompt
     description: "{{input}} will be replaced by the data from input handle."
+additional_inputs: true
 outputs_def:
   - handle: output
     json_schema:

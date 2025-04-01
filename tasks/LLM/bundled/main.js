@@ -13332,12 +13332,9 @@ async function main_default(params, context) {
   const models = context.OOMOL_LLM_ENV.models;
   const baseURL = context.OOMOL_LLM_ENV.baseUrlV1;
   const apiKey = context.OOMOL_LLM_ENV.apiKey;
-  const input = String(params.input || "").trim();
+  const replacements = getReplacements(params);
   const model = params.model.model || models.shift();
-  const messages = typeof params.messages === "string" ? [{ role: "user", content: params.messages }] : params.messages.map((e) => {
-    e.content = e.content.replaceAll("{{input}}", input);
-    return e;
-  });
+  const messages = typeof params.messages === "string" ? [{ role: "user", content: applyReplacement(params.messages, replacements) }] : params.messages.map((e) => applyReplacement2(e, replacements));
   const response = streamText({
     model: createOpenAICompatible({ name: "oomol", baseURL, apiKey }).chatModel(model),
     messages,
@@ -13351,6 +13348,34 @@ async function main_default(params, context) {
     context.preview({ type: "markdown", data: output });
   }
   return { output: await response.text };
+}
+function getReplacements(params) {
+  const replacements = [];
+  for (const key of Object.keys(params)) {
+    if (key !== "model" && key !== "messages") {
+      const value = params[key];
+      if (typeof value === "string") {
+        replacements.push([`{{${key}}}`, value.trim()]);
+      }
+    }
+  }
+  replacements.push(["{{input}}", params.input || ""]);
+  return replacements;
+}
+function applyReplacement(message, replacements) {
+  let content = message;
+  for (const [key, value] of replacements) {
+    content = content.replaceAll(key, value);
+  }
+  return content;
+}
+function applyReplacement2(message, replacements) {
+  let content = message.content;
+  for (const [key, value] of replacements) {
+    content = content.replaceAll(key, value);
+  }
+  message.content = content;
+  return message;
 }
 export {
   main_default as default
