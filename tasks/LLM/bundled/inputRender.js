@@ -13374,36 +13374,29 @@ function messages(dom, context) {
     const doHighlight = (0, import_react10.useCallback)((text) => {
       return doHighlight_(text, allHandleNames.map((v) => `{{${v}}}`));
     }, [allHandleNames]);
-    const updateRole = (0, import_react10.useCallback)(
-      (index2, role) => {
-        const newMessages = messages2.slice();
-        if (newMessages[index2]) {
-          newMessages[index2] = { ...newMessages[index2], role };
-          setMessages(newMessages);
-        }
-      },
-      [messages2]
-    );
-    const updateContent = (0, import_react10.useCallback)(
-      (index2, content) => {
-        const newMessages = messages2.slice();
-        if (newMessages[index2]) {
-          newMessages[index2] = { ...newMessages[index2], content };
-          setMessages(newMessages);
-        }
-      },
-      [messages2]
-    );
-    const addMessage = (0, import_react10.useCallback)(() => {
-      setMessages((m) => [...m, { role: "user", content: "" }]);
-    }, []);
-    const deleteMessage = (0, import_react10.useCallback)((index2) => {
-      setMessages((m) => {
-        m = m.slice();
-        m.splice(index2, 1);
-        return m;
-      });
-    }, []);
+    const updateRole = (0, import_react10.useCallback)((index2, role) => {
+      const newMessages = messages2.slice();
+      if (newMessages[index2]) {
+        newMessages[index2] = { ...newMessages[index2], role };
+        setMessages(newMessages);
+      }
+    }, [messages2]);
+    const updateContent = (0, import_react10.useCallback)((index2, content) => {
+      const newMessages = messages2.slice();
+      if (newMessages[index2]) {
+        newMessages[index2] = { ...newMessages[index2], content };
+        setMessages(newMessages);
+      }
+    }, [messages2]);
+    const addMessage = (0, import_react10.useCallback)(() => setMessages((m) => {
+      if (!m.length) {
+        return [{ role: "system", content: "" }];
+      } else {
+        const newRole = m[m.length - 1].role === "user" ? "assistant" : "user";
+        return [...m, { role: newRole, content: "" }];
+      }
+    }), []);
+    const deleteMessage = (0, import_react10.useCallback)((index2) => setMessages((m) => m.toSpliced(index2, 1)), []);
     (0, import_react10.useEffect)(() => {
       context.store.value$?.set(messages2);
     }, [messages2]);

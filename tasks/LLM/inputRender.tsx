@@ -7,7 +7,7 @@ import QwenSVG from "./icons/qwen.svg";
 import SiliconFlowSVG from "./icons/silicon-flow.svg";
 
 import type { InputRenderContext } from '@oomol/types/inputRender'
-import type { IModelOptions } from "./main";
+import type { IModelOptions, Message } from "./main";
 
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { createRoot } from "react-dom/client";
@@ -180,7 +180,7 @@ function labelOfModel(model: string): string {
 export function messages(dom: HTMLElement, context: InputRenderContext) {
   injectStyles();
 
-  const Role = ["system", "user", "assistant"];
+  const Role = ["system", "user", "assistant"] as const;
   const initialMessages = parseMessages(context.store.value$?.value);
   function MessagesComponent() {
     const [messages, setMessages] = useState(initialMessages);
@@ -190,39 +190,32 @@ export function messages(dom: HTMLElement, context: InputRenderContext) {
       return doHighlight_(text, allHandleNames.map(v => `{{${v}}}`));
     }, [allHandleNames]);
 
-    const updateRole = useCallback(
-      (index: number, role: string) => {
-        const newMessages = messages.slice();
-        if (newMessages[index]) {
-          newMessages[index] = { ...newMessages[index], role };
-          setMessages(newMessages);
-        }
-      },
-      [messages]
-    );
+    const updateRole = useCallback((index: number, role: "system" | "user" | "assistant") => {
+      const newMessages = messages.slice();
+      if (newMessages[index]) {
+        newMessages[index] = { ...newMessages[index], role };
+        setMessages(newMessages);
+      }
+    }, [messages]);
 
-    const updateContent = useCallback(
-      (index: number, content: string) => {
-        const newMessages = messages.slice();
-        if (newMessages[index]) {
-          newMessages[index] = { ...newMessages[index], content };
-          setMessages(newMessages);
-        }
-      },
-      [messages]
-    );
+    const updateContent = useCallback((index: number, content: string) => {
+      const newMessages = messages.slice();
+      if (newMessages[index]) {
+        newMessages[index] = { ...newMessages[index], content };
+        setMessages(newMessages);
+      }
+    }, [messages]);
 
-    const addMessage = useCallback(() => {
-      setMessages((m) => [...m, { role: "user", content: "" }]);
-    }, []);
+    const addMessage = useCallback(() => setMessages((m) => {
+      if (!m.length) {
+        return [{ role: "system", content: "" }];
+      } else {
+        const newRole = m[m.length - 1].role === "user" ? "assistant" : "user";
+        return [...m, { role: newRole, content: "" }];
+      }
+    }), []);
 
-    const deleteMessage = useCallback((index: number) => {
-      setMessages((m) => {
-        m = m.slice();
-        m.splice(index, 1);
-        return m;
-      });
-    }, []);
+    const deleteMessage = useCallback((index: number) => setMessages((m) => m.toSpliced(index, 1)), []);
 
     useEffect(() => {
       context.store.value$?.set(messages);
@@ -236,7 +229,7 @@ export function messages(dom: HTMLElement, context: InputRenderContext) {
               <TheSelect
                 value={{ value: a.role, label: a.role }}
                 options={Role.map((role) => ({ value: role, label: role }))}
-                onChange={(e: IBasicOption) => updateRole(i, e.value!)}
+                onChange={(e: IBasicOption) => updateRole(i, e.value as typeof Role[number])}
               />
               <button onClick={() => deleteMessage(i)}>
                 <i className="codicon codicon-trash" />
@@ -469,7 +462,7 @@ function RangeInput({
   );
 }
 
-function parseMessages(value: unknown) {
+function parseMessages(value: unknown): Message[] {
   if (typeof value === "string") {
     return [{ role: "user", content: value }];
   } else if (Array.isArray(value)) {
