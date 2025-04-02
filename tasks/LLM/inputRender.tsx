@@ -65,19 +65,19 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
 
     const customSelectLabel = ({ value }: { value: Model }) => {
       return (
-        <div className="custom-label">
+        <div className="llm-custom-label">
           <ModelIcon modelName={value.model_name} />
-          <div className="custom-label-content">
-            <div className="custom-label-header">
-              <div className="title-box">
-                <span className="title" title={labelOfModel(value.model_name)}>
+          <div className="llm-custom-label-content">
+            <div className="llm-custom-label-header">
+              <div className="llm-title-box">
+                <span className="llm-title" title={labelOfModel(value.model_name)}>
                   {labelOfModel(value.model_name)}
                 </span>
                 <ModelTag content={value.channel_name} highlight />
               </div>
-              <span className="ratio">Ratio: {value.ratio}</span>
+              <span className="llm-ratio">Ratio: {value.ratio}</span>
             </div>
-            <div className="tags">
+            <div className="llm-tags">
               {value.tags.map((tag) => (
                 <ModelTag key={tag} content={tag} />
               ))}
@@ -166,6 +166,7 @@ function labelOfModel(model: string): string {
       if (word === "qvq") return "QvQ";
       if (word === "qwq") return "QwQ";
       if (word === "deepseek") return "DeepSeek";
+      if (word === "vl") return "VL";
       if (word === "ai") return "AI";
       return word[0].toUpperCase() + word.slice(1);
     })
@@ -272,9 +273,9 @@ function customSingleValue<Option extends IBasicOption = IBasicOption>(
 ) {
   const { label, value } = option;
   return (
-    <div className="format-option-container" title={label || value}>
+    <div className="llm-format-option-container" title={label || value}>
       {value && <ModelIcon modelName={value} size={16} />}
-      <span className="format-option-label">{label || value}</span>
+      <span className="llm-format-option-label">{label || value}</span>
     </div>
   );
 }
@@ -349,7 +350,7 @@ function ModelTag({
   highlight?: boolean;
 }) {
   return (
-    <div className={`model-tag ${highlight ? "highlight" : ""}`}>{content}</div>
+    <div className={`llm-tag ${highlight ? "llm-tag-highlight" : ""}`}>{content}</div>
   );
 }
 
@@ -544,7 +545,7 @@ const STYLE = `
   background: #2b4f7760;
 }
 
-.custom-label {
+.llm-custom-label {
   flex: 1;
   display: flex;
   gap: 12px;
@@ -553,34 +554,34 @@ const STYLE = `
   padding: 8px 12px;
 }
 
-.custom-label-content {
+.llm-custom-label-content {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 9px;
   overflow: hidden;
 
-  .tags {
+  .llm-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
   }
 }
 
-.custom-label-header {
+.llm-custom-label-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
 
-  .title-box {
+  .llm-title-box {
     display: flex;
     gap: 4px;
     align-items: center;
     overflow: hidden;
   }
 
-   .title {
+   .llm-title {
     font-size: 13px;
     font-weight: 500;
     color: var(--text-4);
@@ -589,7 +590,7 @@ const STYLE = `
     text-overflow: ellipsis;
   }
 
-  .ratio {
+  .llm-ratio {
     white-space: nowrap;
     font-size: 12px;
     color: var(--text-2);
@@ -601,7 +602,7 @@ const STYLE = `
   }
 }
 
-.model-tag {
+.llm-tag {
   width: fit-content;
   display: flex;
   align-items: center;
@@ -613,7 +614,7 @@ const STYLE = `
   white-space: nowrap;
 }
 
-.highlight {
+.llm-tag-highlight {
   background-color: var(--brand-5);
   color: #ffffff;
 
@@ -622,12 +623,12 @@ const STYLE = `
   }
 }
 
-.format-option-container {
+.llm-format-option-container {
   display: flex;
   align-items: center;
   gap: 4px;
 
-  .format-option-label {
+  .llm-format-option-label {
     font-size: 11px;
     color: var(--text-4);
     font-weight: 500;
