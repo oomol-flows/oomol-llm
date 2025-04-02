@@ -13292,7 +13292,7 @@ function model(dom, context) {
       });
     }, [selectedModel, temperature, topP, maxTokens]);
     const customSelectLabel = ({ value: value2 }) => {
-      return /* @__PURE__ */ import_react10.default.createElement("div", { className: "custom-label" }, /* @__PURE__ */ import_react10.default.createElement(ModelIcon, { modelName: value2.model_name }), /* @__PURE__ */ import_react10.default.createElement("div", { className: "custom-label-content" }, /* @__PURE__ */ import_react10.default.createElement("div", { className: "custom-label-header" }, /* @__PURE__ */ import_react10.default.createElement("div", { className: "title-box" }, /* @__PURE__ */ import_react10.default.createElement("span", { className: "title", title: labelOfModel(value2.model_name) }, labelOfModel(value2.model_name)), /* @__PURE__ */ import_react10.default.createElement(ModelTag, { content: value2.channel_name, highlight: true })), /* @__PURE__ */ import_react10.default.createElement("span", { className: "ratio" }, "Ratio: ", value2.ratio)), /* @__PURE__ */ import_react10.default.createElement("div", { className: "tags" }, value2.tags.map((tag) => /* @__PURE__ */ import_react10.default.createElement(ModelTag, { key: tag, content: tag })))));
+      return /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-custom-label" }, /* @__PURE__ */ import_react10.default.createElement(ModelIcon, { modelName: value2.model_name }), /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-custom-label-content" }, /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-custom-label-header" }, /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-title-box" }, /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-title", title: labelOfModel(value2.model_name) }, labelOfModel(value2.model_name)), /* @__PURE__ */ import_react10.default.createElement(ModelTag, { content: value2.channel_name, highlight: true })), /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-ratio" }, "Ratio: ", value2.ratio)), /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-tags" }, value2.tags.map((tag) => /* @__PURE__ */ import_react10.default.createElement(ModelTag, { key: tag, content: tag })))));
     };
     return /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-container" }, /* @__PURE__ */ import_react10.default.createElement("div", { style: { display: "flex", gap: "5px", alignItems: "center" } }, /* @__PURE__ */ import_react10.default.createElement(
       TheSelect,
@@ -13359,6 +13359,7 @@ function labelOfModel(model2) {
     if (word === "qvq") return "QvQ";
     if (word === "qwq") return "QwQ";
     if (word === "deepseek") return "DeepSeek";
+    if (word === "vl") return "VL";
     if (word === "ai") return "AI";
     return word[0].toUpperCase() + word.slice(1);
   }).join(" ");
@@ -13433,7 +13434,7 @@ function doHighlight_(content, keys) {
 }
 function customSingleValue(option) {
   const { label, value } = option;
-  return /* @__PURE__ */ import_react10.default.createElement("div", { className: "format-option-container", title: label || value }, value && /* @__PURE__ */ import_react10.default.createElement(ModelIcon, { modelName: value, size: 16 }), /* @__PURE__ */ import_react10.default.createElement("span", { className: "format-option-label" }, label || value));
+  return /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-format-option-container", title: label || value }, value && /* @__PURE__ */ import_react10.default.createElement(ModelIcon, { modelName: value, size: 16 }), /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-format-option-label" }, label || value));
 }
 var customComponents = {
   DropdownIndicator: (props) => /* @__PURE__ */ import_react10.default.createElement(components.DropdownIndicator, { ...props }, /* @__PURE__ */ import_react10.default.createElement("i", { className: "i-codicon:chevron-down" })),
@@ -13486,7 +13487,7 @@ function ModelTag({
   content,
   highlight
 }) {
-  return /* @__PURE__ */ import_react10.default.createElement("div", { className: `model-tag ${highlight ? "highlight" : ""}` }, content);
+  return /* @__PURE__ */ import_react10.default.createElement("div", { className: `llm-tag ${highlight ? "llm-tag-highlight" : ""}` }, content);
 }
 var modelIconMap = {
   codestral: codestral_default,
@@ -13649,7 +13650,7 @@ var STYLE = `
   background: #2b4f7760;
 }
 
-.custom-label {
+.llm-custom-label {
   flex: 1;
   display: flex;
   gap: 12px;
@@ -13658,34 +13659,34 @@ var STYLE = `
   padding: 8px 12px;
 }
 
-.custom-label-content {
+.llm-custom-label-content {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 9px;
   overflow: hidden;
 
-  .tags {
+  .llm-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
   }
 }
 
-.custom-label-header {
+.llm-custom-label-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
 
-  .title-box {
+  .llm-title-box {
     display: flex;
     gap: 4px;
     align-items: center;
     overflow: hidden;
   }
 
-   .title {
+   .llm-title {
     font-size: 13px;
     font-weight: 500;
     color: var(--text-4);
@@ -13694,7 +13695,7 @@ var STYLE = `
     text-overflow: ellipsis;
   }
 
-  .ratio {
+  .llm-ratio {
     white-space: nowrap;
     font-size: 12px;
     color: var(--text-2);
@@ -13706,7 +13707,7 @@ var STYLE = `
   }
 }
 
-.model-tag {
+.llm-tag {
   width: fit-content;
   display: flex;
   align-items: center;
@@ -13718,7 +13719,7 @@ var STYLE = `
   white-space: nowrap;
 }
 
-.highlight {
+.llm-tag-highlight {
   background-color: var(--brand-5);
   color: #ffffff;
 
@@ -13727,12 +13728,12 @@ var STYLE = `
   }
 }
 
-.format-option-container {
+.llm-format-option-container {
   display: flex;
   align-items: center;
   gap: 4px;
 
-  .format-option-label {
+  .llm-format-option-label {
     font-size: 11px;
     color: var(--text-4);
     font-weight: 500;
