@@ -5,6 +5,8 @@ import Mistralai from "./icons/mistralai.svg";
 import OOMOLSVG from "./icons/oomol.svg";
 import QwenSVG from "./icons/qwen.svg";
 import SiliconFlowSVG from "./icons/silicon-flow.svg";
+import GeminiSVG from "./icons/gemini.svg";
+import defaultSVG from "./icons/default.svg";
 
 import type { InputRenderContext } from '@oomol/types/inputRender'
 import type { IModelOptions, Message } from "./main";
@@ -355,6 +357,7 @@ function ModelTag({
 }
 
 const modelIconMap = {
+  "fallback-icon": defaultSVG,
   codestral: CodestralSVG,
   deepseek: DeepSeekSVG,
   doubao: DouBaoSVG,
@@ -363,6 +366,7 @@ const modelIconMap = {
   qwen: QwenSVG,
   "silicon-flow": SiliconFlowSVG,
   qwq: QwenSVG,
+  gemini: GeminiSVG,
 };
 
 function getModelIcon(model: string) {
@@ -373,7 +377,7 @@ function getModelIcon(model: string) {
     .toLowerCase();
 
   return (
-    Object.keys(modelIconMap).find((key) => parsedLabel.includes(key)) || null
+    Object.keys(modelIconMap).find((key) => parsedLabel.includes(key)) || "fallback-icon"
   );
 }
 
