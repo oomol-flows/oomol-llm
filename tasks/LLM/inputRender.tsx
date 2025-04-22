@@ -186,7 +186,25 @@ function labelOfModel(model: string): string {
 export function messages(dom: HTMLElement, context: InputRenderContext) {
   injectStyles();
 
+  const carbonSystem = <svg width="16" height="16" viewBox="0 0 32 32"><path fill="currentColor" d="M30 24v-2h-2.101a5 5 0 0 0-.732-1.753l1.49-1.49l-1.414-1.414l-1.49 1.49A5 5 0 0 0 24 18.101V16h-2v2.101a5 5 0 0 0-1.753.732l-1.49-1.49l-1.414 1.414l1.49 1.49A5 5 0 0 0 18.101 22H16v2h2.101a5 5 0 0 0 .732 1.753l-1.49 1.49l1.414 1.414l1.49-1.49a5 5 0 0 0 1.753.732V30h2v-2.101a5 5 0 0 0 1.753-.732l1.49 1.49l1.414-1.414l-1.49-1.49A5 5 0 0 0 27.899 24Zm-7 2a3 3 0 1 1 3-3a3.003 3.003 0 0 1-3 3" /><path fill="currentColor" d="M28 4H4a2 2 0 0 0-2 2v20a2 2 0 0 0 2 2h10v-2H4V12h24v3h2V6a2 2 0 0 0-2-2m0 6H4V6h24Z" /><circle cx="20" cy="8" r="1" fill="currentColor" /><circle cx="23" cy="8" r="1" fill="currentColor" /><circle cx="26" cy="8" r="1" fill="currentColor" /></svg>;
+  const carbonAssistant = <svg width="16" height="16" viewBox="0 0 32 32"><path fill="currentColor" d="M16 30C8.28 30 2 23.72 2 16S8.28 2 16 2s14 6.28 14 14c0 2.62-.73 5.18-2.11 7.39c.05.74 1.05 3.21 2.01 5.17c.19.38.11.84-.19 1.14s-.76.38-1.14.2c-1.99-.96-4.5-1.94-5.24-1.97A14 14 0 0 1 16 30m0-26C9.38 4 4 9.38 4 16s5.38 12 12 12a12 12 0 0 0 6.39-1.84c.32-.21 1.01-.63 4.58.84c-1.5-3.54-1.07-4.22-.87-4.54c1.23-1.93 1.89-4.16 1.89-6.46c0-6.62-5.38-12-12-12zm7.83 16.87l-1.67-1.11a4.997 4.997 0 0 1-8.33 0l-1.67 1.11A7 7 0 0 0 17.99 24c2.35 0 4.54-1.17 5.83-3.13zM22 13c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2c.01-1.09-.87-1.99-1.96-2zm-8 0c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2c.01-1.09-.87-1.99-1.96-2z" /></svg>;
+  const carbonUser = <svg width="16" height="16" viewBox="0 0 32 32"><path fill="currentColor" d="M16 8a5 5 0 1 0 5 5a5 5 0 0 0-5-5m0 8a3 3 0 1 1 3-3a3.003 3.003 0 0 1-3 3" /><path fill="currentColor" d="M16 2a14 14 0 1 0 14 14A14.016 14.016 0 0 0 16 2m-6 24.377V25a3.003 3.003 0 0 1 3-3h6a3.003 3.003 0 0 1 3 3v1.377a11.9 11.9 0 0 1-12 0m13.993-1.451A5 5 0 0 0 19 20h-6a5 5 0 0 0-4.992 4.926a12 12 0 1 1 15.985 0" /></svg>
+
   const Role = ["system", "user", "assistant"] as const;
+  const RoleImages: Record<typeof Role[number], React.ReactNode> = {
+    system: carbonSystem,
+    assistant: carbonAssistant,
+    user: carbonUser,
+  }
+  const RoleOptions = Role.map((role) => ({
+    value: role,
+    label: (
+      <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        {RoleImages[role]}
+        <span style={{ textTransform: 'capitalize' }}>{role}</span>
+      </div>
+    )
+  }));
   const initialMessages = parseMessages(context.store.value$?.value);
   function MessagesComponent() {
     const [messages, setMessages] = useState(initialMessages);
@@ -233,9 +251,10 @@ export function messages(dom: HTMLElement, context: InputRenderContext) {
           <div key={i} data-message-index={i} className="llm-message-container">
             <div className="llm-message-head">
               <TheSelect
-                value={{ value: a.role, label: a.role }}
-                options={Role.map((role) => ({ value: role, label: role }))}
+                value={RoleOptions.find((option) => option.value === a.role)}
+                options={RoleOptions}
                 onChange={(e: IBasicOption) => updateRole(i, e.value as typeof Role[number])}
+                customComponents={customComponentsWithDefaultSingleValue}
               />
               <button onClick={() => deleteMessage(i)}>
                 <i className="codicon codicon-trash" />
@@ -303,6 +322,19 @@ const customComponents = {
   ),
 };
 
+const customComponentsWithDefaultSingleValue = {
+  DropdownIndicator: (props: any) => (
+    <components.DropdownIndicator {...props}>
+      <i className="i-codicon:chevron-down" />
+    </components.DropdownIndicator>
+  ),
+  Menu: (props: any) => (
+    <components.Menu {...props} className={clsx(props.className, "nowheel")}>
+      {props.children}
+    </components.Menu>
+  ),
+};
+
 function TheSelect(props: any) {
   const [menuWidth, setMenuWidth] = useState(0);
   const innerRef = useRef<SelectInstance<any, any>>(null);
@@ -340,7 +372,7 @@ function TheSelect(props: any) {
         classNamePrefix="react-select"
         onChange={props.onChange}
         unstyled
-        components={customComponents}
+        components={props.customComponents ?? customComponents}
         styles={{ menu: (base) => ({ ...base, width: "var(--menu-width)" }) }}
       />
     </div>
