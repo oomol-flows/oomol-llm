@@ -1,10 +1,30 @@
-<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect width="40" height="40" rx="8" fill="white"/>
-<rect width="40" height="40" rx="8" fill="url(#pattern0_2130_22465)"/>
+<g clip-path="url(#clip0_2130_22556)">
+<path d="M13.1357 9H8.56689V13.3995H13.1357V9Z" fill="black"/>
+<path d="M31.4165 9H26.8477V13.3995H31.4165V9Z" fill="black"/>
+<path d="M17.7044 13.3989H8.56689V17.7984H17.7044V13.3989Z" fill="black"/>
+<path d="M31.4178 13.3989H22.2803V17.7984H31.4178V13.3989Z" fill="black"/>
+<path d="M31.4136 17.7983H8.56689V22.1977H31.4136V17.7983Z" fill="black"/>
+<path d="M13.1357 22.1987H8.56689V26.5982H13.1357V22.1987Z" fill="black"/>
+<path d="M22.2763 22.1987H17.7075V26.5982H22.2763V22.1987Z" fill="black"/>
+<path d="M31.4165 22.1987H26.8477V26.5982H31.4165V22.1987Z" fill="black"/>
+<path d="M17.7091 26.6011H4V31.0005H17.7091V26.6011Z" fill="black"/>
+<path d="M35.9894 26.6011H22.2803V31.0005H35.9894V26.6011Z" fill="black"/>
+<path d="M13.1371 9H8.56836V13.3995H13.1371V9Z" fill="#FFD800"/>
+<path d="M31.4149 9H26.8462V13.3995H31.4149V9Z" fill="#FFD800"/>
+<path d="M17.7059 13.3989H8.56836V17.7984H17.7059V13.3989Z" fill="#FFAF00"/>
+<path d="M31.4148 13.3989H22.2773V17.7984H31.4148V13.3989Z" fill="#FFAF00"/>
+<path d="M31.415 17.7983H8.56836V22.1977H31.415V17.7983Z" fill="#FF8205"/>
+<path d="M13.1371 22.1987H8.56836V26.5982H13.1371V22.1987Z" fill="#FA500F"/>
+<path d="M22.2763 22.1987H17.7075V26.5982H22.2763V22.1987Z" fill="#FA500F"/>
+<path d="M31.4149 22.1987H26.8462V26.5982H31.4149V22.1987Z" fill="#FA500F"/>
+<path d="M17.7091 26.6011H4V31.0005H17.7091V26.6011Z" fill="#E10500"/>
+<path d="M35.9865 26.6011H22.2773V31.0005H35.9865V26.6011Z" fill="#E10500"/>
+</g>
 <defs>
-<pattern id="pattern0_2130_22465" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_2130_22465" transform="scale(0.00555556)"/>
-</pattern>
-<image id="image0_2130_22465" width="180" height="180" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0BAMAAADP4xsBAAAAAXNSR0IArs4c6QAAAB5QTFRFAAAA1FUq3VUz5F4v5V4v5l0u510t5V4v5l0u5l0ukuYZKAAAAAl0Uk5TAAYPJmJ5nZ7DfxfQ4gAAALJJREFUeNrt2rEJwkAYhuETQbBzBxcIZgUV0juAhWQHR7CzEPS2tf2ayHWG8LztB099/FyRJElaeKs+OpSm9n20K1Ota/Rqo4cadWg0Go1Go9Hzpj9jdC3RJpdHKz3Vs0TbmqHRaDQajUbPnW4LjUaj0Wg0Gv37rLWdfKUNaDQajUaj0fOjj9GpRu9czmN0y+Veo0supWatZ62m0Gg0Go1Go/9G9011Sa/7pnyVlyRJC+wLOvx68u80dbkAAAAASUVORK5CYII="/>
+<clipPath id="clip0_2130_22556">
+<rect width="32" height="22" fill="white" transform="translate(4 9)"/>
+</clipPath>
 </defs>
 </svg>
