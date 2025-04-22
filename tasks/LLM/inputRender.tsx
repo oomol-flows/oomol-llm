@@ -8,6 +8,8 @@ import SiliconFlowSVG from "./icons/silicon-flow.svg";
 import GeminiSVG from "./icons/gemini.svg";
 import DefaultSVG from "./icons/default.svg";
 import GrokSVG from "./icons/grok.svg";
+import OpenAISVG from "./icons/openai.svg";
+import ClaudeSVG from "./icons/claude.svg";
 
 import type { InputRenderContext } from '@oomol/types/inputRender'
 import type { IModelOptions, Message } from "./main";
@@ -369,6 +371,8 @@ const modelIconMap = {
   qwq: QwenSVG,
   gemini: GeminiSVG,
   grok: GrokSVG,
+  openai: OpenAISVG,
+  claude: ClaudeSVG,
 };
 
 function getModelIcon(model: string) {
