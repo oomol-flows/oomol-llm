@@ -13307,7 +13307,7 @@ function model(dom, context) {
       });
     }, [selectedModel, temperature, topP, maxTokens]);
     const customSelectLabel = ({ value: value2 }) => {
-      return /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-custom-label" }, /* @__PURE__ */ import_react10.default.createElement(ModelIcon, { modelName: value2.model_name }), /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-custom-label-content" }, /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-custom-label-header" }, /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-title-box" }, /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-title", title: labelOfModel(value2.model_name) }, labelOfModel(value2.model_name)), /* @__PURE__ */ import_react10.default.createElement(ModelTag, { content: value2.channel_name, highlight: true })), /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-ratio" }, "Ratio: ", value2.ratio)), /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-tags" }, value2.tags.map((tag) => /* @__PURE__ */ import_react10.default.createElement(ModelTag, { key: tag, content: tag })))));
+      return /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-custom-label" }, /* @__PURE__ */ import_react10.default.createElement(ModelIcon, { modelName: value2.model_name }), /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-custom-label-content" }, /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-custom-label-header" }, /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-title-box" }, /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-title", title: labelOfModel(value2.model_name) }, labelOfModel(value2.model_name))), /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-ratio" }, "Input: ", value2.input_ratio, " / Output: ", value2.output_ratio)), /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-tags" }, /* @__PURE__ */ import_react10.default.createElement(ModelTag, { content: value2.channel_name, highlight: true }), value2.tags.map((tag) => /* @__PURE__ */ import_react10.default.createElement(ModelTag, { key: tag, content: tag })))));
     };
     return /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-container" }, /* @__PURE__ */ import_react10.default.createElement("div", { style: { display: "flex", gap: "5px", alignItems: "center" } }, /* @__PURE__ */ import_react10.default.createElement(
       TheSelect,
@@ -13737,10 +13737,6 @@ var STYLE = `
     font-size: 12px;
     color: var(--text-2);
     font-weight: 500;
-
-    .oomol-theme-dark & {
-      color: var(--text-3);
-    }
   }
 }
 
