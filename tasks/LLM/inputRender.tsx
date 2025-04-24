@@ -30,6 +30,8 @@ type Model = {
   tags: string[];
   ratio: number;
   channel_name: string;
+  input_ratio: number;
+  output_ratio: number;
 };
 
 // See https://github.com/JedWatson/react-select/blob/-/packages/react-select/src/builtins.ts
@@ -78,11 +80,11 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
                 <span className="llm-title" title={labelOfModel(value.model_name)}>
                   {labelOfModel(value.model_name)}
                 </span>
-                <ModelTag content={value.channel_name} highlight />
               </div>
-              <span className="llm-ratio">Ratio: {value.ratio}</span>
+              <span className="llm-ratio">Input: {value.input_ratio} / Output: {value.output_ratio}</span>
             </div>
             <div className="llm-tags">
+              <ModelTag content={value.channel_name} highlight />
               {value.tags.map((tag) => (
                 <ModelTag key={tag} content={tag} />
               ))}
@@ -637,10 +639,6 @@ const STYLE = `
     font-size: 12px;
     color: var(--text-2);
     font-weight: 500;
-
-    .oomol-theme-dark & {
-      color: var(--text-3);
-    }
   }
 }
 
