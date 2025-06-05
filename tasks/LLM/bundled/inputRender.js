@@ -13519,14 +13519,11 @@ function ModelTag({
   channelName,
   highlight
 }) {
-  return (
-    // <div className={`llm-tag ${highlight ? "llm-tag-highlight" : ""}`}>{channelName}</div>
-    /* @__PURE__ */ import_react10.default.createElement("div", { className: clsx_default(
-      "llm-tag",
-      highlight && "llm-tag-highlight",
-      channelName && `llm-tag-${channelName}`
-    ) }, channelName)
-  );
+  return /* @__PURE__ */ import_react10.default.createElement("div", { className: clsx_default(
+    "llm-tag",
+    highlight && "llm-tag-highlight",
+    channelName && `llm-tag-${channelName}`
+  ) }, channelName);
 }
 var modelIconMap = {
   "fallback-icon": default_default,
