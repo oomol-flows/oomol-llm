@@ -84,9 +84,9 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
               <span className="llm-ratio">Input: {value.input_ratio} / Output: {value.output_ratio}</span>
             </div>
             <div className="llm-tags">
-              <ModelTag content={value.channel_name} highlight />
+              <ModelTag channelName={value.channel_name} highlight />
               {value.tags.map((tag) => (
-                <ModelTag key={tag} content={tag} />
+                <ModelTag key={tag} channelName={tag} />
               ))}
             </div>
           </div>
@@ -382,14 +382,18 @@ function TheSelect(props: any) {
 }
 
 function ModelTag({
-  content,
+  channelName,
   highlight,
 }: {
-  content: string;
+  channelName: string;
   highlight?: boolean;
 }) {
   return (
-    <div className={`llm-tag ${highlight ? "llm-tag-highlight" : ""}`}>{content}</div>
+    <div className={clsx(
+      "llm-tag",
+      highlight && "llm-tag-highlight",
+      channelName && `llm-tag-${channelName}`
+    )}>{channelName}</div>
   );
 }
 
@@ -661,6 +665,26 @@ const STYLE = `
   .oomol-theme-dark & {
     color: var(--text-4);
   }
+}
+
+.llm-tag-AlibabaCloud {
+  color: #ffffff;
+  background-color: #E4630B;
+}
+
+.llm-tag-DeepSeek {
+  color: #ffffff;
+  background-color: #4D6BFF;
+}
+
+.llm-tag-VolcEngine {
+  color: #ffffff;
+  background-color: #2FC6C6;
+}
+
+.llm-tag-OpenRouter {
+  color: #ffffff;
+  background-color: #7C8B9D;
 }
 
 .llm-format-option-container {
