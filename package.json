@@ -6,13 +6,13 @@
     "build-entry": "esbuild tasks/LLM/main.ts --bundle --platform=node --format=esm --outdir=tasks/LLM/bundled"
   },
   "devDependencies": {
-    "@ai-sdk/openai-compatible": "^0.2.12",
+    "@ai-sdk/openai-compatible": "^0.2.14",
     "@hyrious/configs": "^0.1.4",
-    "@oomol/types": "^0.0.12",
+    "@oomol/types": "^0.0.14",
     "@types/react-dom": "^18.3.5",
-    "ai": "^4.3.9",
+    "ai": "^4.3.16",
     "clsx": "^2.1.1",
-    "esbuild": "^0.25.2",
+    "esbuild": "^0.25.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-select": "^5.10.1",
