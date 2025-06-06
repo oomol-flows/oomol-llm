@@ -165,7 +165,7 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
 }
 
 function labelOfModel(model: string): string {
-  model = model.replace(/\W/g, " ").replace(/\s+/g, " ").toLowerCase();
+  model = model.replace(/[-_/]/g, " ").replace(/\s+/g, " ").toLowerCase();
   model = model
     .split(" ")
     .map((word) => {

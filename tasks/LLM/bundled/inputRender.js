@@ -13368,7 +13368,7 @@ function model(dom, context) {
   return () => root.unmount();
 }
 function labelOfModel(model2) {
-  model2 = model2.replace(/\W/g, " ").replace(/\s+/g, " ").toLowerCase();
+  model2 = model2.replace(/[-_/]/g, " ").replace(/\s+/g, " ").toLowerCase();
   model2 = model2.split(" ").map((word) => {
     if (word === "oomol") return "OOMOL";
     if (word === "qwen") return "Qwen";
