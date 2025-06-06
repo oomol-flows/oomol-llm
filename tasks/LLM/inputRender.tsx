@@ -16,7 +16,7 @@ import type { IModelOptions, Message } from "./main";
 
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { createRoot } from "react-dom/client";
-import Select, { components, SelectInstance } from "react-select";
+import Select, { components, SelectInstance, Props as ReactSelectProps } from "react-select";
 import Editor from "react-simple-code-editor";
 import clsx from "clsx";
 import { useVal } from "use-value-enhancer";
@@ -37,7 +37,7 @@ type Model = {
 // See https://github.com/JedWatson/react-select/blob/-/packages/react-select/src/builtins.ts
 export interface IBasicOption {
   readonly icon?: string | React.ReactNode;
-  readonly label?: string;
+  readonly label?: string | React.ReactNode;
   readonly value?: string;
   readonly isDisabled?: boolean;
 }
@@ -103,9 +103,10 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
               value: model.model_name,
               label: customSelectLabel({ value: model }),
             }))}
-            onChange={(selectedOption: IBasicOption) => {
-              setSelectedModel(selectedOption.value || '');
+            onChange={(selectedOption: IBasicOption | null) => {
+              setSelectedModel(selectedOption?.value || '');
             }}
+            isLoading={models.length === 0}
           />
           <button onClick={() => setExpanded(!expanded)}>
             <i className="codicon codicon-settings" />
@@ -255,8 +256,8 @@ export function messages(dom: HTMLElement, context: InputRenderContext) {
               <TheSelect
                 value={RoleOptions.find((option) => option.value === a.role)}
                 options={RoleOptions}
-                onChange={(e: IBasicOption) => updateRole(i, e.value as typeof Role[number])}
-                customComponents={customComponentsWithDefaultSingleValue}
+                onChange={(e: IBasicOption | null) => updateRole(i, (e?.value as typeof Role[number]) ?? 'user')}
+                components={customComponentsWithDefaultSingleValue}
               />
               <button onClick={() => deleteMessage(i)}>
                 <i className="codicon codicon-trash" />
@@ -299,11 +300,16 @@ function customSingleValue<Option extends IBasicOption = IBasicOption>(
 ) {
   const { label, value } = option;
   return (
-    <div className="llm-format-option-container" title={label || value}>
+    <div className="llm-format-option-container" title={filterString(label) || value}>
       {value && <ModelIcon modelName={value} size={16} />}
       <span className="llm-format-option-label">{label || value}</span>
     </div>
   );
+}
+
+function filterString(str: string | React.ReactNode): string {
+  if (typeof str === "string") return str;
+  return ""
 }
 
 const customComponents = {
@@ -337,7 +343,9 @@ const customComponentsWithDefaultSingleValue = {
   ),
 };
 
-function TheSelect(props: any) {
+interface SelectProps extends ReactSelectProps<IBasicOption, false> { }
+
+function TheSelect(props: SelectProps) {
   const [menuWidth, setMenuWidth] = useState(0);
   const innerRef = useRef<SelectInstance<any, any>>(null);
 
@@ -372,10 +380,11 @@ function TheSelect(props: any) {
         options={props.options}
         className="react-select-container"
         classNamePrefix="react-select"
-        onChange={props.onChange}
+        onChange={props.onChange as any}
         unstyled
-        components={props.customComponents ?? customComponents}
+        components={props.components ?? customComponents}
         styles={{ menu: (base) => ({ ...base, width: "var(--menu-width)" }) }}
+        isLoading={props.isLoading}
       />
     </div>
   );

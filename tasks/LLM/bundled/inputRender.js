@@ -13318,8 +13318,9 @@ function model(dom, context) {
           label: customSelectLabel({ value: model2 })
         })),
         onChange: (selectedOption) => {
-          setSelectedModel(selectedOption.value || "");
-        }
+          setSelectedModel(selectedOption?.value || "");
+        },
+        isLoading: models.length === 0
       }
     ), /* @__PURE__ */ import_react10.default.createElement("button", { onClick: () => setExpanded(!expanded) }, /* @__PURE__ */ import_react10.default.createElement("i", { className: "codicon codicon-settings" }))), expanded && /* @__PURE__ */ import_react10.default.createElement(
       "div",
@@ -13433,8 +13434,8 @@ function messages(dom, context) {
       {
         value: RoleOptions.find((option) => option.value === a.role),
         options: RoleOptions,
-        onChange: (e) => updateRole(i, e.value),
-        customComponents: customComponentsWithDefaultSingleValue
+        onChange: (e) => updateRole(i, e?.value ?? "user"),
+        components: customComponentsWithDefaultSingleValue
       }
     ), /* @__PURE__ */ import_react10.default.createElement("button", { onClick: () => deleteMessage(i) }, /* @__PURE__ */ import_react10.default.createElement("i", { className: "codicon codicon-trash" }))), /* @__PURE__ */ import_react10.default.createElement(
       import_react_simple_code_editor.default,
@@ -13462,7 +13463,11 @@ function doHighlight_(content, keys) {
 }
 function customSingleValue(option) {
   const { label, value } = option;
-  return /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-format-option-container", title: label || value }, value && /* @__PURE__ */ import_react10.default.createElement(ModelIcon, { modelName: value, size: 16 }), /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-format-option-label" }, label || value));
+  return /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-format-option-container", title: filterString(label) || value }, value && /* @__PURE__ */ import_react10.default.createElement(ModelIcon, { modelName: value, size: 16 }), /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-format-option-label" }, label || value));
+}
+function filterString(str) {
+  if (typeof str === "string") return str;
+  return "";
 }
 var customComponents = {
   DropdownIndicator: (props) => /* @__PURE__ */ import_react10.default.createElement(components.DropdownIndicator, { ...props }, /* @__PURE__ */ import_react10.default.createElement("i", { className: "i-codicon:chevron-down" })),
@@ -13509,8 +13514,9 @@ function TheSelect(props) {
         classNamePrefix: "react-select",
         onChange: props.onChange,
         unstyled: true,
-        components: props.customComponents ?? customComponents,
-        styles: { menu: (base) => ({ ...base, width: "var(--menu-width)" }) }
+        components: props.components ?? customComponents,
+        styles: { menu: (base) => ({ ...base, width: "var(--menu-width)" }) },
+        isLoading: props.isLoading
       }
     )
   );
