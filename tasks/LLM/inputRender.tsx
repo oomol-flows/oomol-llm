@@ -49,6 +49,7 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
     const [models, setModels] = useState<Model[]>([]);
     const [expanded, setExpanded] = useState(false);
 
+    const readonly = !context.store.context.canEditValue;
     const value = context.store.value$?.value as IModelOptions | undefined;
     const [selectedModel, setSelectedModel] = useState(value?.model || "oomol-chat");
     const [temperature, setTemperature] = useState<number>(value?.temperature || 0);
@@ -70,29 +71,27 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
       } satisfies IModelOptions);
     }, [selectedModel, temperature, topP, maxTokens]);
 
-    const customSelectLabel = ({ value }: { value: Model }) => {
-      return (
-        <div className="llm-custom-label">
-          <ModelIcon modelName={value.model_name} />
-          <div className="llm-custom-label-content">
-            <div className="llm-custom-label-header">
-              <div className="llm-title-box">
-                <span className="llm-title" title={labelOfModel(value.model_name)}>
-                  {labelOfModel(value.model_name)}
-                </span>
-              </div>
-              <span className="llm-ratio">Input: {value.input_ratio} / Output: {value.output_ratio}</span>
+    const customSelectLabel = ({ value }: { value: Model }) => (
+      <div className="llm-custom-label">
+        <ModelIcon modelName={value.model_name} />
+        <div className="llm-custom-label-content">
+          <div className="llm-custom-label-header">
+            <div className="llm-title-box">
+              <span className="llm-title" title={labelOfModel(value.model_name)}>
+                {labelOfModel(value.model_name)}
+              </span>
             </div>
-            <div className="llm-tags">
-              <ModelTag channelName={value.channel_name} highlight />
-              {value.tags.map((tag) => (
-                <ModelTag key={tag} channelName={tag} />
-              ))}
-            </div>
+            <span className="llm-ratio">Input: {value.input_ratio} / Output: {value.output_ratio}</span>
+          </div>
+          <div className="llm-tags">
+            <ModelTag channelName={value.channel_name} highlight />
+            {value.tags.map((tag) => (
+              <ModelTag key={tag} channelName={tag} />
+            ))}
           </div>
         </div>
-      );
-    };
+      </div>
+    );
 
     return (
       <div className="llm-container">
@@ -107,6 +106,7 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
               setSelectedModel(selectedOption?.value || '');
             }}
             isLoading={models.length === 0}
+            isDisabled={readonly}
           />
           <button onClick={() => setExpanded(!expanded)}>
             <i className="codicon codicon-settings" />
@@ -150,7 +150,7 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
                 defaultValue: 2048,
               },
             ].map((props) => (
-              <RangeInput key={props.label} {...props} />
+              <RangeInput key={props.label} {...props} disabled={readonly} />
             ))}
           </div>
         )}
@@ -208,10 +208,13 @@ export function messages(dom: HTMLElement, context: InputRenderContext) {
       </div>
     )
   }));
+
   const initialMessages = parseMessages(context.store.value$?.value);
   function MessagesComponent() {
     const [messages, setMessages] = useState(initialMessages);
     const allHandleNames = useVal(context.allHandleNames);
+
+    const readonly = !context.store.context.canEditValue;
 
     const doHighlight = useCallback((text: string): string => {
       return doHighlight_(text, allHandleNames.map(v => `{{${v}}}`));
@@ -258,14 +261,18 @@ export function messages(dom: HTMLElement, context: InputRenderContext) {
                 options={RoleOptions}
                 onChange={(e: IBasicOption | null) => updateRole(i, (e?.value as typeof Role[number]) ?? 'user')}
                 components={customComponentsWithDefaultSingleValue}
+                isDisabled={readonly}
               />
-              <button onClick={() => deleteMessage(i)}>
-                <i className="codicon codicon-trash" />
-              </button>
+              {readonly ? null : (
+                <button onClick={() => deleteMessage(i)}>
+                  <i className="codicon codicon-trash" />
+                </button>
+              )}
             </div>
             <Editor
               value={a.content}
               onValueChange={(content) => updateContent(i, content)}
+              readOnly={readonly}
               highlight={doHighlight}
               padding={5}
               className="llm-message-content"
@@ -274,9 +281,11 @@ export function messages(dom: HTMLElement, context: InputRenderContext) {
             />
           </div>
         ))}
-        <button className="llm-btn-add-message" onClick={addMessage}>
-          Add message
-        </button>
+        {readonly ? null : (
+          <button className="llm-btn-add-message" onClick={addMessage}>
+            Add message
+          </button>
+        )}
       </div>
     );
   }
@@ -385,6 +394,7 @@ function TheSelect(props: SelectProps) {
         components={props.components ?? customComponents}
         styles={{ menu: (base) => ({ ...base, width: "var(--menu-width)" }) }}
         isLoading={props.isLoading}
+        isDisabled={props.isDisabled}
       />
     </div>
   );
@@ -454,6 +464,7 @@ interface RangeInputProps {
   step: number;
   onChange: (value: number | string) => void;
   defaultValue?: number;
+  disabled?: boolean;
 }
 
 function RangeInput({
@@ -464,6 +475,7 @@ function RangeInput({
   step,
   onChange,
   defaultValue,
+  disabled
 }: RangeInputProps) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
@@ -479,6 +491,7 @@ function RangeInput({
             onChange(e.target.value);
           }}
           defaultValue={defaultValue}
+          disabled={disabled}
           style={{
             height: "4px",
             flex: 1,
@@ -494,6 +507,7 @@ function RangeInput({
           step={step}
           value={value}
           defaultValue={defaultValue}
+          disabled={disabled}
           onChange={(e) => {
             const newValue =
               e.target.value === ""

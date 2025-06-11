@@ -15,6 +15,9 @@ nodes:
         value:
           - role: user
             content: Hi, I'm {{input}}. What's the result of {{a}} plus {{b}}?
+        schema_overrides:
+          - schema:
+              type: array
       - handle: a
         value: 123
       - handle: b

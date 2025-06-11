@@ -13286,6 +13286,7 @@ function model(dom, context) {
   function ModelComponent() {
     const [models, setModels] = (0, import_react10.useState)([]);
     const [expanded, setExpanded] = (0, import_react10.useState)(false);
+    const readonly = !context.store.context.canEditValue;
     const value = context.store.value$?.value;
     const [selectedModel, setSelectedModel] = (0, import_react10.useState)(value?.model || "oomol-chat");
     const [temperature, setTemperature] = (0, import_react10.useState)(value?.temperature || 0);
@@ -13306,9 +13307,7 @@ function model(dom, context) {
         max_tokens: maxTokens
       });
     }, [selectedModel, temperature, topP, maxTokens]);
-    const customSelectLabel = ({ value: value2 }) => {
-      return /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-custom-label" }, /* @__PURE__ */ import_react10.default.createElement(ModelIcon, { modelName: value2.model_name }), /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-custom-label-content" }, /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-custom-label-header" }, /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-title-box" }, /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-title", title: labelOfModel(value2.model_name) }, labelOfModel(value2.model_name))), /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-ratio" }, "Input: ", value2.input_ratio, " / Output: ", value2.output_ratio)), /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-tags" }, /* @__PURE__ */ import_react10.default.createElement(ModelTag, { channelName: value2.channel_name, highlight: true }), value2.tags.map((tag) => /* @__PURE__ */ import_react10.default.createElement(ModelTag, { key: tag, channelName: tag })))));
-    };
+    const customSelectLabel = ({ value: value2 }) => /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-custom-label" }, /* @__PURE__ */ import_react10.default.createElement(ModelIcon, { modelName: value2.model_name }), /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-custom-label-content" }, /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-custom-label-header" }, /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-title-box" }, /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-title", title: labelOfModel(value2.model_name) }, labelOfModel(value2.model_name))), /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-ratio" }, "Input: ", value2.input_ratio, " / Output: ", value2.output_ratio)), /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-tags" }, /* @__PURE__ */ import_react10.default.createElement(ModelTag, { channelName: value2.channel_name, highlight: true }), value2.tags.map((tag) => /* @__PURE__ */ import_react10.default.createElement(ModelTag, { key: tag, channelName: tag })))));
     return /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-container" }, /* @__PURE__ */ import_react10.default.createElement("div", { style: { display: "flex", gap: "5px", alignItems: "center" } }, /* @__PURE__ */ import_react10.default.createElement(
       TheSelect,
       {
@@ -13320,7 +13319,8 @@ function model(dom, context) {
         onChange: (selectedOption) => {
           setSelectedModel(selectedOption?.value || "");
         },
-        isLoading: models.length === 0
+        isLoading: models.length === 0,
+        isDisabled: readonly
       }
     ), /* @__PURE__ */ import_react10.default.createElement("button", { onClick: () => setExpanded(!expanded) }, /* @__PURE__ */ import_react10.default.createElement("i", { className: "codicon codicon-settings" }))), expanded && /* @__PURE__ */ import_react10.default.createElement(
       "div",
@@ -13360,7 +13360,7 @@ function model(dom, context) {
           onChange: (value2) => setMaxTokens(Number(value2)),
           defaultValue: 2048
         }
-      ].map((props) => /* @__PURE__ */ import_react10.default.createElement(RangeInput, { key: props.label, ...props }))
+      ].map((props) => /* @__PURE__ */ import_react10.default.createElement(RangeInput, { key: props.label, ...props, disabled: readonly }))
     ));
   }
   const root = (0, import_client.createRoot)(dom);
@@ -13400,6 +13400,7 @@ function messages(dom, context) {
   function MessagesComponent() {
     const [messages2, setMessages] = (0, import_react10.useState)(initialMessages);
     const allHandleNames = useVal(context.allHandleNames);
+    const readonly = !context.store.context.canEditValue;
     const doHighlight = (0, import_react10.useCallback)((text) => {
       return doHighlight_(text, allHandleNames.map((v) => `{{${v}}}`));
     }, [allHandleNames]);
@@ -13435,20 +13436,22 @@ function messages(dom, context) {
         value: RoleOptions.find((option) => option.value === a.role),
         options: RoleOptions,
         onChange: (e) => updateRole(i, e?.value ?? "user"),
-        components: customComponentsWithDefaultSingleValue
+        components: customComponentsWithDefaultSingleValue,
+        isDisabled: readonly
       }
-    ), /* @__PURE__ */ import_react10.default.createElement("button", { onClick: () => deleteMessage(i) }, /* @__PURE__ */ import_react10.default.createElement("i", { className: "codicon codicon-trash" }))), /* @__PURE__ */ import_react10.default.createElement(
+    ), readonly ? null : /* @__PURE__ */ import_react10.default.createElement("button", { onClick: () => deleteMessage(i) }, /* @__PURE__ */ import_react10.default.createElement("i", { className: "codicon codicon-trash" }))), /* @__PURE__ */ import_react10.default.createElement(
       import_react_simple_code_editor.default,
       {
         value: a.content,
         onValueChange: (content) => updateContent(i, content),
+        readOnly: readonly,
         highlight: doHighlight,
         padding: 5,
         className: "llm-message-content",
         placeholder: context.store.description$.value,
         style: { minHeight: 100, resize: "vertical" }
       }
-    ))), /* @__PURE__ */ import_react10.default.createElement("button", { className: "llm-btn-add-message", onClick: addMessage }, "Add message"));
+    ))), readonly ? null : /* @__PURE__ */ import_react10.default.createElement("button", { className: "llm-btn-add-message", onClick: addMessage }, "Add message"));
   }
   const root = (0, import_client.createRoot)(dom);
   root.render(/* @__PURE__ */ import_react10.default.createElement(MessagesComponent, null));
@@ -13516,7 +13519,8 @@ function TheSelect(props) {
         unstyled: true,
         components: props.components ?? customComponents,
         styles: { menu: (base) => ({ ...base, width: "var(--menu-width)" }) },
-        isLoading: props.isLoading
+        isLoading: props.isLoading,
+        isDisabled: props.isDisabled
       }
     )
   );
@@ -13570,7 +13574,8 @@ function RangeInput({
   max: max2,
   step,
   onChange: onChange2,
-  defaultValue
+  defaultValue,
+  disabled
 }) {
   return /* @__PURE__ */ import_react10.default.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "4px" } }, /* @__PURE__ */ import_react10.default.createElement("label", null, label, ":"), /* @__PURE__ */ import_react10.default.createElement("div", { style: { display: "flex", gap: "8px", alignItems: "center" } }, /* @__PURE__ */ import_react10.default.createElement(
     "input",
@@ -13584,6 +13589,7 @@ function RangeInput({
         onChange2(e.target.value);
       },
       defaultValue,
+      disabled,
       style: {
         height: "4px",
         flex: 1,
@@ -13601,6 +13607,7 @@ function RangeInput({
       step,
       value,
       defaultValue,
+      disabled,
       onChange: (e) => {
         const newValue = e.target.value === "" ? "" : Math.min(Math.max(Number(e.target.value), min2), max2);
         onChange2(newValue);
