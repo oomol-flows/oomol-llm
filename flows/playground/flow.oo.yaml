@@ -1,0 +1,55 @@
+nodes:
+  - node_id: llm#1
+    title: "LLM #1"
+    inputs_from:
+      - handle: model
+        value:
+          model: deepseek-chat
+          temperature: 0
+          top_p: 0.5
+          max_tokens: 4096
+      - handle: prompt
+        value:
+          - role: system
+            content: 你是一个翻译者。你要翻译接下来用户的发言。
+          - role: user
+            content: "{{input}}"
+        schema_overrides:
+          - schema:
+              type: array
+      - handle: input
+        value: |-
+          白日依山尽，黄河入海流。
+          欲穷千里目，更上一层楼。
+    task: self::llm
+    inputs_def:
+      - handle: input
+        json_schema:
+          type: string
+          ui:widget: text
+    outputs_def:
+      - handle: english
+        json_schema:
+          type: string
+        description: 翻译成英语
+        nullable: false
+      - handle: japanese
+        json_schema:
+          type: string
+        description: 翻译成日语
+  - node_id: markdown_text_preview#1
+    title: "Markdown preview #1"
+    inputs_from:
+      - handle: text
+        from_node:
+          - node_id: llm#1
+            output_handle: english
+    task: oomol-preview::markdown_text_preview
+  - node_id: markdown_text_preview#2
+    title: "Markdown preview #2"
+    inputs_from:
+      - handle: text
+        from_node:
+          - node_id: llm#1
+            output_handle: japanese
+    task: oomol-preview::markdown_text_preview

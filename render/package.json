@@ -1,0 +1,30 @@
+{
+  "name": "render",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.10.0",
+  "scripts": {
+    "build": "pnpm clean && pnpm build:render",
+    "clean": "rimraf ../bundled",
+    "build:render": "esbuild ./src/index.tsx --bundle --format=esm --loader:.svg=dataurl --define:process.env.NODE_ENV=\\\"production\\\" --outfile=../bundled/inputRender.js"
+  },
+  "devDependencies": {
+    "@ai-sdk/openai-compatible": "^0.2.14",
+    "@hyrious/configs": "^0.1.4",
+    "@oomol/types": "^0.0.14",
+    "@types/react-dom": "^18.3.5",
+    "ai": "^4.3.16",
+    "clsx": "^2.1.1",
+    "esbuild": "^0.25.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-select": "^5.10.1",
+    "react-simple-code-editor": "^0.14.1",
+    "rimraf": "^6.0.1",
+    "use-value-enhancer": "^5.0.6"
+  }
+}

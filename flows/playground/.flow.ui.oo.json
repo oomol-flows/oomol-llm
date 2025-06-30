@@ -1,0 +1,42 @@
+{
+  "nodes": {
+    "llm#1": {
+      "rfNode": {
+        "position": {
+          "x": 28,
+          "y": -78.99869537353516
+        }
+      },
+      "sections": {
+        "inputHandle": {
+          "cardCollapsed": true
+        },
+        "outputs": {
+          "collapsed": {
+            "english": {
+              "[]": false
+            }
+          }
+        }
+      }
+    },
+    "markdown_text_preview#1": {
+      "contentWidth": 450,
+      "rfNode": {
+        "position": {
+          "x": 515.3861744281272,
+          "y": 129.70812135255602
+        }
+      }
+    },
+    "markdown_text_preview#2": {
+      "contentWidth": 450,
+      "rfNode": {
+        "position": {
+          "x": 515.3861744281272,
+          "y": 562.178638386114
+        }
+      }
+    }
+  }
+}

@@ -1,16 +1,16 @@
 name: llm
 displayName: LLM
-version: 0.2.9
+version: 1.0.0
 description: LLM
 scripts:
   {}
 icon: "./icon.png"
 repository: https://github.com/oomol/oomol-llm
 dependencies:
-  {}
+  oomol-preview: 0.0.5
 contributes:
   input_widgets:
-    render: ./tasks/LLM/bundled/inputRender.js
+    render: ./bundled/inputRender.js
     widgets:
       - name: model
         json_schema:
