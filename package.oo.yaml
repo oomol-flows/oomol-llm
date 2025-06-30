@@ -7,7 +7,7 @@ scripts:
 icon: "./icon.png"
 repository: https://github.com/oomol/oomol-llm
 dependencies:
-  {}
+  oomol-preview: 0.0.5
 contributes:
   input_widgets:
     render: ./bundled/inputRender.js

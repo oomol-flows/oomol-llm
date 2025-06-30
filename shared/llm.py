@@ -47,7 +47,7 @@ class LLM:
   def request(
         self,
         messages: Iterable[Message],
-        response_format: dict[str, Any] | None = None,
+        response_format_type: str | None = None,
         stream: bool = False,
       ) -> Message:
 
@@ -62,8 +62,10 @@ class LLM:
         for m in messages
       ],
     }
-    if response_format is not None:
-      data["response_format"] = response_format
+    if response_format_type is not None:
+      data["response_format"] = {
+        "type": response_format_type,
+      }
 
     response: requests.Response = requests.post(
       timeout=30.0,

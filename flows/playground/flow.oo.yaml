@@ -28,11 +28,28 @@ nodes:
           type: string
           ui:widget: text
     outputs_def:
-      - handle: en
+      - handle: english
         json_schema:
           type: string
-        description: 英语译文
-      - handle: fr
+        description: 翻译成英语
+        nullable: false
+      - handle: japanese
         json_schema:
           type: string
-        description: 法语译文
+        description: 翻译成日语
+  - node_id: markdown_text_preview#1
+    title: "Markdown preview #1"
+    inputs_from:
+      - handle: text
+        from_node:
+          - node_id: llm#1
+            output_handle: english
+    task: oomol-preview::markdown_text_preview
+  - node_id: markdown_text_preview#2
+    title: "Markdown preview #2"
+    inputs_from:
+      - handle: text
+        from_node:
+          - node_id: llm#1
+            output_handle: japanese
+    task: oomol-preview::markdown_text_preview
