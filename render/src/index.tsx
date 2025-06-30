@@ -1,18 +1,17 @@
-import CodestralSVG from "./icons/codestral.svg";
-import DeepSeekSVG from "./icons/deepseek.svg";
-import DouBaoSVG from "./icons/doubao.svg";
-import Mistralai from "./icons/mistralai.svg";
-import OOMOLSVG from "./icons/oomol.svg";
-import QwenSVG from "./icons/qwen.svg";
-import SiliconFlowSVG from "./icons/silicon-flow.svg";
-import GeminiSVG from "./icons/gemini.svg";
-import DefaultSVG from "./icons/default.svg";
-import GrokSVG from "./icons/grok.svg";
-import OpenAISVG from "./icons/openai.svg";
-import ClaudeSVG from "./icons/claude.svg";
+import CodestralSVG from "../icons/codestral.svg";
+import DeepSeekSVG from "../icons/deepseek.svg";
+import DouBaoSVG from "../icons/doubao.svg";
+import Mistralai from "../icons/mistralai.svg";
+import OOMOLSVG from "../icons/oomol.svg";
+import QwenSVG from "../icons/qwen.svg";
+import SiliconFlowSVG from "../icons/silicon-flow.svg";
+import GeminiSVG from "../icons/gemini.svg";
+import DefaultSVG from "../icons/default.svg";
+import GrokSVG from "../icons/grok.svg";
+import OpenAISVG from "../icons/openai.svg";
+import ClaudeSVG from "../icons/claude.svg";
 
 import type { InputRenderContext } from '@oomol/types/inputRender'
-import type { IModelOptions, Message } from "./main";
 
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { createRoot } from "react-dom/client";
@@ -33,6 +32,18 @@ type Model = {
   input_ratio: number;
   output_ratio: number;
 };
+
+interface IModelOptions {
+  model?: string
+  temperature?: number // 0-1
+  top_p?: number // 0-1
+  max_tokens?: number // 1-4096
+}
+
+interface Message {
+    role: 'system' | 'user' | 'assistant'
+    content: string
+}
 
 // See https://github.com/JedWatson/react-select/blob/-/packages/react-select/src/builtins.ts
 export interface IBasicOption {

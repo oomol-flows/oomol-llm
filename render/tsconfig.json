@@ -1,8 +1,9 @@
 {
-  "include": ["tasks/**/*"],
+  "include": ["src/**/*", "types/index.d.ts"],
   "extends": "@hyrious/configs/tsconfig.casual.json",
   "compilerOptions": {
     "verbatimModuleSyntax": false,
+    "typeRoots": ["./types", "node_modules/@types"],
     "jsx": "react"
-  }
+  },
 }
