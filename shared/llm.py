@@ -3,7 +3,7 @@ import io
 import json
 import requests
 
-from typing import Any, Iterable
+from typing import Any, Iterable, Callable
 from .message import parse_role, Role, Message
 
 
@@ -73,6 +73,7 @@ class LLM:
       return self._parse_response(response)
 
   def _parse_stream(self, response: requests.Response) -> Message:
+
     role: Role = Role.Assistant
     content_buffer = io.StringIO()
 
