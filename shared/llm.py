@@ -13,6 +13,18 @@ class Role(Enum):
   User = "user"
   Assistant = "assistant"
 
+def parse_role(role: str) -> Role:
+  if role == "system":
+    return Role.System
+  elif role == "developer":
+    return Role.System
+  elif role == "user":
+    return Role.User
+  elif role == "assistant":
+    return Role.Assistant
+  else:
+    raise ValueError("Invalid role")
+
 @dataclass
 class Message:
   role: Role
@@ -90,7 +102,7 @@ class LLM:
       delta_role = delta.get("role", None)
       delta_content = delta.get("content", None)
       if delta_role is not None:
-        role = self._parse_role(delta_role)
+        role = parse_role(delta_role)
       if delta_content is not None:
         content_buffer.write(delta_content)
 
@@ -102,18 +114,6 @@ class LLM:
   def _parse_response(self, response: requests.Response) -> Message:
     message = response.json()["choices"][-1]["message"]
     return Message(
-      role=self._parse_role(message["role"]),
+      role=parse_role(message["role"]),
       content=message["content"],
     )
-
-  def _parse_role(self, role: str) -> Role:
-    if role == "system":
-      return Role.System
-    elif role == "developer":
-      return Role.System
-    elif role == "user":
-      return Role.User
-    elif role == "assistant":
-      return Role.Assistant
-    else:
-      raise ValueError("Invalid role")
