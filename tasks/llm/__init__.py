@@ -3,8 +3,9 @@ import json
 
 from typing import cast, Any
 from oocana import Context
-from shared.llm import parse_role, LLM, Message
-from .schema import inject_json_schema_into_messages, parse_json_schema
+from shared.message import prompt_messages
+from shared.llm import LLM
+from shared.schema import inject_json_schema_into_messages, parse_json_schema
 
 #region generated meta
 import typing
@@ -27,13 +28,16 @@ def main(params: Inputs, context: Context) -> Outputs:
   json_schema = parse_json_schema(context)
   valid_keys = set(cast(dict, json_schema["properties"]).keys())
 
-  messages = _prompt_messages(params)
-  messages = inject_json_schema_into_messages(messages, json_schema)
+  messages = prompt_messages(
+    params=cast(dict[str, Any], params),
+    reserved_keys=("model", "prompt"),
+  )
   llm = LLM(
     base_url=base_url,
     api_key=api_key,
     model=model,
   )
+  messages = inject_json_schema_into_messages(messages, json_schema)
   resp_message = llm.request(
     stream=True,
     messages=messages,
@@ -57,25 +61,3 @@ def main(params: Inputs, context: Context) -> Outputs:
 
   return resp_obj
 
-_RESERVED_KEYS = ("model", "prompt")
-_KEY_PATTERN: re.Pattern = re.compile(r"{{\s*([^}]+)\s*}}")
-
-def _prompt_messages(params: Inputs):
-  messages: list[Message] = []
-  prompt: list[dict[str, Any]] = params["prompt"]
-
-  def repl(match: re.Match):
-    key = match.group(1).strip()
-    if key in _RESERVED_KEYS:
-      return match.group()
-    value = params.get(key, None)
-    if value is None:
-      return match.group()
-    return str(value)
-
-  for message in prompt:
-    messages.append(Message(
-      role=parse_role(message["role"]),
-      content=_KEY_PATTERN.sub(repl, message["content"]),
-    ))
-  return messages

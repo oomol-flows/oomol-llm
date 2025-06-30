@@ -2,7 +2,7 @@ import json
 
 from typing import Any
 from oocana import Context
-from shared.llm import Message, Role
+from .message import Message, Role
 
 
 def inject_json_schema_into_messages(messages: list[Message], json_schema: dict[str, Any]) -> list[Message]:
