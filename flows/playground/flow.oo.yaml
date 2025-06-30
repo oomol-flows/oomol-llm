@@ -1,0 +1,15 @@
+nodes:
+  - node_id: llm#1
+    title: "LLM #1"
+    inputs_from:
+      - handle: model
+        value:
+          model: deepseek-chat
+          temperature: 0
+          top_p: 0.5
+          max_tokens: 4096
+    task: self::llm
+    inputs_def:
+      []
+    outputs_def:
+      []
