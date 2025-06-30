@@ -5,8 +5,8 @@ nodes:
       - handle: model
         value:
           model: deepseek-chat
-          temperature: 0
-          top_p: 0.5
+          temperature: 0.81
+          top_p: 0.82
           max_tokens: 4096
       - handle: prompt
         value:

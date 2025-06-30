@@ -44,10 +44,14 @@ class LLM:
     self._api_key: str = api_key
     self._model: str = model
 
+  # https://platform.openai.com/docs/api-reference/chat/create
   def request(
         self,
         messages: Iterable[Message],
         response_format_type: str | None = None,
+        max_completion_tokens: int | None = None,
+        temperature: float | None = None,
+        top_p: float | None = None,
         stream: bool = False,
       ) -> Message:
 
@@ -66,6 +70,14 @@ class LLM:
       data["response_format"] = {
         "type": response_format_type,
       }
+    if max_completion_tokens is not None:
+      data["max_tokens"] = max_completion_tokens # for DeepSeek
+      data["max_completion_tokens"] = max_completion_tokens # for ChatGPT
+
+    if temperature is not None:
+      data["temperature"] = temperature
+    if top_p is not None:
+      data["top_p"] = top_p
 
     response: requests.Response = requests.post(
       timeout=30.0,

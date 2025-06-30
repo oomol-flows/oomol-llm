@@ -37,7 +37,10 @@ def main(params: Inputs, context: Context) -> Outputs:
   resp_message = llm.request(
     stream=True,
     messages=messages,
+    max_completion_tokens=max_tokens,
     response_format_type="json_object",
+    temperature=temperature,
+    top_p=top_p,
   )
   try:
     resp_obj = json.loads(resp_message.content)
