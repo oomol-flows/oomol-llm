@@ -1,9 +1,9 @@
 import re
-import io
 import json
-import requests
 
 from typing import Any, Iterable
+from io import StringIO
+from .request import Request
 from .message import parse_role, Role, Message
 
 
@@ -56,30 +56,26 @@ class LLM:
     if top_p is not None:
       data["top_p"] = top_p
 
-    response: requests.Response = requests.post(
-      timeout=30.0,
+    request = Request(
       url=f"{self._base_url}/chat/completions",
-      json=data,
+      data=data,
+      timeout=30.0,
       headers={
         "Content-Type": "application/json",
         "Authorization": f"Bearer {self._api_key}"
       },
     )
-    response.raise_for_status()
-
     if stream:
-      return self._parse_stream(response)
+      return self._parse_stream(request.post_and_iter_lines())
     else:
-      return self._parse_response(response)
+      return self._parse_response(request.post())
 
-  def _parse_stream(self, response: requests.Response) -> Message:
+  def _parse_stream(self, lines: Iterable[str]) -> Message:
     role: Role = Role.Assistant
-    content_buffer = io.StringIO()
+    content_buffer = StringIO()
 
-    for line in response.iter_lines():
-      if not isinstance(line, bytes):
-        continue
-      decoded_line = line.decode("utf-8").strip()
+    for line in lines:
+      decoded_line = line.strip()
       if not _DATA_HEAD.match(decoded_line):
         continue
       decoded_line = _DATA_HEAD.sub("", decoded_line)
@@ -102,8 +98,8 @@ class LLM:
       content=content_buffer.getvalue(),
     )
 
-  def _parse_response(self, response: requests.Response) -> Message:
-    message = response.json()["choices"][-1]["message"]
+  def _parse_response(self, response_json: Any) -> Message:
+    message = response_json["choices"][-1]["message"]
     return Message(
       role=parse_role(message["role"]),
       content=message["content"],
