@@ -1,46 +1,36 @@
 {
   "nodes": {
-    "llm#1": {
+    "llm-template#2": {
       "rfNode": {
         "position": {
-          "x": 28,
-          "y": -78.99869537353516
-        }
-      },
-      "sections": {
-        "outputs": {
-          "collapsed": {
-            "english": {
-              "[]": false
-            }
-          }
+          "x": -32.2603344583199,
+          "y": 111.03431855994808
         }
       }
     },
-    "markdown_text_preview#1": {
+    "llm-with-messages#1": {
+      "rfNode": {
+        "position": {
+          "x": 513.6395609535748,
+          "y": 111.03431855994808
+        }
+      }
+    },
+    "markdown_text_preview#4": {
       "contentWidth": 450,
       "rfNode": {
         "position": {
-          "x": 515.3861744281272,
-          "y": 129.70812135255602
+          "x": 1073.8022120491646,
+          "y": -38.458842221711336
         }
       }
     },
-    "markdown_text_preview#2": {
+    "markdown_text_preview#5": {
       "contentWidth": 450,
       "rfNode": {
         "position": {
-          "x": 515.3861744281272,
-          "y": 562.178638386114
-        }
-      }
-    },
-    "llm-chat#1": {
-      "contentWidth": 540.336813685031,
-      "rfNode": {
-        "position": {
-          "x": 83.97938197669049,
-          "y": 915.919098586113
+          "x": 1073.8022120491646,
+          "y": 414.5101208896146
         }
       }
     }

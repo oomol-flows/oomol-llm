@@ -7,7 +7,7 @@ from shared.message import prompt_messages
 import typing
 class Inputs(typing.TypedDict):
   model: typing.Any
-  prompt: typing.Any
+  template: typing.Any
 class Outputs(typing.TypedDict):
   output: str
 #endregion

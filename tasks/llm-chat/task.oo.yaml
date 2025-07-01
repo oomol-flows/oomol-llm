@@ -13,7 +13,7 @@ inputs_def:
       temperature: 0
       top_p: 0.5
       max_tokens: 4096
-  - handle: prompt
+  - handle: template
     json_schema:
       anyOf:
         - type: string

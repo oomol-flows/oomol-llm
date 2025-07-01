@@ -1,0 +1,42 @@
+executor:
+  name: python
+  options:
+    entry: __init__.py
+inputs_def:
+  - handle: model
+    json_schema:
+      ui:options:
+        title: Model
+      ui:widget: self::model
+    value:
+      model: oomol-chat
+      temperature: 0
+      top_p: 0.5
+      max_tokens: 4096
+  - handle: messages
+    json_schema:
+      type: array
+      items:
+        type: object
+        additionalProperties: false
+        properties:
+          role:
+            enum:
+              - system
+              - user
+              - assistant
+            ui:options:
+              labels:
+                - System
+                - User
+                - Assistant
+          content:
+            type: string
+outputs_def:
+  []
+title: LLM (messages)
+additional_outputs: true
+additional_outputs_def:
+  - handle: output
+    json_schema:
+      type: string

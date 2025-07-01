@@ -31,7 +31,7 @@ _KEY_PATTERN: re.Pattern = re.compile(r"{{\s*([^}]+)\s*}}")
 
 def prompt_messages(params: dict[str, Any], reserved_keys: Container[str]) -> list[Message]:
   messages: list[Message] = []
-  prompt: list[dict[str, Any]] = params["prompt"]
+  template: list[dict[str, Any]] = params["template"]
 
   def repl(match: re.Match):
     key = match.group(1).strip()
@@ -42,7 +42,7 @@ def prompt_messages(params: dict[str, Any], reserved_keys: Container[str]) -> li
       return match.group()
     return str(value)
 
-  for message in prompt:
+  for message in template:
     messages.append(Message(
       role=parse_role(message["role"]),
       content=_KEY_PATTERN.sub(repl, message["content"]),
