@@ -1,0 +1,67 @@
+executor:
+  name: python
+  options:
+    entry: __init__.py
+inputs_def:
+  - handle: template
+    json_schema:
+      anyOf:
+        - type: string
+        - type: array
+      ui:options:
+        title: Prompt
+      ui:widget: self::messages
+    value:
+      - role: user
+        content: "{{input}}"
+    schema_overrides:
+      - schema:
+          type: array
+  - handle: be_continued
+    json_schema:
+      type: array
+      items:
+        type: object
+        additionalProperties: false
+        properties:
+          role:
+            enum:
+              - system
+              - user
+              - assistant
+            ui:options:
+              labels:
+                - System
+                - User
+                - Assistant
+          content:
+            type: string
+    nullable: true
+    value:
+outputs_def:
+  - handle: messages
+    json_schema:
+      type: array
+      items:
+        type: object
+        additionalProperties: false
+        properties:
+          role:
+            enum:
+              - system
+              - user
+              - assistant
+            ui:options:
+              labels:
+                - System
+                - User
+                - Assistant
+          content:
+            type: string
+title: LLM generate messages
+additional_inputs: true
+additional_inputs_def:
+  - handle: input
+    json_schema:
+      type: string
+      ui:widget: text

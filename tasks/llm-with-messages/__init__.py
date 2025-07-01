@@ -1,16 +1,16 @@
 import json
 
-from typing import cast, Any
+from typing import cast
 from oocana import Context
 from shared.llm_creation import create_llm
-from shared.message import render_messages
+from shared.message import Message, Role
 from shared.schema import inject_json_schema_into_messages, parse_json_schema
 
 #region generated meta
 import typing
 class Inputs(typing.TypedDict):
   model: typing.Any
-  template: typing.Any
+  messages: list[dict]
   stream: bool
 Outputs = typing.Dict[str, typing.Any]
 #endregion
@@ -25,12 +25,17 @@ def main(params: Inputs, context: Context) -> Outputs:
   json_schema = parse_json_schema(context)
   valid_keys = set(cast(dict, json_schema["properties"]).keys())
 
-  messages = list(render_messages(
-    params=cast(dict[str, Any], params),
-    reserved_keys=("model", "prompt"),
-  ))
   llm = create_llm(params, context)
-  messages = inject_json_schema_into_messages(messages, json_schema)
+  messages = inject_json_schema_into_messages(
+    json_schema=json_schema,
+    messages=[
+      Message(
+        role=Role(message["role"]),
+        content=message["content"],
+      )
+      for message in params["messages"]
+    ],
+  )
   resp_message = llm.request(
     stream=params["stream"],
     messages=messages,

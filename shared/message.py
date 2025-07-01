@@ -1,6 +1,6 @@
 import re
 
-from typing import Any, Container
+from typing import Any, Container, Generator
 from dataclasses import dataclass
 from enum import Enum
 
@@ -29,9 +29,8 @@ class Message:
 
 _KEY_PATTERN: re.Pattern = re.compile(r"{{\s*([^}]+)\s*}}")
 
-def prompt_messages(params: dict[str, Any], reserved_keys: Container[str]) -> list[Message]:
-  messages: list[Message] = []
-  prompt: list[dict[str, Any]] = params["prompt"]
+def render_messages(params: dict[str, Any], reserved_keys: Container[str]) -> Generator[Message, None, None]:
+  template: list[dict[str, Any]] = params["template"]
 
   def repl(match: re.Match):
     key = match.group(1).strip()
@@ -42,9 +41,8 @@ def prompt_messages(params: dict[str, Any], reserved_keys: Container[str]) -> li
       return match.group()
     return str(value)
 
-  for message in prompt:
-    messages.append(Message(
+  for message in template:
+    yield Message(
       role=parse_role(message["role"]),
       content=_KEY_PATTERN.sub(repl, message["content"]),
-    ))
-  return messages
+    )

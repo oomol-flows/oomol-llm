@@ -1,3 +1,4 @@
+title: Translate
 nodes:
   - node_id: llm#1
     title: "LLM #1"
@@ -5,18 +6,20 @@ nodes:
       - handle: model
         value:
           model: deepseek-chat
-          temperature: 0.81
-          top_p: 0.82
+          temperature: 0
+          top_p: 0.5
           max_tokens: 4096
-      - handle: prompt
+      - handle: template
         value:
           - role: system
-            content: 你是一个翻译者。你要翻译接下来用户的发言。
+            content: "将用户发言信达雅地翻译。"
           - role: user
             content: "{{input}}"
         schema_overrides:
           - schema:
               type: array
+      - handle: stream
+        value: true
       - handle: input
         value: |-
           白日依山尽，黄河入海流。
@@ -28,23 +31,21 @@ nodes:
           type: string
           ui:widget: text
     outputs_def:
-      - handle: english
-        description: 翻译成英语
+      - handle: en
+        description: 翻译成
         json_schema:
           type: string
-        nullable: false
-      - handle: japanese
+      - handle: ja
+        json_schema:
+          {}
         description: 翻译成日语
-        json_schema:
-          type: string
-        nullable: false
   - node_id: markdown_text_preview#1
     title: "Markdown preview #1"
     inputs_from:
       - handle: text
         from_node:
           - node_id: llm#1
-            output_handle: english
+            output_handle: en
     task: oomol-preview::markdown_text_preview
   - node_id: markdown_text_preview#2
     title: "Markdown preview #2"
@@ -52,29 +53,5 @@ nodes:
       - handle: text
         from_node:
           - node_id: llm#1
-            output_handle: japanese
+            output_handle: ja
     task: oomol-preview::markdown_text_preview
-  - node_id: llm-chat#1
-    title: "LLM chat #1"
-    inputs_from:
-      - handle: model
-        value:
-          model: deepseek-chat
-          temperature: 0
-          top_p: 0.5
-          max_tokens: 4096
-      - handle: prompt
-        value:
-          - role: user
-            content: "{{input}}"
-        schema_overrides:
-          - schema:
-              type: array
-      - handle: input
-        value: 你好，你是谁。你可以帮我做什么？
-    task: self::llm-chat
-    inputs_def:
-      - handle: input
-        json_schema:
-          type: string
-          ui:widget: text

@@ -13,6 +13,8 @@ def inject_json_schema_into_messages(messages: list[Message], json_schema: dict[
       system = (i, message)
       break
 
+  # DeepSeek doesn't support response_format="json_schema"
+  # can only description JSON schema format in the system prompt
   injection = "You must output in JSON format and strictly follow the following JSON Schema:\n"
   injection += json.dumps(
     obj=json_schema,

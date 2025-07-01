@@ -1,13 +1,12 @@
-from typing import cast, Any
 from oocana import Context
 from shared.llm_creation import create_llm
-from shared.message import render_messages
+from shared.message import Role, Message
 
 #region generated meta
 import typing
 class Inputs(typing.TypedDict):
+  messages: list[dict]
   model: typing.Any
-  template: typing.Any
   stream: bool
 class Outputs(typing.TypedDict):
   output: str
@@ -15,15 +14,18 @@ class Outputs(typing.TypedDict):
 
 
 def main(params: Inputs, context: Context) -> Outputs:
+  messages = [
+    Message(
+      role=Role(message["role"]),
+      content=message["content"],
+    )
+    for message in params["messages"]
+  ]
   model = params["model"]
   temperature: float = float(model["temperature"])
   top_p: float = float(model["top_p"])
   max_tokens: int = int(model["max_tokens"])
 
-  messages = render_messages(
-    params=cast(dict[str, Any], params),
-    reserved_keys=("model", "prompt"),
-  )
   llm = create_llm(params, context)
   resp_message = llm.request(
     stream=params["stream"],

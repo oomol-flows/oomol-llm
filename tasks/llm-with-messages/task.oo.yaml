@@ -13,35 +13,34 @@ inputs_def:
       temperature: 0
       top_p: 0.5
       max_tokens: 4096
-  - handle: template
+  - handle: messages
     json_schema:
-      anyOf:
-        - type: string
-        - type: array
-      ui:options:
-        title: Prompt
-      ui:widget: self::messages
-    value:
-      - role: user
-        content: "{{input}}"
-    schema_overrides:
-      - schema:
-          type: array
+      type: array
+      items:
+        type: object
+        additionalProperties: false
+        properties:
+          role:
+            enum:
+              - system
+              - user
+              - assistant
+            ui:options:
+              labels:
+                - System
+                - User
+                - Assistant
+          content:
+            type: string
   - handle: stream
     json_schema:
       type: boolean
     value: true
 outputs_def:
   []
-title: LLM
-additional_inputs: true
+title: LLM (messages)
 additional_outputs: true
 additional_outputs_def:
   - handle: output
-    description: write your answer here
-    json_schema:
-      type: string
-additional_inputs_def:
-  - handle: input
     json_schema:
       type: string
