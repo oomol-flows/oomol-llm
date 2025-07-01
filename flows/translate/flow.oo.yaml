@@ -35,10 +35,12 @@ nodes:
         description: 翻译成
         json_schema:
           type: string
+        nullable: false
       - handle: ja
+        description: 翻译成日语
         json_schema:
           {}
-        description: 翻译成日语
+        nullable: false
   - node_id: markdown_text_preview#1
     title: "Markdown preview #1"
     inputs_from:

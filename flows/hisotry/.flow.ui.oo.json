@@ -37,6 +37,11 @@
           "x": 1113.948131452628,
           "y": -61.66224730389263
         }
+      },
+      "sections": {
+        "inputHandle": {
+          "cardCollapsed": true
+        }
       }
     },
     "llm-chat-with-messages#4": {

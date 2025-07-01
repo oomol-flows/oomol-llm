@@ -36,8 +36,8 @@ inputs_def:
                 - Assistant
           content:
             type: string
-    nullable: true
     value:
+    nullable: true
 outputs_def:
   - handle: messages
     json_schema:
