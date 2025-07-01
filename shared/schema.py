@@ -14,8 +14,11 @@ def inject_json_schema_into_messages(messages: list[Message], json_schema: dict[
       break
 
   injection = "You must output in JSON format and strictly follow the following JSON Schema:\n"
-  injection += json.dumps(json_schema, indent=2)
-
+  injection += json.dumps(
+    obj=json_schema,
+    indent=2,
+    ensure_ascii=False,
+  )
   if system is None:
     messages.insert(0, Message(
       role=Role.System,

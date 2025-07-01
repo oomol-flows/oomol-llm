@@ -29,14 +29,15 @@ nodes:
           ui:widget: text
     outputs_def:
       - handle: english
+        description: 翻译成英语
         json_schema:
           type: string
-        description: 翻译成英语
         nullable: false
       - handle: japanese
+        description: 翻译成日语
         json_schema:
           type: string
-        description: 翻译成日语
+        nullable: false
   - node_id: markdown_text_preview#1
     title: "Markdown preview #1"
     inputs_from:
