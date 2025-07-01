@@ -3,12 +3,15 @@ import json
 
 from typing import Any, Iterable
 from io import StringIO
+from time import sleep
 from .request import Request
 from .message import parse_role, Role, Message
 
 
 _BASE_URL_TAIL = re.compile(r"\\$")
 _DATA_HEAD = re.compile(r"^data:\s+")
+_DEFAULT_RETRY_TIME = 5.0
+_DEFAULT_TIMEOUT = 30.0
 
 class LLM:
   def __init__(
@@ -25,6 +28,9 @@ class LLM:
   def request(
         self,
         messages: Iterable[Message],
+        retry_times: int = 0,
+        retry_sleep_time: float = _DEFAULT_RETRY_TIME,
+        timeout: float = _DEFAULT_TIMEOUT,
         response_format_type: str | None = None,
         max_completion_tokens: int | None = None,
         temperature: float | None = None,
@@ -56,19 +62,29 @@ class LLM:
     if top_p is not None:
       data["top_p"] = top_p
 
-    request = Request(
-      url=f"{self._base_url}/chat/completions",
-      data=data,
-      timeout=30.0,
-      headers={
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {self._api_key}"
-      },
-    )
-    if stream:
-      return self._parse_stream(request.post_and_iter_lines())
-    else:
-      return self._parse_response(request.post())
+    did_retry_times: int = 0
+    while True:
+      try:
+        request = Request(
+          url=f"{self._base_url}/chat/completions",
+          data=data,
+          timeout=timeout,
+          headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self._api_key}"
+          },
+        )
+        if stream:
+          return self._parse_stream(request.post_and_iter_lines())
+        else:
+          return self._parse_response(request.post())
+
+      except TimeoutError as err:
+        if did_retry_times >= retry_times:
+          raise err
+        if retry_sleep_time > 0.0:
+          sleep(retry_sleep_time)
+        did_retry_times += 1
 
   def _parse_stream(self, lines: Iterable[str]) -> Message:
     role: Role = Role.Assistant
