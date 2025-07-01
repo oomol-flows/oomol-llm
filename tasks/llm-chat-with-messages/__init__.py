@@ -7,6 +7,7 @@ import typing
 class Inputs(typing.TypedDict):
   messages: list[dict]
   model: typing.Any
+  stream: bool
 class Outputs(typing.TypedDict):
   output: str
 #endregion
@@ -27,7 +28,7 @@ def main(params: Inputs, context: Context) -> Outputs:
 
   llm = create_llm(params, context)
   resp_message = llm.request(
-    stream=True,
+    stream=params["stream"],
     messages=messages,
     max_completion_tokens=max_tokens,
     temperature=temperature,

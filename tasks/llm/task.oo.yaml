@@ -27,6 +27,10 @@ inputs_def:
     schema_overrides:
       - schema:
           type: array
+  - handle: stream
+    json_schema:
+      type: boolean
+    value: true
 outputs_def:
   []
 title: LLM

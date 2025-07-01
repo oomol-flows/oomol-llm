@@ -32,6 +32,10 @@ inputs_def:
                 - Assistant
           content:
             type: string
+  - handle: stream
+    json_schema:
+      type: boolean
+    value: true
 outputs_def:
   []
 title: LLM (messages)

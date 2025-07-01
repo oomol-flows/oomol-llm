@@ -32,6 +32,10 @@ inputs_def:
       temperature: 0
       top_p: 0.5
       max_tokens: 4096
+  - handle: stream
+    json_schema:
+      type: boolean
+    value: true
 outputs_def:
   - handle: output
     json_schema:

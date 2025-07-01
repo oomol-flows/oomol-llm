@@ -12,6 +12,8 @@ nodes:
           temperature: 0
           top_p: 0.5
           max_tokens: 4096
+      - handle: stream
+        value: false
     task: self::llm-chat-with-messages
   - node_id: llm-template#3
     title: "LLM template #3"
@@ -71,6 +73,8 @@ nodes:
           temperature: 0
           top_p: 0.5
           max_tokens: 4096
+      - handle: stream
+        value: true
     task: self::llm-chat-with-messages
   - node_id: markdown_text_preview#6
     title: "Markdown preview #6"

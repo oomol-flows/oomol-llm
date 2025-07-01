@@ -11,6 +11,7 @@ import typing
 class Inputs(typing.TypedDict):
   model: typing.Any
   messages: list[dict]
+  stream: bool
 Outputs = typing.Dict[str, typing.Any]
 #endregion
 
@@ -36,7 +37,7 @@ def main(params: Inputs, context: Context) -> Outputs:
     ],
   )
   resp_message = llm.request(
-    stream=True,
+    stream=params["stream"],
     messages=messages,
     max_completion_tokens=max_tokens,
     response_format_type="json_object",
