@@ -1,0 +1,91 @@
+nodes:
+  - node_id: llm-chat-with-messages#2
+    title: "LLM chat (messages) #2"
+    inputs_from:
+      - handle: messages
+        from_node:
+          - node_id: llm-template#3
+            output_handle: messages
+      - handle: model
+        value:
+          model: deepseek-chat
+          temperature: 0
+          top_p: 0.5
+          max_tokens: 4096
+    task: self::llm-chat-with-messages
+  - node_id: llm-template#3
+    title: "LLM template #3"
+    inputs_from:
+      - handle: template
+        value:
+          - role: system
+            content: "你要与用户友善地对话。用户问问题，你要简短地回答，不要啰里八嗦。你要坚持自己的观点，敢于挑战用户。若用户质疑，你就不要简短答复了，用详实的\
+              证据回应。"
+          - role: user
+            content: 哥伦布是哪一年发现新大陆的？
+        schema_overrides:
+          - schema:
+              type: array
+      - handle: raw
+        value:
+    task: self::llm-messages
+    inputs_def:
+      []
+  - node_id: llm-messages#1
+    title: "LLM generate messages #1"
+    inputs_from:
+      - handle: template
+        value:
+          - role: assistant
+            content: "{{input}}"
+          - role: user
+            content: 我觉得你说得不对？我给你3秒钟重新回答，我要看到不一样的答案。
+        schema_overrides:
+          - schema:
+              type: array
+      - handle: raw
+        value: null
+        from_node:
+          - node_id: llm-template#3
+            output_handle: messages
+      - handle: input
+        from_node:
+          - node_id: llm-chat-with-messages#2
+            output_handle: output
+    task: self::llm-messages
+    inputs_def:
+      - handle: input
+        json_schema:
+          type: string
+        nullable: false
+  - node_id: llm-chat-with-messages#4
+    title: "LLM chat (messages) #4"
+    inputs_from:
+      - handle: messages
+        from_node:
+          - node_id: llm-messages#1
+            output_handle: messages
+      - handle: model
+        value:
+          model: deepseek-chat
+          temperature: 0
+          top_p: 0.5
+          max_tokens: 4096
+    task: self::llm-chat-with-messages
+  - node_id: markdown_text_preview#6
+    title: "Markdown preview #6"
+    inputs_from:
+      - handle: text
+        from_node:
+          - node_id: llm-chat-with-messages#2
+            output_handle: output
+    task: oomol-preview::markdown_text_preview
+  - node_id: markdown_text_preview#7
+    title: "Markdown preview #7"
+    inputs_from:
+      - handle: text
+        from_node:
+          - node_id: llm-chat-with-messages#4
+            output_handle: output
+    task: oomol-preview::markdown_text_preview
+title: Chat with history

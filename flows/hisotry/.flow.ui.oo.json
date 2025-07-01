@@ -1,0 +1,76 @@
+{
+  "nodes": {
+    "llm-chat-with-messages#2": {
+      "rfNode": {
+        "position": {
+          "x": 568.0774000295585,
+          "y": 227.33775269610737
+        }
+      }
+    },
+    "llm-template#3": {
+      "rfNode": {
+        "position": {
+          "x": 36.8774917466435,
+          "y": -61.66224730389263
+        }
+      },
+      "sections": {
+        "inputs": {
+          "collapsed": {
+            "input": {
+              "[]": true
+            },
+            "raw": {
+              "[]": true
+            }
+          }
+        }
+      }
+    },
+    "llm-messages#1": {
+      "rfNode": {
+        "position": {
+          "x": 1113.948131452628,
+          "y": -61.66224730389263
+        }
+      }
+    },
+    "llm-chat-with-messages#4": {
+      "rfNode": {
+        "position": {
+          "x": 1608.1338188924942,
+          "y": 95.33775269610737
+        }
+      }
+    },
+    "markdown_text_preview#6": {
+      "contentWidth": 290.15821581979895,
+      "rfNode": {
+        "position": {
+          "x": 1755.557143540121,
+          "y": 537.3377526961074
+        }
+      },
+      "sections": {
+        "preview": {
+          "previewHeight": 62.68572661445489
+        }
+      }
+    },
+    "markdown_text_preview#7": {
+      "contentWidth": 526.2478945460956,
+      "rfNode": {
+        "position": {
+          "x": 2163.3074881480097,
+          "y": 475.25805485063484
+        }
+      },
+      "sections": {
+        "preview": {
+          "previewHeight": 180.5479578168771
+        }
+      }
+    }
+  }
+}

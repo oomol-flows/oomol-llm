@@ -1,7 +1,7 @@
 from typing import cast, Any
 from oocana import Context
 from shared.llm_creation import create_llm
-from shared.message import prompt_messages
+from shared.message import render_messages
 
 #region generated meta
 import typing
@@ -19,7 +19,7 @@ def main(params: Inputs, context: Context) -> Outputs:
   top_p: float = float(model["top_p"])
   max_tokens: int = int(model["max_tokens"])
 
-  messages = prompt_messages(
+  messages = render_messages(
     params=cast(dict[str, Any], params),
     reserved_keys=("model", "prompt"),
   )
