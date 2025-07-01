@@ -23,6 +23,9 @@
             },
             "raw": {
               "[]": true
+            },
+            "be_continued": {
+              "[]": true
             }
           }
         }
