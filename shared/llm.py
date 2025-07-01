@@ -10,8 +10,6 @@ from .message import parse_role, Role, Message
 
 _BASE_URL_TAIL = re.compile(r"\\$")
 _DATA_HEAD = re.compile(r"^data:\s+")
-_DEFAULT_RETRY_TIME = 5.0
-_DEFAULT_TIMEOUT = 30.0
 
 class LLM:
   def __init__(
@@ -56,9 +54,10 @@ class LLM:
       data["response_format"] = {
         "type": response_format_type,
       }
-    if max_completion_tokens is not None:
-      data["max_tokens"] = max_completion_tokens # for DeepSeek
-      data["max_completion_tokens"] = max_completion_tokens # for ChatGPT
+    # FIXME: 火山引擎此参数混乱，传入过期参数直接 400，反应过于粗暴。在和他们沟通，有结果前先关闭这个功能。
+    # if max_completion_tokens is not None:
+    #   data["max_tokens"] = max_completion_tokens # for DeepSeek
+    #   data["max_completion_tokens"] = max_completion_tokens # for ChatGPT
 
     if temperature is not None:
       data["temperature"] = temperature
