@@ -3,16 +3,6 @@ executor:
   options:
     entry: __init__.py
 inputs_def:
-  - handle: model
-    json_schema:
-      ui:options:
-        title: Model
-      ui:widget: self::model
-    value:
-      model: oomol-chat
-      temperature: 0
-      top_p: 0.5
-      max_tokens: 4096
   - handle: messages
     json_schema:
       type: array
@@ -32,6 +22,31 @@ inputs_def:
                 - Assistant
           content:
             type: string
+  - handle: model
+    json_schema:
+      ui:options:
+        title: Model
+      ui:widget: self::model
+    value:
+      model: oomol-chat
+      temperature: 0
+      top_p: 0.5
+      max_tokens: 4096
+  - handle: timeout
+    json_schema:
+      type: number
+      minimum: 0
+    value: 30
+  - handle: retry_times
+    json_schema:
+      type: integer
+      minimum: 0
+    value: 0
+  - handle: retry_sleep
+    json_schema:
+      type: number
+      minimum: 0
+    value: 3.5
   - handle: stream
     json_schema:
       type: boolean

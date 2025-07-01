@@ -20,6 +20,12 @@ nodes:
               type: array
       - handle: stream
         value: true
+      - handle: timeout
+        value: 30
+      - handle: retry_times
+        value: 0
+      - handle: retry_sleep
+        value: 3.5
     task: self::llm-chat
     inputs_def:
       []

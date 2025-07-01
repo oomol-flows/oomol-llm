@@ -6,6 +6,15 @@
           "x": -5,
           "y": 36.001304626464844
         }
+      },
+      "sections": {
+        "inputs": {
+          "collapsed": {
+            "input": {
+              "[]": false
+            }
+          }
+        }
       }
     },
     "markdown_text_preview#1": {

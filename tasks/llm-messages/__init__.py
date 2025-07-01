@@ -1,4 +1,3 @@
-from typing import cast, Any
 from oocana import Context
 from shared.message import render_messages
 
@@ -17,10 +16,7 @@ def main(params: Inputs, context: Context) -> Outputs:
   if messages is None:
     messages = []
 
-  for message in render_messages(
-    params=cast(dict[str, Any], params),
-    reserved_keys=("be_continued", "template",),
-  ):
+  for message in render_messages(params, context):
     messages.append({
       "role": message.role.value,
       "content": message.content,

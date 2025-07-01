@@ -6,8 +6,11 @@ from shared.message import Role, Message
 import typing
 class Inputs(typing.TypedDict):
   messages: list[dict]
-  model: typing.Any
+  timeout: float
+  retry_times: int
+  retry_sleep: float
   stream: bool
+  model: typing.Any
 class Outputs(typing.TypedDict):
   output: str
 #endregion
