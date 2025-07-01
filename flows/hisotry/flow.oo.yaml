@@ -28,7 +28,7 @@ nodes:
         schema_overrides:
           - schema:
               type: array
-      - handle: raw
+      - handle: source
         value:
     task: self::llm-messages
     inputs_def:
@@ -45,7 +45,7 @@ nodes:
         schema_overrides:
           - schema:
               type: array
-      - handle: raw
+      - handle: source
         value: null
         from_node:
           - node_id: llm-template#3

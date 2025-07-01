@@ -6,20 +6,20 @@ from shared.message import render_messages
 import typing
 class Inputs(typing.TypedDict):
   template: typing.Any
-  raw: list[dict] | None
+  source: list[dict] | None
 class Outputs(typing.TypedDict):
   messages: list[dict]
 #endregion
 
 
 def main(params: Inputs, context: Context) -> Outputs:
-  messages = params["raw"]
+  messages = params["source"]
   if messages is None:
     messages = []
 
   for message in render_messages(
     params=cast(dict[str, Any], params),
-    reserved_keys=("raw", "template",),
+    reserved_keys=("source", "template",),
   ):
     messages.append({
       "role": message.role.value,

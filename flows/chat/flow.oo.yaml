@@ -1,0 +1,33 @@
+title: Chat
+nodes:
+  - node_id: llm-chat#1
+    title: "LLM chat #1"
+    inputs_from:
+      - handle: model
+        value:
+          model: deepseek-chat
+          temperature: 0
+          top_p: 0.5
+          max_tokens: 4096
+      - handle: template
+        value:
+          - role: system
+            content: "请友好地与用户交流，不要啰里八嗦。"
+          - role: user
+            content: 你好，你是谁？
+        schema_overrides:
+          - schema:
+              type: array
+      - handle: stream
+        value: true
+    task: self::llm-chat
+    inputs_def:
+      []
+  - node_id: markdown_text_preview#1
+    title: "Markdown preview #1"
+    inputs_from:
+      - handle: text
+        from_node:
+          - node_id: llm-chat#1
+            output_handle: output
+    task: oomol-preview::markdown_text_preview

@@ -17,7 +17,7 @@ inputs_def:
     schema_overrides:
       - schema:
           type: array
-  - handle: raw
+  - handle: source
     json_schema:
       type: array
       items:

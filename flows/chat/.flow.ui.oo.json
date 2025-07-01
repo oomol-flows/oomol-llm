@@ -1,0 +1,21 @@
+{
+  "nodes": {
+    "llm-chat#1": {
+      "rfNode": {
+        "position": {
+          "x": 189,
+          "y": 27.001304626464844
+        }
+      }
+    },
+    "markdown_text_preview#1": {
+      "contentWidth": 450,
+      "rfNode": {
+        "position": {
+          "x": 716.1666596465643,
+          "y": 185.00130462646484
+        }
+      }
+    }
+  }
+}
