@@ -1,0 +1,40 @@
+executor:
+  name: python
+  options:
+    entry: __init__.py
+inputs_def:
+  - handle: model
+    json_schema:
+      ui:options:
+        title: Model
+      ui:widget: self::model
+    value:
+      model: oomol-chat
+      temperature: 0
+      top_p: 0.5
+      max_tokens: 4096
+  - handle: prompt
+    json_schema:
+      anyOf:
+        - type: string
+        - type: array
+      ui:options:
+        title: Prompt
+      ui:widget: self::messages
+    value:
+      - role: user
+        content: "{{input}}"
+    schema_overrides:
+      - schema:
+          type: array
+outputs_def:
+  - handle: output
+    json_schema:
+      type: string
+title: LLM chat
+additional_inputs: true
+additional_outputs: false
+additional_inputs_def:
+  - handle: input
+    json_schema:
+      type: string

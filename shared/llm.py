@@ -4,31 +4,8 @@ import json
 import requests
 
 from typing import Any, Iterable
-from dataclasses import dataclass
-from enum import Enum
+from .message import parse_role, Role, Message
 
-
-class Role(Enum):
-  System = "system"
-  User = "user"
-  Assistant = "assistant"
-
-def parse_role(role: str) -> Role:
-  if role == "system":
-    return Role.System
-  elif role == "developer":
-    return Role.System
-  elif role == "user":
-    return Role.User
-  elif role == "assistant":
-    return Role.Assistant
-  else:
-    raise ValueError("Invalid role")
-
-@dataclass
-class Message:
-  role: Role
-  content: str
 
 _BASE_URL_TAIL = re.compile(r"\\$")
 _DATA_HEAD = re.compile(r"^data:\s+")
@@ -44,10 +21,14 @@ class LLM:
     self._api_key: str = api_key
     self._model: str = model
 
+  # https://platform.openai.com/docs/api-reference/chat/create
   def request(
         self,
         messages: Iterable[Message],
         response_format_type: str | None = None,
+        max_completion_tokens: int | None = None,
+        temperature: float | None = None,
+        top_p: float | None = None,
         stream: bool = False,
       ) -> Message:
 
@@ -66,6 +47,14 @@ class LLM:
       data["response_format"] = {
         "type": response_format_type,
       }
+    if max_completion_tokens is not None:
+      data["max_tokens"] = max_completion_tokens # for DeepSeek
+      data["max_completion_tokens"] = max_completion_tokens # for ChatGPT
+
+    if temperature is not None:
+      data["temperature"] = temperature
+    if top_p is not None:
+      data["top_p"] = top_p
 
     response: requests.Response = requests.post(
       timeout=30.0,

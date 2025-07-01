@@ -5,8 +5,8 @@ nodes:
       - handle: model
         value:
           model: deepseek-chat
-          temperature: 0
-          top_p: 0.5
+          temperature: 0.81
+          top_p: 0.82
           max_tokens: 4096
       - handle: prompt
         value:
@@ -29,14 +29,15 @@ nodes:
           ui:widget: text
     outputs_def:
       - handle: english
+        description: 翻译成英语
         json_schema:
           type: string
-        description: 翻译成英语
         nullable: false
       - handle: japanese
+        description: 翻译成日语
         json_schema:
           type: string
-        description: 翻译成日语
+        nullable: false
   - node_id: markdown_text_preview#1
     title: "Markdown preview #1"
     inputs_from:
@@ -53,3 +54,27 @@ nodes:
           - node_id: llm#1
             output_handle: japanese
     task: oomol-preview::markdown_text_preview
+  - node_id: llm-chat#1
+    title: "LLM chat #1"
+    inputs_from:
+      - handle: model
+        value:
+          model: deepseek-chat
+          temperature: 0
+          top_p: 0.5
+          max_tokens: 4096
+      - handle: prompt
+        value:
+          - role: user
+            content: "{{input}}"
+        schema_overrides:
+          - schema:
+              type: array
+      - handle: input
+        value: 你好，你是谁。你可以帮我做什么？
+    task: self::llm-chat
+    inputs_def:
+      - handle: input
+        json_schema:
+          type: string
+          ui:widget: text
