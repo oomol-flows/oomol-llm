@@ -22,6 +22,24 @@ inputs_def:
                 - Assistant
           content:
             type: string
+  - handle: timeout
+    json_schema:
+      type: number
+      minimum: 0
+    value: 30
+  - handle: retry_times
+    json_schema:
+      type: integer
+      minimum: 0
+    value: 0
+  - handle: retry_sleep
+    json_schema:
+      type: number
+      minimum: 0
+    value: 3.5
+  - handle: stream
+    json_schema:
+      type: boolean
   - handle: model
     json_schema:
       ui:options:
@@ -32,10 +50,6 @@ inputs_def:
       temperature: 0
       top_p: 0.5
       max_tokens: 4096
-  - handle: stream
-    json_schema:
-      type: boolean
-    value: true
 outputs_def:
   - handle: output
     json_schema:

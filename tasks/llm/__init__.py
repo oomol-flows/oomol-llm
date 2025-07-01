@@ -9,9 +9,12 @@ from shared.schema import inject_json_schema_into_messages, parse_json_schema
 #region generated meta
 import typing
 class Inputs(typing.TypedDict):
+  timeout: float
+  retry_times: int
+  retry_sleep: float
+  stream: bool
   model: typing.Any
   template: typing.Any
-  stream: bool
 Outputs = typing.Dict[str, typing.Any]
 #endregion
 

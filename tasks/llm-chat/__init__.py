@@ -5,9 +5,12 @@ from shared.message import render_messages
 #region generated meta
 import typing
 class Inputs(typing.TypedDict):
+  timeout: float
+  retry_times: int
+  retry_sleep: float
+  stream: bool
   model: typing.Any
   template: typing.Any
-  stream: bool
 class Outputs(typing.TypedDict):
   output: str
 #endregion

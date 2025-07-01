@@ -19,18 +19,21 @@ class LLM:
       base_url: str,
       api_key: str,
       model: str,
+      retry_times: int,
+      retry_sleep_time: float,
+      timeout: float,
     ) -> None:
     self._base_url: str = _BASE_URL_TAIL.sub("", base_url)
     self._api_key: str = api_key
     self._model: str = model
+    self._retry_times: int = retry_times
+    self._retry_sleep_time: float = retry_sleep_time
+    self._timeout: float = timeout
 
   # https://platform.openai.com/docs/api-reference/chat/create
   def request(
         self,
         messages: Iterable[Message],
-        retry_times: int = 0,
-        retry_sleep_time: float = _DEFAULT_RETRY_TIME,
-        timeout: float = _DEFAULT_TIMEOUT,
         response_format_type: str | None = None,
         max_completion_tokens: int | None = None,
         temperature: float | None = None,
@@ -68,7 +71,7 @@ class LLM:
         request = Request(
           url=f"{self._base_url}/chat/completions",
           data=data,
-          timeout=timeout,
+          timeout=self._timeout,
           headers={
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self._api_key}"
@@ -80,10 +83,10 @@ class LLM:
           return self._parse_response(request.post())
 
       except TimeoutError as err:
-        if did_retry_times >= retry_times:
+        if did_retry_times >= self._retry_times:
           raise err
-        if retry_sleep_time > 0.0:
-          sleep(retry_sleep_time)
+        if self._retry_sleep_time > 0.0:
+          sleep(self._retry_sleep_time)
         did_retry_times += 1
 
   def _parse_stream(self, lines: Iterable[str]) -> Message:

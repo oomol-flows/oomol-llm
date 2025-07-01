@@ -14,9 +14,15 @@ nodes:
           max_tokens: 4096
       - handle: stream
         value: false
+      - handle: timeout
+        value: 30
+      - handle: retry_times
+        value: 0
+      - handle: retry_sleep
+        value: 3.5
     task: self::llm-chat-with-messages
   - node_id: llm-template#3
-    title: "LLM template #3"
+    title: "LLM generate messages #1"
     inputs_from:
       - handle: template
         value:
@@ -34,7 +40,7 @@ nodes:
     inputs_def:
       []
   - node_id: llm-messages#1
-    title: "LLM generate messages #1"
+    title: "LLM generate messages #3"
     inputs_from:
       - handle: template
         value:
@@ -75,9 +81,15 @@ nodes:
           max_tokens: 4096
       - handle: stream
         value: true
+      - handle: timeout
+        value: 30
+      - handle: retry_times
+        value: 0
+      - handle: retry_sleep
+        value: 3.5
     task: self::llm-chat-with-messages
   - node_id: markdown_text_preview#6
-    title: "Markdown preview #6"
+    title: "Markdown preview #5"
     inputs_from:
       - handle: text
         from_node:
@@ -85,7 +97,7 @@ nodes:
             output_handle: output
     task: oomol-preview::markdown_text_preview
   - node_id: markdown_text_preview#7
-    title: "Markdown preview #7"
+    title: "Markdown preview #6"
     inputs_from:
       - handle: text
         from_node:

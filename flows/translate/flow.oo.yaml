@@ -24,6 +24,12 @@ nodes:
         value: |-
           白日依山尽，黄河入海流。
           欲穷千里目，更上一层楼。
+      - handle: timeout
+        value: 30
+      - handle: retry_times
+        value: 0
+      - handle: retry_sleep
+        value: 3.5
     task: self::llm
     inputs_def:
       - handle: input
