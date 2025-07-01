@@ -1,8 +1,9 @@
 import re
 
-from typing import Any, Container, Generator
+from typing import Any, Generator
 from dataclasses import dataclass
 from enum import Enum
+from oocana import Context
 
 
 class Role(Enum):
@@ -29,12 +30,15 @@ class Message:
 
 _KEY_PATTERN: re.Pattern = re.compile(r"{{\s*([^}]+)\s*}}")
 
-def render_messages(params: dict[str, Any], reserved_keys: Container[str]) -> Generator[Message, None, None]:
+def render_messages(params: Any, context: Context) -> Generator[Message, None, None]:
   template: list[dict[str, Any]] = params["template"]
 
   def repl(match: re.Match):
     key = match.group(1).strip()
-    if key in reserved_keys:
+    input_def = context.inputs_def.get(key, None)
+    if input_def is None:
+      return match.group()
+    if not input_def["is_additional"]:
       return match.group()
     value = params.get(key, None)
     if value is None:
