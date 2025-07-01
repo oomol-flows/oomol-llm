@@ -2,7 +2,7 @@ import json
 
 from typing import cast
 from oocana import Context
-from shared.llm import LLM
+from shared.llm_creation import create_llm
 from shared.message import Message, Role
 from shared.schema import inject_json_schema_into_messages, parse_json_schema
 
@@ -16,22 +16,15 @@ Outputs = typing.Dict[str, typing.Any]
 
 
 def main(params: Inputs, context: Context) -> Outputs:
-  model_obj = params["model"]
-  model: str = model_obj["model"]
-  temperature: float = float(model_obj["temperature"])
-  top_p: float = float(model_obj["top_p"])
-  max_tokens: int = int(model_obj["max_tokens"])
-  base_url = context.oomol_llm_env["base_url_v1"]
-  api_key = context.oomol_llm_env["api_key"]
+  model = params["model"]
+  temperature: float = float(model["temperature"])
+  top_p: float = float(model["top_p"])
+  max_tokens: int = int(model["max_tokens"])
 
   json_schema = parse_json_schema(context)
   valid_keys = set(cast(dict, json_schema["properties"]).keys())
 
-  llm = LLM(
-    base_url=base_url,
-    api_key=api_key,
-    model=model,
-  )
+  llm = create_llm(params, context)
   messages = inject_json_schema_into_messages(
     json_schema=json_schema,
     messages=[

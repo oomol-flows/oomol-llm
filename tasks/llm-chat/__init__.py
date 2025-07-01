@@ -1,6 +1,6 @@
 from typing import cast, Any
 from oocana import Context
-from shared.llm import LLM
+from shared.llm_creation import create_llm
 from shared.message import prompt_messages
 
 #region generated meta
@@ -14,23 +14,16 @@ class Outputs(typing.TypedDict):
 
 
 def main(params: Inputs, context: Context) -> Outputs:
-  model_obj = params["model"]
-  model: str = model_obj["model"]
-  temperature: float = float(model_obj["temperature"])
-  top_p: float = float(model_obj["top_p"])
-  max_tokens: int = int(model_obj["max_tokens"])
-  base_url = context.oomol_llm_env["base_url_v1"]
-  api_key = context.oomol_llm_env["api_key"]
+  model = params["model"]
+  temperature: float = float(model["temperature"])
+  top_p: float = float(model["top_p"])
+  max_tokens: int = int(model["max_tokens"])
 
   messages = prompt_messages(
     params=cast(dict[str, Any], params),
     reserved_keys=("model", "prompt"),
   )
-  llm = LLM(
-    base_url=base_url,
-    api_key=api_key,
-    model=model,
-  )
+  llm = create_llm(params, context)
   resp_message = llm.request(
     stream=True,
     messages=messages,
