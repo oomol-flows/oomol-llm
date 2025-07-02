@@ -1,6 +1,6 @@
 name: llm
 displayName: LLM
-version: 0.3.0
+version: 0.3.1
 description: LLM
 scripts:
   {}
@@ -23,4 +23,4 @@ contributes:
             - type: array
           ui:options:
             title: Prompt
-releaseNotes: rebuild the whole logic & add more blocks.
+releaseNotes: update the icon
