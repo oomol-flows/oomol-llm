@@ -1,0 +1,31 @@
+title: Test Skills
+nodes:
+  - node_id: +typescript#1
+    title: "TypeScript #1"
+    icon: ":skill-icons:typescript:"
+    task:
+      ui:
+        default_width: 450
+      inputs_def:
+        - handle: skills
+          json_schema:
+            type: array
+            ui:options:
+              title: Skills
+            ui:widget: self::skills
+      outputs_def:
+        - handle: output
+          json_schema:
+            type: string
+      executor:
+        name: nodejs
+        options:
+          entry: scriptlets/+scriptlet#1.ts
+    inputs_from:
+      - handle: skills
+        value:
+          - package: self
+            blockName: llm-chat
+        schema_overrides:
+          - schema:
+              type: array

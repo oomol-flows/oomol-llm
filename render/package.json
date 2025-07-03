@@ -4,12 +4,14 @@
   "scripts": {
     "build": "pnpm clean && pnpm build:render",
     "clean": "rimraf ../bundled",
-    "build:render": "esbuild ./src/index.tsx --bundle --format=esm --loader:.svg=dataurl --define:process.env.NODE_ENV=\\\"production\\\" --outfile=../bundled/inputRender.js"
+    "build:render": "esbuild ./src/index.tsx --bundle --format=esm --loader:.svg=dataurl --loader:.css=text --define:process.env.NODE_ENV=\\\"production\\\" --outfile=../bundled/inputRender.js"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.9.0",
     "@hyrious/configs": "^0.1.4",
     "@hyrious/rimraf": "^0.1.0",
     "@oomol/types": "^0.0.16",
+    "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.5",
     "clsx": "^2.1.1",
     "esbuild": "^0.25.5",
@@ -17,7 +19,8 @@
     "react-dom": "^18.3.1",
     "react-select": "^5.10.1",
     "react-simple-code-editor": "^0.14.1",
-    "use-value-enhancer": "^5.0.6"
+    "use-value-enhancer": "^5.0.6",
+    "value-enhancer": "^5.5.3"
   },
   "packageManager": "pnpm@10.12.4"
 }
