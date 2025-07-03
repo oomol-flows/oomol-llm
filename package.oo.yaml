@@ -23,4 +23,8 @@ contributes:
             - type: array
           ui:options:
             title: Prompt
-releaseNotes: update the icon
+      - name: skills
+        json_schema:
+          type: array
+          ui:options:
+            title: Skills

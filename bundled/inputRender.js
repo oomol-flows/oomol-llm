@@ -13341,8 +13341,7 @@ function model(dom, context) {
           min: 0,
           max: 1,
           step: 0.01,
-          onChange: (value2) => setTemperature(parseFloat(value2)),
-          defaultValue: 0.5
+          onChange: (value2) => setTemperature(parseFloat(value2))
         },
         {
           label: "Top P",
@@ -13350,8 +13349,7 @@ function model(dom, context) {
           min: 0,
           max: 1,
           step: 0.01,
-          onChange: (value2) => setTopP(parseFloat(value2)),
-          defaultValue: 1
+          onChange: (value2) => setTopP(parseFloat(value2))
         },
         {
           label: "Max Tokens",
@@ -13359,8 +13357,7 @@ function model(dom, context) {
           min: 1,
           max: 4096,
           step: 1,
-          onChange: (value2) => setMaxTokens(Number(value2)),
-          defaultValue: 2048
+          onChange: (value2) => setMaxTokens(Number(value2))
         }
       ].map((props) => /* @__PURE__ */ import_react10.default.createElement(RangeInput, { key: props.label, ...props, disabled: readonly }))
     ));
@@ -13501,6 +13498,11 @@ function TheSelect(props) {
       };
     }
   }, []);
+  (0, import_react10.useEffect)(() => {
+    if (props.defaultMenuIsOpen && innerRef.current) {
+      innerRef.current.focus();
+    }
+  }, [props.defaultMenuIsOpen]);
   return /* @__PURE__ */ import_react10.default.createElement(
     "div",
     {
@@ -13522,7 +13524,9 @@ function TheSelect(props) {
         components: props.components ?? customComponents,
         styles: { menu: (base) => ({ ...base, width: "var(--menu-width)" }) },
         isLoading: props.isLoading,
-        isDisabled: props.isDisabled
+        isDisabled: props.isDisabled,
+        defaultMenuIsOpen: props.defaultMenuIsOpen,
+        onMenuClose: props.onMenuClose
       }
     )
   );
@@ -13642,6 +13646,113 @@ function parseMessages(value) {
         return { role, content };
       }
     });
+  } else {
+    return [];
+  }
+}
+function skills(dom, context) {
+  injectStyles();
+  const initialSkills = parseSkills(context.store.value$?.value);
+  function SkillsComponent() {
+    const [blocks$, setBlocks$] = (0, import_react10.useState)();
+    const blocks = useVal(blocks$);
+    const [menuOpen, setMenuOpen] = (0, import_react10.useState)(false);
+    const dark = useVal(context.dark);
+    const [skills2, setSkills] = (0, import_react10.useState)(initialSkills);
+    const addSkill = (0, import_react10.useCallback)((blockId) => {
+      const block = blocks$?.value?.find((b) => b.id === blockId);
+      if (block && !skills2.some((s) => s.blockName === block.blockName && s.package === block.package)) {
+        setSkills((s) => [...s, { package: block.package, blockName: block.blockName }]);
+        setMenuOpen(false);
+      }
+    }, [blocks$, skills2]);
+    const deleteSkill = (0, import_react10.useCallback)((skill) => {
+      setSkills((s) => s.filter((sk) => sk.package !== skill.package || sk.blockName !== skill.blockName));
+    }, []);
+    const readonly = !context.store.context.canEditValue;
+    (0, import_react10.useEffect)(() => {
+      let isMounted = true;
+      context.postMessage("getCallableBlocks", (blocks$2) => {
+        if (!isMounted) return;
+        setBlocks$(blocks$2);
+      });
+      return () => {
+        isMounted = false;
+        blocks$?.dispose();
+      };
+    }, []);
+    (0, import_react10.useEffect)(() => {
+      context.store.value$?.set(skills2);
+    }, [skills2]);
+    return /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-container" }, skills2.length > 0 && /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-tags" }, skills2.map((skill) => {
+      const block = findBlock(blocks, skill);
+      return block && /* @__PURE__ */ import_react10.default.createElement("button", { className: "llm-tag-btn", key: `${skill.package}::${skill.blockName}`, disabled: readonly, onClick: () => deleteSkill(skill) }, block.icon && /* @__PURE__ */ import_react10.default.createElement(BlockIcon, { icon: block.icon, alt: getBlockLabel(block), dark }), /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-tag-content" }, block.title || block.blockName));
+    }).filter((x) => !!x)), readonly ? null : menuOpen ? /* @__PURE__ */ import_react10.default.createElement(
+      TheSelect,
+      {
+        defaultMenuIsOpen: true,
+        value: null,
+        options: blocks?.map((b) => mapBlockToOption(b, dark)),
+        onMenuClose: () => setMenuOpen(false),
+        components: customComponentsWithDefaultSingleValue,
+        onChange: (v) => v?.value && addSkill(v.value)
+      }
+    ) : /* @__PURE__ */ import_react10.default.createElement("button", { className: "llm-btn-add-message", onClick: () => setMenuOpen(true) }, "Add skill"));
+  }
+  const root = (0, import_client.createRoot)(dom);
+  root.render(/* @__PURE__ */ import_react10.default.createElement(SkillsComponent, null));
+  return () => root.unmount();
+}
+function findBlock(blocks, skill) {
+  return blocks?.find((b) => b.package === skill.package && b.blockName === skill.blockName);
+}
+function BlockIcon({ icon, alt, dark }) {
+  let src;
+  if (icon.startsWith(":") && icon.endsWith(":")) {
+    const [_, collection = "", name = "", color = ""] = icon.split(":");
+    if (collection && name) {
+      src = `https://api.iconify.design/${collection}:${name}.svg?color=${encodeURIComponent(getColor(color, dark))}`;
+    }
+  } else {
+    src = icon;
+  }
+  if (!src) return null;
+  return /* @__PURE__ */ import_react10.default.createElement("img", { src, alt, style: { width: 16, height: 16 } });
+}
+function getColor(color, dark) {
+  if (color && color.toLowerCase() !== "currentcolor") return color;
+  return dark ? "#f0f6fc" : "#252a2e";
+}
+function mapBlockToOption(block, dark) {
+  return {
+    value: block.id,
+    label: /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-format-option-container", title: getBlockDetails(block) }, block.icon && /* @__PURE__ */ import_react10.default.createElement(BlockIcon, { icon: block.icon, alt: block.title || block.blockName, dark }), /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-format-option-label" }, getBlockLabel(block)))
+  };
+}
+function getBlockLabel(block) {
+  if (!block) return "<unknown>";
+  if (block.title) {
+    return `${block.title} (${block.package}::${block.blockName})`;
+  }
+  return `${block.blockName} (${block.package})`;
+}
+function getBlockDetails(block) {
+  let details = `${block.package}::${block.blockName}`;
+  if (block.title) {
+    details = `${block.title} (${details})`;
+  }
+  if (block.description) {
+    details += ` - ${block.description}`;
+  }
+  return details;
+}
+function parseSkills(value) {
+  if (Array.isArray(value)) {
+    return value.map((v) => {
+      if (typeof v === "object" && v !== null && v.id && v.package && v.blockName) {
+        return v;
+      }
+    }).filter((x) => !!x);
   } else {
     return [];
   }
@@ -13811,10 +13922,32 @@ var STYLE = `
     font-weight: 500;
   }
 }
+
+.llm-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.llm-tag-btn {
+  width: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+}
+
+.llm-tag-content {
+  font-size: 11px;
+  color: var(--text-4);
+  font-weight: 500;
+}
 `;
 export {
   messages,
-  model
+  model,
+  skills
 };
 /*! Bundled license information:
 

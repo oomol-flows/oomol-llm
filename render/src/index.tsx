@@ -12,6 +12,7 @@ import OpenAISVG from "../icons/openai.svg";
 import ClaudeSVG from "../icons/claude.svg";
 
 import type { InputRenderContext } from '@oomol/types/inputRender'
+import type { ReadonlyVal } from "value-enhancer";
 
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { createRoot } from "react-dom/client";
@@ -19,31 +20,7 @@ import Select, { components, SelectInstance, Props as ReactSelectProps } from "r
 import Editor from "react-simple-code-editor";
 import clsx from "clsx";
 import { useVal } from "use-value-enhancer";
-
-type Model = {
-  model_name: string;
-  model_display_name: string;
-  temperature: number;
-  top_p: number;
-  max_tokens: number;
-  tags: string[];
-  ratio: number;
-  channel_name: string;
-  input_ratio: number;
-  output_ratio: number;
-};
-
-interface IModelOptions {
-  model?: string
-  temperature?: number // 0-1
-  top_p?: number // 0-1
-  max_tokens?: number // 1-4096
-}
-
-interface Message {
-    role: 'system' | 'user' | 'assistant'
-    content: string
-}
+import { Model, IModelOptions, Message, CallableBlock, Skill } from './types';
 
 // See https://github.com/JedWatson/react-select/blob/-/packages/react-select/src/builtins.ts
 export interface IBasicOption {
@@ -140,7 +117,6 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
                 max: 1,
                 step: 0.01,
                 onChange: (value: any) => setTemperature(parseFloat(value)),
-                defaultValue: 0.5,
               },
               {
                 label: "Top P",
@@ -149,7 +125,6 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
                 max: 1,
                 step: 0.01,
                 onChange: (value: any) => setTopP(parseFloat(value)),
-                defaultValue: 1,
               },
               {
                 label: "Max Tokens",
@@ -158,7 +133,6 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
                 max: 4096,
                 step: 1,
                 onChange: (value: any) => setMaxTokens(Number(value)),
-                defaultValue: 2048,
               },
             ].map((props) => (
               <RangeInput key={props.label} {...props} disabled={readonly} />
@@ -385,6 +359,12 @@ function TheSelect(props: SelectProps) {
     }
   }, []);
 
+  useEffect(() => {
+    if (props.defaultMenuIsOpen && innerRef.current) {
+      innerRef.current.focus();
+    }
+  }, [props.defaultMenuIsOpen]);
+
   return (
     <div
       style={
@@ -406,6 +386,8 @@ function TheSelect(props: SelectProps) {
         styles={{ menu: (base) => ({ ...base, width: "var(--menu-width)" }) }}
         isLoading={props.isLoading}
         isDisabled={props.isDisabled}
+        defaultMenuIsOpen={props.defaultMenuIsOpen}
+        onMenuClose={props.onMenuClose}
       />
     </div>
   );
@@ -561,6 +543,155 @@ function parseMessages(value: unknown): Message[] {
           return { role, content };
         }
       });
+  } else {
+    return [];
+  }
+}
+
+export function skills(dom: HTMLElement, context: InputRenderContext) {
+  injectStyles();
+
+  const initialSkills = parseSkills(context.store.value$?.value);
+  function SkillsComponent() {
+    const [blocks$, setBlocks$] = useState<ReadonlyVal<CallableBlock[]>>();
+    const blocks = useVal(blocks$);
+    const [menuOpen, setMenuOpen] = useState(false);
+    const dark = useVal((context as any).dark); // TODO: update types.
+
+    const [skills, setSkills] = useState<Skill[]>(initialSkills);
+
+    const addSkill = useCallback((blockId: string) => {
+      const block = blocks$?.value?.find(b => b.id === blockId);
+      if (block && !skills.some(s => s.blockName === block.blockName && s.package === block.package)) {
+        setSkills((s) => [...s, { package: block.package, blockName: block.blockName }]);
+        setMenuOpen(false);
+      }
+    }, [blocks$, skills]);
+
+    const deleteSkill = useCallback((skill: Skill) => {
+      setSkills((s) => s.filter(sk => sk.package !== skill.package || sk.blockName !== skill.blockName));
+    }, []);
+
+    const readonly = !context.store.context.canEditValue;
+
+    useEffect(() => {
+      let isMounted = true;
+
+      context.postMessage('getCallableBlocks', (blocks$: ReadonlyVal<CallableBlock[]>) => {
+        if (!isMounted) return;
+        setBlocks$(blocks$);
+      });
+
+      return () => {
+        isMounted = false;
+        blocks$?.dispose();
+      }
+    }, []);
+
+    useEffect(() => {
+      context.store.value$?.set(skills);
+    }, [skills]);
+
+    return (
+      <div className="llm-container">
+        {skills.length > 0 && <div className="llm-tags">
+          {skills.map(skill => {
+            const block = findBlock(blocks, skill)
+            return block && (
+              <button className="llm-tag-btn" key={`${skill.package}::${skill.blockName}`} disabled={readonly}
+                  title={getBlockDetails(block) + ' (click to delete)'}
+                  onClick={() => deleteSkill(skill)}>
+                {block.icon && <BlockIcon icon={block.icon} alt={getBlockLabel(block)} dark={dark} />}
+                <span className="llm-tag-content">{block.title || block.blockName}</span>
+              </button>
+            );
+          }).filter(x => !!x)}
+        </div>}
+        {readonly ? null : menuOpen ? (
+          <TheSelect
+            defaultMenuIsOpen
+            value={null}
+            options={blocks?.map(b => mapBlockToOption(b, dark))}
+            onMenuClose={() => setMenuOpen(false)}
+            components={customComponentsWithDefaultSingleValue}
+            onChange={v => v?.value && addSkill(v.value)}
+          />
+        ) : (
+          <button className="llm-btn-add-message" onClick={() => setMenuOpen(true)}>
+            Add skill
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  const root = createRoot(dom);
+  root.render(<SkillsComponent />);
+
+  return () => root.unmount();
+}
+
+function findBlock(blocks: CallableBlock[] | undefined, skill: Skill): CallableBlock | undefined {
+  return blocks?.find(b => b.package === skill.package && b.blockName === skill.blockName)
+}
+
+function BlockIcon({ icon, alt, dark }: { icon: string, alt?: string, dark?: boolean }) {
+  let src: string | undefined;
+  if (icon.startsWith(":") && icon.endsWith(":")) {
+    const [_, collection = "", name = "", color = ""] = icon.split(':')
+    if (collection && name) {
+      src = `https://api.iconify.design/${collection}:${name}.svg?color=${encodeURIComponent(getColor(color, dark))}`;
+    }
+  } else {
+    src = icon;
+  }
+  if (!src) return null;
+  return <img src={src} alt={alt} style={{ width: 16, height: 16 }} />;
+}
+
+function getColor(color: string, dark?: boolean): string {
+  if (color && color.toLowerCase() !== 'currentcolor') return color;
+  return dark ? '#f0f6fc' : '#252a2e';
+}
+
+function mapBlockToOption(block: CallableBlock, dark?: boolean): IBasicOption {
+  return {
+    value: block.id,
+    label: (
+      <div className="llm-format-option-container" title={getBlockDetails(block)}>
+        {block.icon && <BlockIcon icon={block.icon} alt={block.title || block.blockName} dark={dark} />}
+        <span className="llm-format-option-label">{getBlockLabel(block)}</span>
+      </div>
+    ),
+  };
+}
+
+function getBlockLabel(block?: CallableBlock): string {
+  if (!block) return '<unknown>';
+  if (block.title) {
+    return `${block.title} (${block.package}::${block.blockName})`;
+  }
+  return `${block.blockName} (${block.package})`;
+}
+
+function getBlockDetails(block: CallableBlock): string {
+  let details = `${block.package}::${block.blockName}`;
+  if (block.title) {
+    details = `${block.title} (${details})`;
+  }
+  if (block.description) {
+    details += ` - ${block.description}`;
+  }
+  return details;
+}
+
+function parseSkills(value: unknown): Skill[] {
+  if (Array.isArray(value)) {
+    return value.map((v: any) => {
+      if (typeof v === "object" && v !== null && v.id && v.package && v.blockName) {
+        return v as Skill;
+      }
+    }).filter(x => !!x);
   } else {
     return [];
   }
@@ -731,5 +862,26 @@ const STYLE = `
     color: var(--text-4);
     font-weight: 500;
   }
+}
+
+.llm-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.llm-tag-btn {
+  width: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+}
+
+.llm-tag-content {
+  font-size: 11px;
+  color: var(--text-4);
+  font-weight: 500;
 }
 `;
