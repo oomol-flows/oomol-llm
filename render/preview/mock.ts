@@ -1,5 +1,6 @@
 import { HandleRowStore, InputRenderContext } from '@oomol/types/inputRender';
 import { ReadonlyVal, val } from 'value-enhancer';
+import { faker } from '@faker-js/faker';
 import { CallableBlock, Model } from '../src/types';
 
 export function mockInputRenderContext(name: string): InputRenderContext & { dark?: ReadonlyVal<boolean> } {
@@ -23,7 +24,7 @@ function mockHandleRowStore(name: string): HandleRowStore {
     name,
     context: { canEditValue: true },
     value$: value$,
-    description$: val('Mock description'),
+    description$: val(faker.lorem.sentence()),
   } as any;
 }
 
@@ -43,13 +44,15 @@ function mockPostMessage(message: unknown, ...args: unknown[]) {
     }])
   }
   if (message === 'getCallableBlocks') {
-    (args[0] as Function)(val<CallableBlock[]>(Array.from({ length: 5 }, (_, i) => ({
-      id: 'mock-block-' + i,
-      package: 'self',
-      blockName: 'mockBlock' + i,
-      icon: ':codicon:add:',
-      title: 'Mock Block Title ' + i,
-      description: 'This is a mock block for demonstration purposes.',
+    const fakePackages = expand(faker.helpers.uniqueArray(faker.lorem.word, 10));
+    (args[0] as Function)(val<CallableBlock[]>(Array.from({ length: 50 }, (_, i) => ({
+      id: faker.string.uuid(),
+      package: i < 2 ? 'self' : fakePackages[i % fakePackages.length],
+      packageDisplayName: capitalize(fakePackages[i % fakePackages.length]),
+      blockName: faker.lorem.word(),
+      icon: ':carbon:ai-generate:',
+      title: capitalize(faker.lorem.words({ min: 1, max: 3 })),
+      description: faker.lorem.sentence(),
       inputsDef: [{
         handle: 'input1',
         description: 'Input 1 description',
@@ -62,3 +65,16 @@ function mockPostMessage(message: unknown, ...args: unknown[]) {
     }))))
   }
 }
+
+function capitalize(s: string): string {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function expand(a: string[]): string[] {
+  // Randomly duplicate items to simulate a larger set
+  return a.flatMap(item => {
+    const count = faker.number.int({ min: 1, max: 5 });
+    return Array.from({ length: count }, () => item);
+  });
+}
+

@@ -26,6 +26,7 @@ export interface Message {
 export interface CallableBlock {
   id: string;
   package: string; // 'self' is current workspace
+  packageDisplayName: string;
   blockName: string;
   icon?: string; // ':collection:name:' or url
   title?: string;

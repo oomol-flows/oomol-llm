@@ -4,9 +4,10 @@
   "scripts": {
     "build": "pnpm clean && pnpm build:render",
     "clean": "rimraf ../bundled",
-    "build:render": "esbuild ./src/index.tsx --bundle --format=esm --loader:.svg=dataurl --define:process.env.NODE_ENV=\\\"production\\\" --outfile=../bundled/inputRender.js"
+    "build:render": "esbuild ./src/index.tsx --bundle --format=esm --loader:.svg=dataurl --loader:.css=text --define:process.env.NODE_ENV=\\\"production\\\" --outfile=../bundled/inputRender.js"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.9.0",
     "@hyrious/configs": "^0.1.4",
     "@hyrious/rimraf": "^0.1.0",
     "@oomol/types": "^0.0.16",
