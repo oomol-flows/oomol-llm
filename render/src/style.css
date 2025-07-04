@@ -146,11 +146,15 @@
   display: flex;
   align-items: center;
   gap: 4px;
+  overflow: hidden;
 
   .llm-format-option-label {
     font-size: 11px;
     color: var(--text-4);
     font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
@@ -167,22 +171,33 @@
   align-items: center;
   gap: 4px;
   padding: 2px 6px;
+  overflow: hidden;
+  justify-content: flex-start;
 }
 
 .llm-tag-content {
   font-size: 11px;
   color: var(--text-4);
   font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .llm-blocks-group {
-  padding: 3.5px;
+  padding: 5px 7px;
   min-height: 22px;
   display: flex !important;
   align-items: center;
   color: var(--vscode-breadcrumb-foreground);
+  font-weight: 500;
 }
 
-.react-select__group .llm-format-option-container {
-  padding-left: 10px;
+.llm-select-skills {
+  .react-select__value-container {
+    padding-left: 8px;
+  }
+  .react-select__option {
+    align-items: baseline;
+    padding: 5px 8px;
+  }
 }

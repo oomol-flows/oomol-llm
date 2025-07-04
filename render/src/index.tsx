@@ -384,6 +384,7 @@ function TheSelect(props: SelectProps) {
 
   return (
     <div
+      className={props.className}
       style={
         {
           display: "contents",
@@ -644,6 +645,7 @@ export function skills(dom: HTMLElement, context: InputRenderContext) {
         </div>}
         {readonly ? null : menuOpen ? (
           <TheSelect
+            className="llm-select-skills"
             defaultMenuIsOpen
             value={skills.map(skill => {
               const block = findBlock(blocks, skill);
@@ -687,7 +689,7 @@ function BlockIcon({ icon, alt, dark }: { icon: string, alt?: string, dark?: boo
   } else {
     src = icon;
   }
-  return src && <img src={src} alt={alt} style={{ width: 14, height: 14 }} />;
+  return src && <img src={src} alt={alt} style={{ width: 12, height: 12 }} />;
 }
 
 function getColor(color: string, dark?: boolean): string {

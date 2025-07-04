@@ -51,7 +51,7 @@ function mockPostMessage(message: unknown, ...args: unknown[]) {
       packageDisplayName: capitalize(fakePackages[i % fakePackages.length]),
       blockName: faker.lorem.word(),
       icon: ':carbon:ai-generate:',
-      title: capitalize(faker.lorem.words({ min: 1, max: 3 })),
+      title: capitalize(faker.lorem.words({ min: 1, max: 10 })),
       description: faker.lorem.sentence(),
       inputsDef: [{
         handle: 'input1',
