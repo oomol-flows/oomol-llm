@@ -36,7 +36,7 @@ export default async function(
     });
 
     var { error, result } = await response.finish();
-    if (error) throw new Error(error + '');
+    if (error || !result) throw new Error(error + '' || 'No result.');
 
     var output = result.output as string;
 
