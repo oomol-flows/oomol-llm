@@ -1,0 +1,203 @@
+.llm-container .react-select-container {
+  flex: 1;
+}
+
+.llm-container .react-select__control {
+  min-height: 24px;
+}
+
+.llm-container mark {
+  color: var(--vscode-chat-slashCommandForeground);
+  background: none transparent !important;
+}
+
+.llm-message-container {
+  margin-bottom: 4px;
+}
+
+.llm-message-head {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 4px;
+}
+
+.llm-message-head select {
+  border-color: transparent;
+}
+
+.llm-btn-add-message {
+}
+
+.llm-message-content {
+  border: 1px solid transparent;
+  background: var(--widget-background);
+  border-radius: var(--widget-radius);
+}
+
+.llm-message-content:hover {
+  background: var(--widget-background-highlight-color);
+}
+
+.llm-message-content:focus-within {
+  border-color: var(--brand-highlight-color);
+  background: var(--widget-input-background);
+}
+
+.llm-message-content ::selection {
+  background: #2b4f7760;
+}
+
+.llm-custom-label {
+  flex: 1;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  overflow: hidden;
+  padding: 8px 12px;
+}
+
+.llm-custom-label-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  overflow: hidden;
+
+  .llm-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+}
+
+.llm-custom-label-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  .llm-title-box {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    overflow: hidden;
+  }
+
+   .llm-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-4);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .llm-ratio {
+    white-space: nowrap;
+    font-size: 12px;
+    color: var(--text-2);
+    font-weight: 500;
+  }
+}
+
+.llm-tag {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background-color: var(--fill-6);
+  font-size: 11px;
+  color: var(--text-4);
+  white-space: nowrap;
+}
+
+.llm-tag-highlight {
+  background-color: var(--brand-5);
+  color: #ffffff;
+
+  .oomol-theme-dark & {
+    color: var(--text-4);
+  }
+}
+
+.llm-tag-AlibabaCloud {
+  color: #ffffff;
+  background-color: #E4630B;
+}
+
+.llm-tag-DeepSeek {
+  color: #ffffff;
+  background-color: #4D6BFF;
+}
+
+.llm-tag-VolcEngine {
+  color: #ffffff;
+  background-color: #2FC6C6;
+}
+
+.llm-tag-OpenRouter {
+  color: #ffffff;
+  background-color: #7C8B9D;
+}
+
+.llm-format-option-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow: hidden;
+
+  .llm-format-option-label {
+    font-size: 11px;
+    color: var(--text-4);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.llm-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.llm-tag-btn {
+  width: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  overflow: hidden;
+  justify-content: flex-start;
+}
+
+.llm-tag-content {
+  font-size: 11px;
+  color: var(--text-4);
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.llm-blocks-group {
+  padding: 5px 7px;
+  min-height: 22px;
+  display: flex !important;
+  align-items: center;
+  color: var(--vscode-breadcrumb-foreground);
+  font-weight: 500;
+}
+
+.llm-select-skills {
+  .react-select__value-container {
+    padding-left: 8px;
+  }
+  .react-select__option {
+    align-items: baseline;
+    padding: 5px 8px;
+  }
+}

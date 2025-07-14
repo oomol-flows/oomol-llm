@@ -11,39 +11,18 @@ import GrokSVG from "../icons/grok.svg";
 import OpenAISVG from "../icons/openai.svg";
 import ClaudeSVG from "../icons/claude.svg";
 
-import type { InputRenderContext } from '@oomol/types/inputRender'
+import STYLE from './style.css';
 
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import type { InputRenderContext } from '@oomol/types/inputRender'
+import type { ReadonlyVal } from "value-enhancer";
+
+import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { createRoot } from "react-dom/client";
-import Select, { components, SelectInstance, Props as ReactSelectProps } from "react-select";
+import Select, { components, SelectInstance, Props as ReactSelectProps, FilterOptionOption, OptionsOrGroups, GroupBase } from "react-select";
 import Editor from "react-simple-code-editor";
 import clsx from "clsx";
 import { useVal } from "use-value-enhancer";
-
-type Model = {
-  model_name: string;
-  model_display_name: string;
-  temperature: number;
-  top_p: number;
-  max_tokens: number;
-  tags: string[];
-  ratio: number;
-  channel_name: string;
-  input_ratio: number;
-  output_ratio: number;
-};
-
-interface IModelOptions {
-  model?: string
-  temperature?: number // 0-1
-  top_p?: number // 0-1
-  max_tokens?: number // 1-4096
-}
-
-interface Message {
-    role: 'system' | 'user' | 'assistant'
-    content: string
-}
+import { Model, IModelOptions, Message, CallableBlock, Skill } from './types';
 
 // See https://github.com/JedWatson/react-select/blob/-/packages/react-select/src/builtins.ts
 export interface IBasicOption {
@@ -51,6 +30,8 @@ export interface IBasicOption {
   readonly label?: string | React.ReactNode;
   readonly value?: string;
   readonly isDisabled?: boolean;
+  // Derived from group label automatically.
+  readonly group?: { label?: string; value?: string };
 }
 
 export function model(dom: HTMLElement, context: InputRenderContext) {
@@ -140,7 +121,6 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
                 max: 1,
                 step: 0.01,
                 onChange: (value: any) => setTemperature(parseFloat(value)),
-                defaultValue: 0.5,
               },
               {
                 label: "Top P",
@@ -149,7 +129,6 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
                 max: 1,
                 step: 0.01,
                 onChange: (value: any) => setTopP(parseFloat(value)),
-                defaultValue: 1,
               },
               {
                 label: "Max Tokens",
@@ -158,7 +137,6 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
                 max: 4096,
                 step: 1,
                 onChange: (value: any) => setMaxTokens(Number(value)),
-                defaultValue: 2048,
               },
             ].map((props) => (
               <RangeInput key={props.label} {...props} disabled={readonly} />
@@ -365,6 +343,19 @@ const customComponentsWithDefaultSingleValue = {
 
 interface SelectProps extends ReactSelectProps<IBasicOption, false> { }
 
+function matchSubstring<Option extends IBasicOption = IBasicOption>(
+  option: FilterOptionOption<Option>,
+  input: string,
+): boolean {
+  input = input.trim().toLowerCase();
+  return (
+    (option.data.group?.label || "").toLowerCase().includes(input) ||
+    (option.data.group?.value || "").toLowerCase().includes(input) ||
+    (option.label || "").toLowerCase().includes(input) ||
+    (option.value || "").toLowerCase().includes(input)
+  );
+}
+
 function TheSelect(props: SelectProps) {
   const [menuWidth, setMenuWidth] = useState(0);
   const innerRef = useRef<SelectInstance<any, any>>(null);
@@ -385,8 +376,15 @@ function TheSelect(props: SelectProps) {
     }
   }, []);
 
+  useEffect(() => {
+    if (props.defaultMenuIsOpen && innerRef.current) {
+      innerRef.current.focus();
+    }
+  }, [props.defaultMenuIsOpen]);
+
   return (
     <div
+      className={props.className}
       style={
         {
           display: "contents",
@@ -406,6 +404,12 @@ function TheSelect(props: SelectProps) {
         styles={{ menu: (base) => ({ ...base, width: "var(--menu-width)" }) }}
         isLoading={props.isLoading}
         isDisabled={props.isDisabled}
+        defaultMenuIsOpen={props.defaultMenuIsOpen}
+        onMenuClose={props.onMenuClose}
+        filterOption={props.filterOption}
+        formatGroupLabel={props.formatGroupLabel}
+        formatOptionLabel={props.formatOptionLabel}
+        hideSelectedOptions={props.hideSelectedOptions}
       />
     </div>
   );
@@ -566,6 +570,202 @@ function parseMessages(value: unknown): Message[] {
   }
 }
 
+export function skills(dom: HTMLElement, context: InputRenderContext) {
+  injectStyles();
+
+  const initialSkills = parseSkills(context.store.value$?.value);
+  function SkillsComponent() {
+    const [blocks$, setBlocks$] = useState<ReadonlyVal<CallableBlock[]>>();
+    const [menuOpen, setMenuOpen] = useState(false);
+    const blocks = useVal(blocks$);
+    const blocksMap = useMemo(() => blocksToMap(blocks), [blocks]);
+    const dark = useVal((context as any).dark); // TODO: update types.
+
+    const [skills, setSkills] = useState<Skill[]>(initialSkills);
+
+    const addSkill = useCallback((blockId: string) => {
+      const block = blocksMap.get(blockId);
+      if (block && !skills.some(s => s.blockName === block.blockName && s.package === block.package)) {
+        setSkills((s) => [...s, { package: block.package, blockName: block.blockName }]);
+        setMenuOpen(false);
+      }
+    }, [blocksMap, skills]);
+
+    const deleteSkill = useCallback((skill: Skill) => {
+      setSkills((s) => s.filter(sk => sk.package !== skill.package || sk.blockName !== skill.blockName));
+    }, []);
+
+    const readonly = !context.store.context.canEditValue;
+
+    useEffect(() => {
+      let isMounted = true;
+
+      context.postMessage('getCallableBlocks', (blocks$: ReadonlyVal<CallableBlock[]>) => {
+        if (!isMounted) return;
+        setBlocks$(blocks$);
+      });
+
+      return () => {
+        isMounted = false;
+        blocks$?.dispose();
+      }
+    }, []);
+
+    useEffect(() => {
+      context.store.value$?.set(skills);
+    }, [skills]);
+
+    function formatGroupLabel(group: GroupBase<IBasicOption>): React.ReactNode {
+      return <div className='llm-blocks-group' title={group.label}>{group.label}</div>;
+    }
+
+    function formatOptionLabel(option: IBasicOption): React.ReactNode {
+      const block = blocksMap.get(option.value!);
+      if (!block) return null;
+      return <div className="llm-format-option-container" title={getBlockDetails(block)}>
+        {block.icon && <BlockIcon icon={block.icon} alt={block.title || block.blockName} dark={dark} />}
+        <span className="llm-format-option-label">{block.title || block.blockName}</span>
+      </div>
+    }
+
+    return (
+      <div className="llm-container">
+        {skills.length > 0 && <div className="llm-tags">
+          {skills.map(skill => {
+            const block = findBlock(blocks, skill)
+            return block && (
+              <button className="llm-tag-btn" key={`${skill.package}::${skill.blockName}`} disabled={readonly}
+                  title={getBlockDetails(block) + ' (click to delete)'}
+                  onClick={() => deleteSkill(skill)}>
+                {block.icon && <BlockIcon icon={block.icon} alt={getBlockLabel(block)} dark={dark} />}
+                <span className="llm-tag-content">{block.title || block.blockName}</span>
+              </button>
+            );
+          }).filter(x => !!x)}
+        </div>}
+        {readonly ? null : menuOpen ? (
+          <TheSelect
+            className="llm-select-skills"
+            defaultMenuIsOpen
+            value={skills.map(skill => {
+              const block = findBlock(blocks, skill);
+              return block && mapBlockToOption(block);
+            }).filter(x => !!x)}
+            options={mapBlocksToOptions(blocks)}
+            onMenuClose={() => setMenuOpen(false)}
+            components={customComponentsWithDefaultSingleValue}
+            onChange={v => v?.value && addSkill(v.value)}
+            filterOption={matchSubstring}
+            formatGroupLabel={formatGroupLabel}
+            formatOptionLabel={formatOptionLabel}
+            hideSelectedOptions
+          />
+        ) : (
+          <button className="llm-btn-add-message" onClick={() => setMenuOpen(true)}>
+            Add skill
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  const root = createRoot(dom);
+  root.render(<SkillsComponent />);
+
+  return () => root.unmount();
+}
+
+function findBlock(blocks: CallableBlock[] | undefined, skill: Skill): CallableBlock | undefined {
+  return blocks?.find(b => b.package === skill.package && b.blockName === skill.blockName)
+}
+
+function BlockIcon({ icon, alt, dark }: { icon: string, alt?: string, dark?: boolean }) {
+  let src: string | null = null;
+  if (icon.startsWith(":") && icon.endsWith(":")) {
+    const [_, collection = "", name = "", color = ""] = icon.split(':')
+    if (collection && name) {
+      src = `https://api.iconify.design/${collection}:${name}.svg?color=${encodeURIComponent(getColor(color, dark))}`;
+    }
+  } else {
+    src = icon;
+  }
+  return src && <img src={src} alt={alt} style={{ width: 12, height: 12 }} />;
+}
+
+function getColor(color: string, dark?: boolean): string {
+  if (color && color.toLowerCase() !== 'currentcolor') return color;
+  return dark ? '#f0f6fc' : '#252a2e';
+}
+
+function mapBlocksToOptions(blocks?: CallableBlock[]): OptionsOrGroups<IBasicOption, GroupBase<IBasicOption>> {
+  if (!blocks || !blocks.length) return [];
+  const result: (IBasicOption | GroupBase<IBasicOption>)[] = [];
+  let p = 'self', group: GroupBase<IBasicOption> & { readonly options: IBasicOption[] } | undefined;
+  for (const block of blocks) {
+    if (block.package !== p) {
+      p = block.package;
+      group = { label: block.packageDisplayName, options: [] };
+      result.push(group);
+    }
+    const option = mapBlockToOption(block);
+    if (group) {
+      group.options.push(option);
+    } else {
+      result.push(option);
+    }
+  }
+  return result;
+}
+
+function mapBlockToOption(block: CallableBlock): IBasicOption {
+  return { value: block.id, label: getBlockLabel(block), group: { label: block.packageDisplayName, value: block.package } };
+}
+
+function getBlockLabel(block?: CallableBlock): string {
+  if (!block) return '<unknown>';
+  if (block.title) {
+    return `${block.title} (${block.packageDisplayName} - ${block.blockName})`;
+  }
+  return `${block.blockName} (${block.packageDisplayName})`;
+}
+
+function getBlockDetails(block: CallableBlock): string {
+  let details = `${block.package}::${block.blockName}`;
+  if (block.title) {
+    details = `${block.title} (${details})`;
+  }
+  if (block.description) {
+    details += `\n${block.description}`;
+  }
+  return details;
+}
+
+function parseSkills(value: unknown): Skill[] {
+  if (Array.isArray(value)) {
+    return value.map((v: any) => {
+      if (typeof v === "object" && v !== null && isNonEmptyString(v.package) && isNonEmptyString(v.blockName)) {
+        return v as Skill;
+      }
+    }).filter(x => !!x);
+  } else {
+    return [];
+  }
+}
+
+function blocksToMap(blocks: CallableBlock[] | undefined): Map<string, CallableBlock> {
+  const map = new Map<string, CallableBlock>();
+  if (blocks) {
+    for (const block of blocks) {
+      map.set(block.id, block);
+    }
+  }
+  return map;
+}
+
+function isNonEmptyString(value: any): value is string {
+  return typeof value === "string" && !!value;
+}
+
 function injectStyles() {
   let style = document.head.querySelector("#oomol-llm-styles");
   if (!style) {
@@ -575,161 +775,3 @@ function injectStyles() {
     document.head.appendChild(style);
   }
 }
-
-const STYLE = `
-.llm-container .react-select-container {
-  flex: 1;
-}
-
-.llm-container .react-select__control {
-  min-height: 24px;
-}
-
-.llm-container mark {
-  color: var(--vscode-chat-slashCommandForeground);
-  background: none transparent !important;
-}
-
-.llm-message-container {
-  margin-bottom: 4px;
-}
-
-.llm-message-head {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 4px;
-}
-
-.llm-message-head select {
-  border-color: transparent;
-}
-
-.llm-btn-add-message {
-}
-
-.llm-message-content {
-  border: 1px solid transparent;
-  background: var(--widget-background);
-  border-radius: var(--widget-radius);
-}
-
-.llm-message-content:hover {
-  background: var(--widget-background-highlight-color);
-}
-
-.llm-message-content:focus-within {
-  border-color: var(--brand-highlight-color);
-  background: var(--widget-input-background);
-}
-
-.llm-message-content ::selection {
-  background: #2b4f7760;
-}
-
-.llm-custom-label {
-  flex: 1;
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  overflow: hidden;
-  padding: 8px 12px;
-}
-
-.llm-custom-label-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  overflow: hidden;
-
-  .llm-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-}
-
-.llm-custom-label-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-
-  .llm-title-box {
-    display: flex;
-    gap: 4px;
-    align-items: center;
-    overflow: hidden;
-  }
-
-   .llm-title {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-4);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .llm-ratio {
-    white-space: nowrap;
-    font-size: 12px;
-    color: var(--text-2);
-    font-weight: 500;
-  }
-}
-
-.llm-tag {
-  width: fit-content;
-  display: flex;
-  align-items: center;
-  padding: 2px 6px;
-  border-radius: 4px;
-  background-color: var(--fill-6);
-  font-size: 11px;
-  color: var(--text-4);
-  white-space: nowrap;
-}
-
-.llm-tag-highlight {
-  background-color: var(--brand-5);
-  color: #ffffff;
-
-  .oomol-theme-dark & {
-    color: var(--text-4);
-  }
-}
-
-.llm-tag-AlibabaCloud {
-  color: #ffffff;
-  background-color: #E4630B;
-}
-
-.llm-tag-DeepSeek {
-  color: #ffffff;
-  background-color: #4D6BFF;
-}
-
-.llm-tag-VolcEngine {
-  color: #ffffff;
-  background-color: #2FC6C6;
-}
-
-.llm-tag-OpenRouter {
-  color: #ffffff;
-  background-color: #7C8B9D;
-}
-
-.llm-format-option-container {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-
-  .llm-format-option-label {
-    font-size: 11px;
-    color: var(--text-4);
-    font-weight: 500;
-  }
-}
-`;
