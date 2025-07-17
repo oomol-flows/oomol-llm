@@ -36,7 +36,7 @@ nodes:
               type: array
       - handle: be_continued
         value:
-    task: self::llm-messages
+    task: self::messages-generator
     inputs_def:
       []
   - node_id: llm-messages#1
@@ -60,7 +60,7 @@ nodes:
         from_node:
           - node_id: llm-chat-with-messages#2
             output_handle: output
-    task: self::llm-messages
+    task: self::messages-generator
     inputs_def:
       - handle: input
         json_schema:

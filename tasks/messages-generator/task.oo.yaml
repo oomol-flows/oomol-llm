@@ -58,7 +58,7 @@ outputs_def:
                 - Assistant
           content:
             type: string
-title: LLM generate messages
+title: Generate Messages
 additional_inputs: true
 additional_inputs_def:
   - handle: input
