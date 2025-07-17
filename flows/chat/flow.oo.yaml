@@ -1,11 +1,29 @@
 title: Chat
 nodes:
-  - node_id: llm-chat#1
-    title: "LLM chat #1"
+  - node_id: markdown_text_preview#1
+    title: "Markdown preview #1"
     inputs_from:
+      - handle: text
+        from_node:
+          - node_id: llm-chat#3
+            output_handle: output
+    task: oomol-preview::markdown_text_preview
+  - node_id: llm-chat#3
+    title: "LLM chat #3"
+    inputs_from:
+      - handle: messages
+        value: null
+      - handle: timeout
+        value: 30
+      - handle: retry_times
+        value: 0
+      - handle: retry_sleep
+        value: 3.5
+      - handle: stream
+        value: true
       - handle: model
         value:
-          model: deepseek-chat
+          model: oomol-chat
           temperature: 0
           top_p: 0.5
           max_tokens: 4096
@@ -18,22 +36,6 @@ nodes:
         schema_overrides:
           - schema:
               type: array
-      - handle: stream
-        value: true
-      - handle: timeout
-        value: 30
-      - handle: retry_times
-        value: 0
-      - handle: retry_sleep
-        value: 3.5
     task: self::llm-chat
     inputs_def:
       []
-  - node_id: markdown_text_preview#1
-    title: "Markdown preview #1"
-    inputs_from:
-      - handle: text
-        from_node:
-          - node_id: llm-chat#1
-            output_handle: output
-    task: oomol-preview::markdown_text_preview

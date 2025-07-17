@@ -9,6 +9,7 @@ from shared.schema import inject_json_schema_into_messages, parse_json_schema
 #region generated meta
 import typing
 class Inputs(typing.TypedDict):
+  messages: list[dict] | None
   timeout: float
   retry_times: int
   retry_sleep: float

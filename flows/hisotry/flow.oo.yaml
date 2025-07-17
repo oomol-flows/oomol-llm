@@ -1,26 +1,4 @@
 nodes:
-  - node_id: llm-chat-with-messages#2
-    title: "LLM chat (messages) #2"
-    inputs_from:
-      - handle: messages
-        from_node:
-          - node_id: llm-template#3
-            output_handle: messages
-      - handle: model
-        value:
-          model: deepseek-chat
-          temperature: 0
-          top_p: 0.5
-          max_tokens: 4096
-      - handle: stream
-        value: false
-      - handle: timeout
-        value: 30
-      - handle: retry_times
-        value: 0
-      - handle: retry_sleep
-        value: 3.5
-    task: self::llm-chat-with-messages
   - node_id: llm-template#3
     title: "LLM generate messages #1"
     inputs_from:
@@ -34,66 +12,17 @@ nodes:
         schema_overrides:
           - schema:
               type: array
-      - handle: be_continued
+      - handle: messages
         value:
-    task: self::llm-messages
+    task: self::messages-generator
     inputs_def:
       []
-  - node_id: llm-messages#1
-    title: "LLM generate messages #3"
-    inputs_from:
-      - handle: template
-        value:
-          - role: assistant
-            content: "{{input}}"
-          - role: user
-            content: 我觉得你说得不对？我给你3秒钟重新回答，我要看到不一样的答案。
-        schema_overrides:
-          - schema:
-              type: array
-      - handle: be_continued
-        value: null
-        from_node:
-          - node_id: llm-template#3
-            output_handle: messages
-      - handle: input
-        from_node:
-          - node_id: llm-chat-with-messages#2
-            output_handle: output
-    task: self::llm-messages
-    inputs_def:
-      - handle: input
-        json_schema:
-          type: string
-        nullable: false
-  - node_id: llm-chat-with-messages#4
-    title: "LLM chat (messages) #4"
-    inputs_from:
-      - handle: messages
-        from_node:
-          - node_id: llm-messages#1
-            output_handle: messages
-      - handle: model
-        value:
-          model: deepseek-chat
-          temperature: 0
-          top_p: 0.5
-          max_tokens: 4096
-      - handle: stream
-        value: true
-      - handle: timeout
-        value: 30
-      - handle: retry_times
-        value: 0
-      - handle: retry_sleep
-        value: 3.5
-    task: self::llm-chat-with-messages
   - node_id: markdown_text_preview#6
     title: "Markdown preview #5"
     inputs_from:
       - handle: text
         from_node:
-          - node_id: llm-chat-with-messages#2
+          - node_id: llm#1
             output_handle: output
     task: oomol-preview::markdown_text_preview
   - node_id: markdown_text_preview#7
@@ -101,7 +30,85 @@ nodes:
     inputs_from:
       - handle: text
         from_node:
-          - node_id: llm-chat-with-messages#4
+          - node_id: llm-chat#1
             output_handle: output
     task: oomol-preview::markdown_text_preview
+  - node_id: llm#1
+    title: "LLM #1"
+    inputs_from:
+      - handle: messages
+        value: null
+        from_node:
+          - node_id: llm-template#3
+            output_handle: messages
+      - handle: timeout
+        value: 30
+      - handle: retry_times
+        value: 0
+      - handle: retry_sleep
+        value: 3.5
+      - handle: stream
+        value: true
+      - handle: model
+        value:
+          model: oomol-chat
+          temperature: 0
+          top_p: 0.5
+          max_tokens: 4096
+      - handle: template
+        value:
+          []
+        schema_overrides:
+          - schema:
+              type: array
+        from_node:
+          []
+    task: self::llm
+    inputs_def:
+      []
+    outputs_def:
+      - handle: output
+        description: write your answer here
+        json_schema:
+          type: string
+  - node_id: llm-chat#1
+    title: "LLM chat #1"
+    inputs_from:
+      - handle: messages
+        value: null
+        from_node:
+          - node_id: llm-template#3
+            output_handle: messages
+      - handle: timeout
+        value: 30
+      - handle: retry_times
+        value: 0
+      - handle: retry_sleep
+        value: 3.5
+      - handle: stream
+        value: true
+      - handle: model
+        value:
+          model: oomol-chat
+          temperature: 0
+          top_p: 0.5
+          max_tokens: 4096
+      - handle: template
+        value:
+          - role: assistant
+            content: "{{answer}}\n"
+          - role: user
+            content: |-
+              我觉得你说得不对？我给你3秒钟重新回答，我要看到不一样的答案。
+        schema_overrides:
+          - schema:
+              type: array
+      - handle: answer
+        from_node:
+          - node_id: llm#1
+            output_handle: output
+    task: self::llm-chat
+    inputs_def:
+      - handle: answer
+        description: write your answer here
 title: Chat with history

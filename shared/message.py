@@ -1,6 +1,6 @@
 import re
 
-from typing import Any, Generator
+from typing import Any, Generator, TypedDict
 from dataclasses import dataclass
 from enum import Enum
 from oocana import Context
@@ -30,8 +30,20 @@ class Message:
 
 _KEY_PATTERN: re.Pattern = re.compile(r"{{\s*([^}]+)\s*}}")
 
-def render_messages(params: Any, context: Context) -> Generator[Message, None, None]:
-  template: list[dict[str, Any]] = params["template"]
+class RenderParams(TypedDict):
+  messages: list[dict] | None
+  template: list[dict[str, Any]] | str
+
+def render_messages(params: RenderParams, context: Context) -> Generator[Message, None, None]:
+  param_messages = params["messages"]
+  param_template = params["template"]
+
+  if param_messages:
+    for message in param_messages:
+      yield Message(
+        role=parse_role(message["role"]),
+        content=message["content"],
+      )
 
   def repl(match: re.Match):
     key = match.group(1).strip()
@@ -45,8 +57,14 @@ def render_messages(params: Any, context: Context) -> Generator[Message, None, N
       return match.group()
     return str(value)
 
-  for message in template:
+  if isinstance(param_template, str):
     yield Message(
-      role=parse_role(message["role"]),
-      content=_KEY_PATTERN.sub(repl, message["content"]),
+      role=Role.System,
+      content=_KEY_PATTERN.sub(repl, param_template),
     )
+  elif isinstance(param_template, list):
+    for message in param_template:
+      yield Message(
+        role=parse_role(message["role"]),
+        content=_KEY_PATTERN.sub(repl, message["content"]),
+      )

@@ -1,6 +1,7 @@
 //#region generated meta
 type Inputs = {
     skills: any;
+    input1: string[];
 };
 type Outputs = {
     output: string;

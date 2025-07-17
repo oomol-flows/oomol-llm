@@ -5,6 +5,7 @@ from shared.message import render_messages
 #region generated meta
 import typing
 class Inputs(typing.TypedDict):
+  messages: list[dict] | None
   timeout: float
   retry_times: int
   retry_sleep: float
