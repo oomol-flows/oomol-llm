@@ -4,15 +4,16 @@ from typing import Any, Generator, TypedDict
 from dataclasses import dataclass
 from enum import Enum
 from oocana import Context
-from .tool import FunctionToolCall
+from .tool import encode_tool_call, FunctionToolCall
 
 
 class Role(Enum):
   System = "system"
   User = "user"
   Assistant = "assistant"
+  Tool = "tool"
 
-def parse_role(role: str) -> Role:
+def decode_role(role: str) -> Role:
   if role == "system":
     return Role.System
   elif role == "developer":
@@ -21,6 +22,8 @@ def parse_role(role: str) -> Role:
     return Role.User
   elif role == "assistant":
     return Role.Assistant
+  elif role == "tool":
+    return Role.Tool
   else:
     raise ValueError("Invalid role")
 
@@ -28,7 +31,22 @@ def parse_role(role: str) -> Role:
 class Message:
   role: Role
   content: str
-  tools: list[FunctionToolCall]
+  tool_calls: list[FunctionToolCall]
+  tool_call_id: str
+
+def encode_message(message: Message) -> dict[str, Any]:
+  json: dict[str, Any] = {
+    "role": message.role.value,
+    "content": message.content,
+  }
+  if message.tool_call_id:
+    json["tool_call_id"] = message.tool_call_id
+  if message.tool_calls:
+    json["tool_calls"] = [
+      encode_tool_call(tool)
+      for tool in message.tool_calls
+    ]
+  return json
 
 _KEY_PATTERN: re.Pattern = re.compile(r"{{\s*([^}]+)\s*}}")
 
@@ -43,9 +61,10 @@ def render_messages(params: RenderParams, context: Context) -> Generator[Message
   if param_messages:
     for message in param_messages:
       yield Message(
-        role=parse_role(message["role"]),
+        role=decode_role(message["role"]),
         content=message["content"],
-        tools=[],
+        tool_calls=[],
+        tool_call_id="",
       )
 
   def repl(match: re.Match):
@@ -64,12 +83,14 @@ def render_messages(params: RenderParams, context: Context) -> Generator[Message
     yield Message(
       role=Role.System,
       content=_KEY_PATTERN.sub(repl, param_template),
-      tools=[],
+      tool_calls=[],
+      tool_call_id="",
     )
   elif isinstance(param_template, list):
     for message in param_template:
       yield Message(
-        role=parse_role(message["role"]),
+        role=decode_role(message["role"]),
         content=_KEY_PATTERN.sub(repl, message["content"]),
-        tools=[],
+        tool_calls=[],
+        tool_call_id="",
       )

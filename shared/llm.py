@@ -5,8 +5,8 @@ from typing import Any, Iterable, Iterator
 from io import StringIO
 from time import sleep
 from .request import Request
-from .tool import parse_tool_call, FunctionTool, FunctionToolCall
-from .message import parse_role, Role, Message
+from .tool import encode_tool, decode_tool_call, FunctionTool, FunctionToolCall
+from .message import encode_message, decode_role, Role, Message
 
 
 _BASE_URL_TAIL = re.compile(r"\\$")
@@ -45,27 +45,10 @@ class LLM:
     data: dict[str, Any] = {
       "model": self._model,
       "stream": stream,
-      "messages": [
-        {
-          "role": m.role.value,
-          "content": m.content,
-        }
-        for m in messages
-      ],
+      "messages": [encode_message(message) for message in messages],
     }
     if tools:
-      data["tools"] = [
-        {
-          "type": "function",
-          "function": {
-            "name": tool.name,
-            "description": tool.description if tool.description else "unkown",
-            "parameters": tool.parameters,
-            "strict": tool.struct,
-          },
-        }
-        for tool in tools
-      ]
+      data["tools"] = [encode_tool(tool) for tool in tools]
 
     if response_format_type is not None:
       data["response_format"] = {
@@ -128,7 +111,7 @@ class LLM:
       delta_tool_calls: list[dict[str, Any]] | None = delta.get("tool_calls", None)
 
       if delta_role is not None:
-        role = parse_role(delta_role)
+        role = decode_role(delta_role)
       if delta_content is not None:
         content_buffer.write(delta_content)
 
@@ -175,7 +158,8 @@ class LLM:
     return Message(
       role=role,
       content=content_buffer.getvalue(),
-      tools=self._parse_tool_calls(tool_call_jsons),
+      tool_calls=self._parse_tool_calls(tool_call_jsons),
+      tool_call_id="",
     )
 
   def _parse_response(self, response_json: Any) -> Message:
@@ -183,9 +167,10 @@ class LLM:
     tool_call_jsons = message.get("tool_calls", None)
 
     return Message(
-      role=parse_role(message["role"]),
+      role=decode_role(message["role"]),
       content=message["content"],
-      tools=self._parse_tool_calls(tool_call_jsons),
+      tool_calls=self._parse_tool_calls(tool_call_jsons),
+      tool_call_id="",
     )
 
   def _parse_tool_calls(self, tool_call_jsons: list[dict[str, Any]] | None) -> list[FunctionToolCall]:
@@ -193,7 +178,7 @@ class LLM:
     if tool_call_jsons:
       for json in tool_call_jsons:
         print(json)
-        tool_call = parse_tool_call(json)
+        tool_call = decode_tool_call(json)
         if tool_call:
           tool_calls.append(tool_call)
     return tool_calls
