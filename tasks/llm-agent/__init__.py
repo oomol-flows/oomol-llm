@@ -4,6 +4,8 @@ from shared.llm_creation import create_llm
 from shared.message import Message, Role
 from shared.tool import FunctionTool
 
+from .invoker import Invoker
+
 #region generated meta
 import typing
 class Inputs(typing.TypedDict):
@@ -16,16 +18,18 @@ Outputs = typing.Dict[str, typing.Any]
 #endregion
 
 
-def main(params: Inputs, context: Context) -> Outputs:
+async def main(params: Inputs, context: Context) -> Outputs:
   model = params["model"]
   temperature: float = float(model["temperature"])
   top_p: float = float(model["top_p"])
   max_tokens: int = int(model["max_tokens"])
   llm = create_llm(params, context)
+  invoker = Invoker(params["skills"], context)
+
   messages: list[Message] = [
     Message(
       role=Role.System,
-      content="你要根据用户要求完成任务",
+      content="你要根据用户要求，使用我的工具完成用户的任务或回答用户的问题。如果我提供的工具不足，你要直接向用户说你做不到，不要胡乱使用我提供的工具。",
       tool_calls=[],
       tool_call_id="",
     ),
@@ -36,23 +40,8 @@ def main(params: Inputs, context: Context) -> Outputs:
       tool_call_id="",
     ),
   ]
-  tools: list[FunctionTool] = [FunctionTool(
-    name="get_weather",
-    description="Get current temperature for a given location.",
-    struct=True,
-    parameters={
-      "type": "object",
-      "properties": {
-        "location": {
-          "type": "string",
-          "description": "City and country e.g. Bogotá, Colombia"
-        }
-      },
-      "required": ["location"],
-      "additionalProperties": False,
-    },
-  )]
-  for _ in range(3):
+  tools = await invoker.query_tools()
+  while True:
     resp_message = llm.request(
       temperature=temperature,
       top_p=top_p,
@@ -61,21 +50,21 @@ def main(params: Inputs, context: Context) -> Outputs:
       messages=messages,
       tools=tools,
     )
-    print(resp_message.role)
-    print(resp_message.content)
     if not resp_message.tool_calls:
+      print(resp_message.content)
       break
 
     messages.append(resp_message)
-    for tool in resp_message.tool_calls:
-      print(tool.name, tool.arguments)
+    for tool_call in resp_message.tool_calls:
+      print("call function", tool_call.name, tool_call.arguments)
+      result = await invoker.call(tool_call)
       messages.append(Message(
         role=Role.Tool,
-        tool_call_id=tool.id,
+        tool_call_id=tool_call.id,
         tool_calls=[],
         content=dumps(
           ensure_ascii=False,
-          obj={"temperature": "27.3°C"},
+          obj=result,
         ),
       ))
 

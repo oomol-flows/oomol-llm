@@ -7,7 +7,7 @@ scripts:
 icon: "./icon.png"
 repository: https://github.com/oomol-flows/oomol-llm
 dependencies:
-  oomol-preview: 0.0.5
+  oomol-preview: 0.1.0
 contributes:
   input_widgets:
     render: ./bundled/inputRender.js
