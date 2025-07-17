@@ -8,6 +8,22 @@ inputs_def:
       anyOf:
         - type: string
         - type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              role:
+                enum:
+                  - system
+                  - user
+                  - assistant
+                ui:options:
+                  labels:
+                    - System
+                    - User
+                    - Assistant
+              content:
+                type: string
       ui:options:
         title: Prompt
       ui:widget: self::messages
@@ -17,7 +33,7 @@ inputs_def:
     schema_overrides:
       - schema:
           type: array
-  - handle: be_continued
+  - handle: messages
     json_schema:
       type: array
       items:

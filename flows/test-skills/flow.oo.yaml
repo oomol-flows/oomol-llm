@@ -13,6 +13,12 @@ nodes:
             ui:options:
               title: Skills
             ui:widget: self::skills
+        - handle: input1
+          json_schema:
+            type: array
+            items:
+              type: string
+              ui:widget: text
       outputs_def:
         - handle: output
           json_schema:
@@ -29,3 +35,9 @@ nodes:
         schema_overrides:
           - schema:
               type: array
+      - handle: input1
+        value:
+          - kmojkonkol
+          - |-
+            jnknhjknkn
+            hkbhkb

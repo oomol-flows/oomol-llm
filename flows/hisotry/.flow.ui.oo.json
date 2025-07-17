@@ -1,13 +1,5 @@
 {
   "nodes": {
-    "llm-chat-with-messages#2": {
-      "rfNode": {
-        "position": {
-          "x": 568.0774000295585,
-          "y": 227.33775269610737
-        }
-      }
-    },
     "llm-template#3": {
       "rfNode": {
         "position": {
@@ -34,8 +26,34 @@
     "llm-messages#1": {
       "rfNode": {
         "position": {
-          "x": 1113.948131452628,
-          "y": -61.66224730389263
+          "x": 1112.5278500104794,
+          "y": -27.73104418598564
+        }
+      }
+    },
+    "markdown_text_preview#6": {
+      "contentWidth": 407.37992506023863,
+      "rfNode": {
+        "position": {
+          "x": 1622.6384352842704,
+          "y": 629.704542673953
+        }
+      }
+    },
+    "markdown_text_preview#7": {
+      "contentWidth": 526.2478945460956,
+      "rfNode": {
+        "position": {
+          "x": 2136.713596246276,
+          "y": 629.704542673953
+        }
+      }
+    },
+    "llm#1": {
+      "rfNode": {
+        "position": {
+          "x": 580.8599330088953,
+          "y": 95.33775269610737
         }
       },
       "sections": {
@@ -44,39 +62,11 @@
         }
       }
     },
-    "llm-chat-with-messages#4": {
+    "llm-chat#1": {
       "rfNode": {
         "position": {
-          "x": 1608.1338188924942,
-          "y": 95.33775269610737
-        }
-      }
-    },
-    "markdown_text_preview#6": {
-      "contentWidth": 290.15821581979895,
-      "rfNode": {
-        "position": {
-          "x": 1678.1338188924942,
-          "y": 555.8499076822299
-        }
-      },
-      "sections": {
-        "preview": {
-          "previewHeight": 62.68572661445489
-        }
-      }
-    },
-    "markdown_text_preview#7": {
-      "contentWidth": 526.2478945460956,
-      "rfNode": {
-        "position": {
-          "x": 2113.9890931719,
-          "y": 439.26895581401436
-        }
-      },
-      "sections": {
-        "preview": {
-          "previewHeight": 180.5479578168771
+          "x": 1622.6384352842704,
+          "y": -42.599678958274815
         }
       }
     }

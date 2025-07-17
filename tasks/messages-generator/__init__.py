@@ -5,21 +5,18 @@ from shared.message import render_messages
 import typing
 class Inputs(typing.TypedDict):
   template: typing.Any
-  be_continued: list[dict] | None
+  messages: list[dict] | None
 class Outputs(typing.TypedDict):
   messages: list[dict]
 #endregion
 
 
 def main(params: Inputs, context: Context) -> Outputs:
-  messages = params["be_continued"]
-  if messages is None:
-    messages = []
-
-  for message in render_messages(params, context):
-    messages.append({
+  messages = [
+    {
       "role": message.role.value,
       "content": message.content,
-    })
-
+    }
+    for message in render_messages(params, context)
+  ]
   return { "messages": messages }

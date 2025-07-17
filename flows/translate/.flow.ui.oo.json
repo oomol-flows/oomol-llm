@@ -12,6 +12,9 @@
           "collapsed": {
             "input": {
               "[]": false
+            },
+            "messages": {
+              "[]": true
             }
           }
         }

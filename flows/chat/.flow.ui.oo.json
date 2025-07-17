@@ -1,19 +1,28 @@
 {
   "nodes": {
-    "llm-chat#1": {
-      "rfNode": {
-        "position": {
-          "x": 189,
-          "y": 27.001304626464844
-        }
-      }
-    },
     "markdown_text_preview#1": {
       "contentWidth": 450,
       "rfNode": {
         "position": {
-          "x": 716.1666596465643,
-          "y": 185.00130462646484
+          "x": 700.5942900879268,
+          "y": 179.16166604197574
+        }
+      }
+    },
+    "llm-chat#3": {
+      "rfNode": {
+        "position": {
+          "x": 162.1445201202028,
+          "y": 58.087869980206584
+        }
+      },
+      "sections": {
+        "inputs": {
+          "collapsed": {
+            "messages": {
+              "[]": true
+            }
+          }
         }
       }
     }
