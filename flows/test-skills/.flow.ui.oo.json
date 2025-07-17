@@ -1,16 +1,11 @@
 {
   "nodes": {
-    "+typescript#1": {
-      "contentWidth": 450,
+    "llm-agent#1": {
+      "contentWidth": 420,
       "rfNode": {
         "position": {
-          "x": 0,
+          "x": 512.1176907822987,
           "y": 0
-        }
-      },
-      "sections": {
-        "scriptlet": {
-          "cardCollapsed": true
         }
       }
     }

@@ -34,6 +34,7 @@ def main(params: Inputs, context: Context) -> Outputs:
   messages = inject_json_schema_into_messages(messages, json_schema)
   resp_message = llm.request(
     stream=params["stream"],
+    tools=[],
     messages=messages,
     max_completion_tokens=max_tokens,
     response_format_type="json_object",

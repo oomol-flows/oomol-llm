@@ -4,6 +4,7 @@ from typing import Any, Generator, TypedDict
 from dataclasses import dataclass
 from enum import Enum
 from oocana import Context
+from .tool import FunctionToolCall
 
 
 class Role(Enum):
@@ -27,6 +28,7 @@ def parse_role(role: str) -> Role:
 class Message:
   role: Role
   content: str
+  tools: list[FunctionToolCall]
 
 _KEY_PATTERN: re.Pattern = re.compile(r"{{\s*([^}]+)\s*}}")
 
@@ -43,6 +45,7 @@ def render_messages(params: RenderParams, context: Context) -> Generator[Message
       yield Message(
         role=parse_role(message["role"]),
         content=message["content"],
+        tools=[],
       )
 
   def repl(match: re.Match):
@@ -61,10 +64,12 @@ def render_messages(params: RenderParams, context: Context) -> Generator[Message
     yield Message(
       role=Role.System,
       content=_KEY_PATTERN.sub(repl, param_template),
+      tools=[],
     )
   elif isinstance(param_template, list):
     for message in param_template:
       yield Message(
         role=parse_role(message["role"]),
         content=_KEY_PATTERN.sub(repl, message["content"]),
+        tools=[],
       )
