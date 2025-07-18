@@ -1,7 +1,7 @@
 import re
 import json
 
-from typing import Any, Iterable, Iterator
+from typing import Any, Iterable
 from io import StringIO
 from time import sleep
 from .request import Request
@@ -176,9 +176,8 @@ class LLM:
   def _parse_tool_calls(self, tool_call_jsons: list[dict[str, Any]] | None) -> list[FunctionToolCall]:
     tool_calls: list[FunctionToolCall] = []
     if tool_call_jsons:
-      for json in tool_call_jsons:
-        print(json)
-        tool_call = decode_tool_call(json)
+      for tool_call_json in tool_call_jsons:
+        tool_call = decode_tool_call(tool_call_json)
         if tool_call:
           tool_calls.append(tool_call)
     return tool_calls

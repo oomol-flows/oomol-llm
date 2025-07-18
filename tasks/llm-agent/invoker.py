@@ -8,6 +8,7 @@ from shared.tool import FunctionTool, FunctionToolCall
 class _Node:
   package: str
   block: str
+  func_name: str
 
   def __str__(self) -> str:
     return f"{self.package}::{self.block}"
@@ -19,6 +20,7 @@ class Invoker:
       _Node(
         package=item["package"],
         block=item["blockName"],
+        func_name=item["blockName"], # TODO: 考虑可能重名导致的无法辨识问题
       )
       for item in skills
     ]
@@ -41,10 +43,12 @@ class Invoker:
           else:
             handle_schema = {**handle_schema}
           properties[handle] = handle_schema
-          handle_schema["description"] = handle_def.get("description")
+          handle_description = handle_def.get("description", None)
+          if handle_description:
+            handle_schema["description"] = handle_description
 
       tools.append(FunctionTool(
-        name=str(node),
+        name=node.func_name,
         description=response.get("description", None),
         struct=True,
         parameters={
@@ -56,7 +60,7 @@ class Invoker:
     return tools
 
   async def call(self, func_call: FunctionToolCall) -> dict[str, Any]:
-    node = next((n for n in self._nodes if str(n) == func_call.name.strip()), None)
+    node = next((n for n in self._nodes if n.func_name == func_call.name.strip()), None)
     if node is None:
       raise ValueError(f"cannot find function name {func_call.name}")
     response = self._context.run_block(block=str(node), inputs=func_call.arguments)
