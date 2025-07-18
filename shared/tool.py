@@ -17,7 +17,7 @@ def encode_tool(tool: FunctionTool) -> dict[str, Any]:
     "type": "function",
     "function": {
       "name": tool.name,
-      "description": tool.description if tool.description else "unkown",
+      "description": tool.description if tool.description else "unknown",
       "parameters": tool.parameters,
       "struct": tool.struct,
     },
