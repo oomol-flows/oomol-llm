@@ -8,6 +8,7 @@ disable=
   fixme,
   redefined-builtin,
   too-many-arguments,
+  broad-exception-caught,
 
 [FORMAT]
 # Maximum number of characters on a single line.

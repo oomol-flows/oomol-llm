@@ -27,6 +27,7 @@ def main(params: Inputs, context: Context) -> Outputs:
   llm = create_llm(params, context)
   resp_message = llm.request(
     stream=params["stream"],
+    tools=[],
     messages=messages,
     max_completion_tokens=max_tokens,
     temperature=temperature,
