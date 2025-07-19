@@ -5,8 +5,8 @@ nodes:
     inputs_from:
       - handle: skills
         value:
-          - package: azure-speech
-            blockName: speech
+          - package: manga-tools
+            blockName: transform
         schema_overrides:
           - schema:
               type: array

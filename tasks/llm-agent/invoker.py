@@ -63,12 +63,21 @@ class Invoker:
     node = next((n for n in self._nodes if n.func_name == func_call.name.strip()), None)
     if node is None:
       raise ValueError(f"cannot find function name {func_call.name}")
-    response = self._context.run_block(block=str(node), inputs=func_call.arguments)
+
+    outputs: dict[str, Any] = {}
+    def on_add_output(key: str, value: Any):
+      outputs[key] = value
+    response = self._context.run_block(
+      block=str(node),
+      inputs=func_call.arguments,
+    )
+    response.add_output_callback(on_add_output)
     payload = await response.finish()
     error = payload.get("error", None)
     if error:
       raise ValueError(error)
-    result = payload.get("result")
-    if result is None:
-      raise ValueError("result not found")
-    return result
+
+    for key, value in list(outputs.items()):
+      if value is None:
+        del outputs[key]
+    return outputs
