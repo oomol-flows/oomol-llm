@@ -18,6 +18,34 @@ inputs_def:
       type: number
       minimum: 0
     value: 3.5
+  - handle: stream
+    json_schema:
+      type: boolean
+    value: true
+  - handle: model
+    json_schema:
+      ui:options:
+        title: Model
+      ui:widget: self::model
+    value:
+      model: oomol-chat
+      temperature: 0
+      top_p: 0.5
+      max_tokens: 4096
+  - handle: template
+    json_schema:
+      anyOf:
+        - type: string
+        - type: array
+      ui:options:
+        title: Prompt
+      ui:widget: self::messages
+    value:
+      - role: system
+        content: ""
+    schema_overrides:
+      - schema:
+          type: array
   - handle: skills
     json_schema:
       type: array
@@ -29,16 +57,8 @@ inputs_def:
     schema_overrides:
       - schema:
           type: array
-  - handle: model
-    json_schema:
-      ui:options:
-        title: Model
-      ui:widget: self::model
-    value:
-      model: oomol-chat
-      temperature: 0
-      top_p: 0.5
-      max_tokens: 4096
 outputs_def:
   []
 title: LLM Agent
+additional_inputs: true
+additional_outputs: true

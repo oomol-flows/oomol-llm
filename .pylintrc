@@ -9,6 +9,7 @@ disable=
   redefined-builtin,
   too-many-arguments,
   broad-exception-caught,
+  broad-exception-raised,
 
 [FORMAT]
 # Maximum number of characters on a single line.
