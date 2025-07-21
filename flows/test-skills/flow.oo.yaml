@@ -27,7 +27,7 @@ nodes:
       - handle: template
         value:
           - role: system
-            content: 我要把文件 {{file_path}} 转化为 PDF 格式的漫画，转化后的文件保存在原目录，以同名文件的形式保存。
+            content: 我要把文件 {{file_path}} 转化为 PDF 格式的漫画。
         schema_overrides:
           - schema:
               type: array
