@@ -1,6 +1,6 @@
 import json
 
-from typing import Any
+from typing import cast, Any
 from oocana import Context
 from .message import Message, Role
 
@@ -25,6 +25,8 @@ def inject_json_schema_into_messages(messages: list[Message], json_schema: dict[
     messages.insert(0, Message(
       role=Role.System,
       content=injection,
+      tool_call_id="",
+      tool_calls=[],
     ))
   else:
     system_index, system_message = system
@@ -32,6 +34,8 @@ def inject_json_schema_into_messages(messages: list[Message], json_schema: dict[
     messages[system_index] = Message(
       role=Role.System,
       content=system_content,
+      tool_call_id="",
+      tool_calls=[],
     )
   return messages
 
@@ -53,7 +57,7 @@ def parse_json_schema(context: Context) -> dict[str, Any]:
         **json_schema,
         "description": description,
       }
-    properties[handle] = json_schema
+    properties[handle] = _clear_invalid_key(json_schema)
 
   return {
     "type": "object",
@@ -61,3 +65,18 @@ def parse_json_schema(context: Context) -> dict[str, Any]:
     "properties": properties,
     "additionalProperties": False,
   }
+
+def _clear_invalid_key(value: Any) -> Any:
+  if isinstance(value, dict):
+    for key in list(cast(dict[str, Any], value).keys()):
+      if key.startswith("ui:"):
+        value.pop(key, None)
+      elif key == "contentMediaType":
+        prop = value[key]
+        if isinstance(prop, str) and \
+           prop.lower().startswith("oomol/"):
+          value.pop(key, None)
+  elif isinstance(value, list):
+    for child in value:
+      _clear_invalid_key(child)
+  return value

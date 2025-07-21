@@ -55,7 +55,7 @@ class RenderParams(TypedDict):
   template: list[dict[str, Any]] | str
 
 def render_messages(params: RenderParams, context: Context) -> Generator[Message, None, None]:
-  param_messages = params["messages"]
+  param_messages = params.get("messages", None)
   param_template = params["template"]
 
   if param_messages:
