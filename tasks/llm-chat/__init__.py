@@ -12,8 +12,7 @@ class Inputs(typing.TypedDict):
   stream: bool
   model: typing.Any
   template: typing.Any
-class Outputs(typing.TypedDict):
-  output: str
+Outputs = typing.Dict[str, typing.Any]
 #endregion
 
 

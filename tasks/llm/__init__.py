@@ -32,7 +32,8 @@ async def main(params: Inputs, context: Context) -> Outputs:
   skills = params["skills"]
   messages = list(render_messages(cast(RenderParams, params), context))
   llm = create_llm(params, context)
-  json_schema = parse_json_schema(context)
+  json_schema: dict[str, Any] = parse_json_schema(context)
+  response_object: Any
 
   if skills:
     messages = [
@@ -54,7 +55,7 @@ async def main(params: Inputs, context: Context) -> Outputs:
       max_tokens=max_tokens,
       stream=stream,
     )
-    return decode_json_response(response_text)
+    response_object = decode_json_response(response_text)
 
   else:
     messages = inject_json_schema_into_messages(messages, json_schema)
@@ -67,20 +68,17 @@ async def main(params: Inputs, context: Context) -> Outputs:
       temperature=temperature,
       top_p=top_p,
     )
-    return _parse_object(resp_message, json_schema)
-
-def _parse_object(resp_message: Message, json_schema: dict[str, Any]) -> dict[str, Any]:
-  try:
-    resp_obj = json.loads(resp_message.content)
-  except json.JSONDecodeError as err:
-    raise ValueError("Response invalid format") from err
-  except Exception as err:
-    raise ValueError("Parse the response failed") from err
-  if not isinstance(resp_obj, dict):
-    raise ValueError("Response is not a valid JSON object")
+    try:
+      response_object = json.loads(resp_message.content)
+    except json.JSONDecodeError as error:
+      raise RuntimeError(f"LLM response wrong JSON: {resp_message.content}") from error
+    except Exception as error:
+      raise ValueError("Parse the response failed") from error
+    if not isinstance(response_object, dict):
+      raise ValueError("Response is not a valid JSON object")
 
   valid_keys = set(cast(dict, json_schema["properties"]).keys())
-  for key in list(resp_obj.keys()):
+  for key in list(response_object.keys()):
     if key not in valid_keys:
-      resp_obj.pop(key)
-  return resp_obj
+      response_object.pop(key)
+  return response_object

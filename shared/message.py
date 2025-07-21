@@ -95,9 +95,13 @@ def render_messages(params: RenderParams, context: Context) -> Generator[Message
         tool_call_id="",
       )
 
-def assert_user_prompt(messages: list[Message]) -> str:
-  if len(messages) == 0:
-    raise ValueError("template cannot be empty")
-  if len(messages) > 1:
-    print("Warning: template has more than one message, only the first one will be used")
-  return messages[0].content
+def assert_user_prompt(raw_messages: list[Message]) -> str:
+  user_messages = [m.content for m in raw_messages if m.role == Role.User]
+  if not user_messages:
+    if raw_messages:
+      raise ValueError("No messages whose role is user found")
+    else:
+      raise ValueError("messages cannot be empty")
+  if len(user_messages) > 1:
+    print("Warning: multiple messages whose role is user found, only the first one will be used")
+  return user_messages[0]

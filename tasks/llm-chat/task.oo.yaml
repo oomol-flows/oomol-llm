@@ -84,9 +84,7 @@ inputs_def:
       - schema:
           type: array
 outputs_def:
-  - handle: output
-    json_schema:
-      type: string
+  []
 title: LLM chat
 additional_inputs: true
 additional_outputs: false
