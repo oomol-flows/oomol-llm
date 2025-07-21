@@ -1,13 +1,10 @@
 from typing import Any
-from json import loads, dumps, JSONDecodeError
+from json import dumps
 from oocana import Context
 
 from ..llm import LLM
 from ..message import Role, Message
-from ..llm_creation import create_llm
-
 from .invoker import Invoker
-from .system import json_system_message
 
 
 async def request(
@@ -19,6 +16,7 @@ async def request(
       top_p: float,
       max_tokens: int,
       stream: bool,
+      response_format_type: str | None,
     ):
 
   invoker = Invoker(skills, context)
@@ -29,7 +27,7 @@ async def request(
       temperature=temperature,
       top_p=top_p,
       max_completion_tokens=max_tokens,
-      response_format_type="json_object",
+      response_format_type=response_format_type,
       stream=stream,
       messages=messages,
       tools=tools,

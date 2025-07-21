@@ -54,6 +54,7 @@ async def main(params: Inputs, context: Context) -> Outputs:
       top_p=top_p,
       max_tokens=max_tokens,
       stream=stream,
+      response_format_type="json_object",
     )
     response_object = decode_json_response(response_text)
 
