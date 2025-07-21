@@ -34,7 +34,7 @@ class Request:
         try:
           return json.loads(response_body)
         except json.JSONDecodeError as err:
-          raise ValueError("Failed to decode JSON response") from err
+          raise ValueError(f"Failed to decode JSON response: {response_body}") from err
     except urllib.error.HTTPError as error:
       raise self._wrap_error(error) from error
 

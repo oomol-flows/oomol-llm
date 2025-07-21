@@ -12,7 +12,7 @@ nodes:
               type: array
       - handle: model
         value:
-          model: deepseek-chat
+          model: deepseek-v3
           temperature: 0
           top_p: 0.5
           max_tokens: 4096

@@ -92,7 +92,7 @@ async def main(params: Inputs, context: Context) -> Outputs:
 
   if result == "error":
     raise Exception(message)
-  elif result == "rejection":
+  elif result == "mission-precondition":
     raise ValueError(message)
   else:
     raise RuntimeError("LLM response invalid result")
