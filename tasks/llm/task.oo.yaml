@@ -24,6 +24,8 @@ inputs_def:
             type: string
     value:
     nullable: true
+  - group: Connection
+    collapsed: true
   - handle: timeout
     json_schema:
       type: number
@@ -39,10 +41,6 @@ inputs_def:
       type: number
       minimum: 0
     value: 3.5
-  - handle: stream
-    json_schema:
-      type: boolean
-    value: true
   - handle: model
     json_schema:
       ui:options:
@@ -94,6 +92,10 @@ inputs_def:
     schema_overrides:
       - schema:
           type: array
+  - handle: stream
+    json_schema:
+      type: boolean
+    value: true
 outputs_def:
   []
 title: LLM

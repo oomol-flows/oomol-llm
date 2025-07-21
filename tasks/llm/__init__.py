@@ -14,10 +14,10 @@ class Inputs(typing.TypedDict):
   timeout: float
   retry_times: int
   retry_sleep: float
-  stream: bool
   model: typing.Any
   template: typing.Any
   skills: typing.Any
+  stream: bool
 Outputs = typing.Dict[str, typing.Any]
 #endregion
 
