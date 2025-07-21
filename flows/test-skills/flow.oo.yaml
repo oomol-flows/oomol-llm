@@ -1,21 +1,10 @@
 title: Test Skills
 nodes:
-  - node_id: llm-agent#1
-    title: "LLM Agent #1"
+  - node_id: llm#1
+    title: "LLM #1"
     inputs_from:
-      - handle: skills
-        value:
-          - package: manga-tools
-            blockName: transform
-        schema_overrides:
-          - schema:
-              type: array
-      - handle: model
-        value:
-          model: deepseek-v3
-          temperature: 0
-          top_p: 0.5
-          max_tokens: 4096
+      - handle: messages
+        value: null
       - handle: timeout
         value: 30
       - handle: retry_times
@@ -24,24 +13,36 @@ nodes:
         value: 3.5
       - handle: stream
         value: true
+      - handle: model
+        value:
+          model: oomol-chat
+          temperature: 0
+          top_p: 0.5
+          max_tokens: 4096
       - handle: template
         value:
-          - role: system
-            content: 我要把文件 {{file_path}} 转化为 PDF 格式的漫画。
+          - role: user
+            content: "帮我把 {{source_path}} 这个地址转化为 pdf 文件的地址"
         schema_overrides:
           - schema:
               type: array
-      - handle: file_path
+      - handle: skills
+        value:
+          []
+        schema_overrides:
+          - schema:
+              type: array
+      - handle: source_path
         value: /oomol-driver/downloads/manga/qq_manga.epub
-    task: self::llm-agent
+    task: self::llm
     inputs_def:
-      - handle: file_path
+      - handle: source_path
         json_schema:
           type: string
           ui:widget: file
     outputs_def:
       - handle: target_path
+        description: 转换后的文件地址
         json_schema:
           type: string
           ui:widget: save
-        description: 转换后的文件地址

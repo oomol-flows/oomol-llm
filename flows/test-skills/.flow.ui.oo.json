@@ -1,16 +1,19 @@
 {
   "nodes": {
-    "llm-agent#1": {
-      "contentWidth": 420,
+    "llm#1": {
       "rfNode": {
         "position": {
-          "x": 512.1176907822987,
-          "y": 0
+          "x": 613.2912044722326,
+          "y": -14.232226630796795
         }
       },
       "sections": {
-        "inputHandle": {
-          "cardCollapsed": true
+        "inputs": {
+          "collapsed": {
+            "messages": {
+              "[]": true
+            }
+          }
         }
       }
     }

@@ -1,41 +1,33 @@
-from typing import cast, Any
+from typing import Any
 from json import loads, dumps, JSONDecodeError
 from oocana import Context
-from shared.llm_creation import create_llm
-from shared.message import render_messages, RenderParams
-from shared.message import Message, Role
+
+from ..llm import LLM
+from ..message import Role, Message
+from ..llm_creation import create_llm
 
 from .invoker import Invoker
 from .system import create_system_message
 
-#region generated meta
-import typing
-class Inputs(typing.TypedDict):
-  timeout: float
-  retry_times: int
-  retry_sleep: float
-  stream: bool
-  model: typing.Any
-  template: typing.Any
-  skills: typing.Any
-Outputs = typing.Dict[str, typing.Any]
-#endregion
 
+async def request(
+      context: Context,
+      llm: LLM,
+      skills: list[Any],
+      messages: list[Message],
+      temperature: float,
+      top_p: float,
+      max_tokens: int,
+      stream: bool,
+    ):
 
-async def main(params: Inputs, context: Context) -> Outputs:
-  model = params["model"]
-  temperature: float = float(model["temperature"])
-  top_p: float = float(model["top_p"])
-  max_tokens: int = int(model["max_tokens"])
-
-  messages = list(render_messages(cast(RenderParams, params), context))
   if len(messages) == 0:
     raise ValueError("template cannot be empty")
+
   if len(messages) > 1:
     print("Warning: template has more than one message, only the first one will be used")
 
-  llm = create_llm(params, context)
-  invoker = Invoker(params["skills"], context)
+  invoker = Invoker(skills, context)
   messages = [create_system_message(context), messages[0]]
   tools = await invoker.query_tools()
   response: Any
@@ -46,7 +38,7 @@ async def main(params: Inputs, context: Context) -> Outputs:
       top_p=top_p,
       max_completion_tokens=max_tokens,
       response_format_type="json_object",
-      stream=params["stream"],
+      stream=stream,
       messages=messages,
       tools=tools,
     )

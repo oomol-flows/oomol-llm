@@ -1,7 +1,7 @@
 from json import dumps
 from oocana import Context
-from shared.message import Role, Message
-from shared.schema import parse_json_schema
+from ..message import Role, Message
+from ..schema import parse_json_schema
 
 
 _SYSTEM_PROMPT1 = """

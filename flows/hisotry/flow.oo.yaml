@@ -23,7 +23,7 @@ nodes:
       - handle: text
         from_node:
           - node_id: llm#1
-            output_handle: output
+            output_handle: target_path
     task: oomol-preview::markdown_text_preview
   - node_id: markdown_text_preview#7
     title: "Markdown preview #6"
@@ -106,7 +106,7 @@ nodes:
       - handle: answer
         from_node:
           - node_id: llm#1
-            output_handle: output
+            output_handle: target_path
     task: self::llm-chat
     inputs_def:
       - handle: answer
