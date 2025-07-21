@@ -1557,3 +1557,7 @@ body { margin: 0 }
 .codicon-trash:before {
   content: '\ea81';
 }
+
+.codicon-close:before {
+  content: '\ea76';
+}

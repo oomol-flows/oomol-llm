@@ -173,6 +173,10 @@
   padding: 2px 6px;
   overflow: hidden;
   justify-content: flex-start;
+
+  &:has(.codicon-close) {
+    padding-right: 2px;
+  }
 }
 
 .llm-tag-content {

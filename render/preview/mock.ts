@@ -3,11 +3,23 @@ import { ReadonlyVal, val } from 'value-enhancer';
 import { faker } from '@faker-js/faker';
 import { CallableBlock, Model } from '../src/types';
 
+function mockValue(name: string) {
+  if (name === 'messages') {
+    return [];
+  }
+}
+
+function mockSchema(name: string) {
+  if (name === 'messages') {
+    return { type: 'array', items: {}, maxItems: 1, minItems: 1 };
+  }
+}
+
 export function mockInputRenderContext(name: string): InputRenderContext & { dark?: ReadonlyVal<boolean> } {
   return {
     handle: name,
     allHandleNames: val(['mockHandle']),
-    store: mockHandleRowStore(name),
+    store: mockHandleRowStore(name, mockValue(name), mockSchema(name)),
     dark: val(true),
     resolveStaticResource: (uri: string) => `mock://static/${uri}`,
     registerActions: console.info,
@@ -15,17 +27,21 @@ export function mockInputRenderContext(name: string): InputRenderContext & { dar
   }
 }
 
-function mockHandleRowStore(name: string): HandleRowStore {
-  const value$ = val();
+function mockHandleRowStore(name: string, value: unknown, schema: unknown): HandleRowStore {
+  const value$ = val(value);
   value$.reaction(v => {
     console.info(`${name}:`, v);
   });
+  const schema$ = val(schema);
+  schema$.reaction(s => {
+    console.info(`${name} schema:`, s);
+  });
   return {
     name,
-    context: { canEditValue: true },
+    context: { schema$: schema$, canEditValue: true },
     value$: value$,
     description$: val(faker.lorem.sentence()),
-  } as any;
+  } as HandleRowStore;
 }
 
 function mockPostMessage(message: unknown, ...args: unknown[]) {

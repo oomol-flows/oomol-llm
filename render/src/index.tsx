@@ -171,10 +171,6 @@ function labelOfModel(model: string): string {
   return model;
 }
 
-/**
- * @param {HTMLElement} dom
- * @param {InputRenderContext} context
- */
 export function messages(dom: HTMLElement, context: InputRenderContext) {
   injectStyles();
 
@@ -200,10 +196,14 @@ export function messages(dom: HTMLElement, context: InputRenderContext) {
 
   const initialMessages = parseMessages(context.store.value$?.value);
   function MessagesComponent() {
+    const schema = useVal(context.store.context.schema$);
+    const singleMessage = isSingleMessageMode(schema);
     const [messages, setMessages] = useState(initialMessages);
     const allHandleNames = useVal(context.allHandleNames);
 
     const readonly = !context.store.context.canEditValue;
+    const allowAdd = !readonly && (!singleMessage || messages.length < 1);
+    const allowDelete = !readonly && (!singleMessage || messages.length > 1);
 
     const doHighlight = useCallback((text: string): string => {
       return doHighlight_(text, allHandleNames.map(v => `{{${v}}}`));
@@ -227,12 +227,12 @@ export function messages(dom: HTMLElement, context: InputRenderContext) {
 
     const addMessage = useCallback(() => setMessages((m) => {
       if (!m.length) {
-        return [{ role: "system", content: "" }];
+        return [{ role: singleMessage ? "user" : "system", content: "" }];
       } else {
         const newRole = m[m.length - 1].role === "user" ? "assistant" : "user";
         return [...m, { role: newRole, content: "" }];
       }
-    }), []);
+    }), [singleMessage]);
 
     const deleteMessage = useCallback((index: number) => setMessages((m) => m.toSpliced(index, 1)), []);
 
@@ -250,9 +250,9 @@ export function messages(dom: HTMLElement, context: InputRenderContext) {
                 options={RoleOptions}
                 onChange={(e: IBasicOption | null) => updateRole(i, (e?.value as typeof Role[number]) ?? 'user')}
                 components={customComponentsWithDefaultSingleValue}
-                isDisabled={readonly}
+                isDisabled={readonly || singleMessage}
               />
-              {readonly ? null : (
+              {allowDelete && (
                 <button onClick={() => deleteMessage(i)}>
                   <i className="codicon codicon-trash" />
                 </button>
@@ -270,7 +270,7 @@ export function messages(dom: HTMLElement, context: InputRenderContext) {
             />
           </div>
         ))}
-        {readonly ? null : (
+        {allowAdd && (
           <button className="llm-btn-add-message" onClick={addMessage}>
             Add message
           </button>
@@ -283,6 +283,16 @@ export function messages(dom: HTMLElement, context: InputRenderContext) {
   root.render(<MessagesComponent />);
 
   return () => root.unmount();
+}
+
+function isSingleMessageMode(schema: unknown): boolean {
+  if (schema && typeof schema === 'object' && !Array.isArray(schema)) {
+    const s = schema as any;
+    if (s.type === 'array' && !s.uniqueItems) {
+      return s.maxItems === 1 && s.minItems === 1;
+    }
+  }
+  return false;
 }
 
 function doHighlight_(content: string, keys: Iterable<string>): string {
@@ -305,7 +315,7 @@ function customSingleValue<Option extends IBasicOption = IBasicOption>(
   );
 }
 
-function filterString(str: string | React.ReactNode): string {
+function filterString(str: string | unknown): string {
   if (typeof str === "string") return str;
   return ""
 }
@@ -635,10 +645,11 @@ export function skills(dom: HTMLElement, context: InputRenderContext) {
             const block = findBlock(blocks, skill)
             return block && (
               <button className="llm-tag-btn" key={`${skill.package}::${skill.blockName}`} disabled={readonly}
-                  title={getBlockDetails(block) + ' (click to delete)'}
+                  title={getBlockDetails(block)}
                   onClick={() => deleteSkill(skill)}>
                 {block.icon && <BlockIcon icon={block.icon} alt={getBlockLabel(block)} dark={dark} />}
                 <span className="llm-tag-content">{block.title || block.blockName}</span>
+                <span className="codicon codicon-close" />
               </button>
             );
           }).filter(x => !!x)}
