@@ -2,10 +2,10 @@ import json
 
 from typing import cast, Any
 from oocana import Context
-from shared.llm_creation import create_llm, LLM
-from shared.message import Message, render_messages, RenderParams
+from shared.llm_creation import create_llm
+from shared.message import render_messages, assert_user_prompt, Role, Message, RenderParams
 from shared.schema import inject_json_schema_into_messages, parse_json_schema
-from shared.agent import request
+from shared.agent import request, json_system_message, decode_json_response
 
 #region generated meta
 import typing
@@ -35,7 +35,16 @@ async def main(params: Inputs, context: Context) -> Outputs:
   json_schema = parse_json_schema(context)
 
   if skills:
-    return await request(
+    messages = [
+      json_system_message(context),
+      Message(
+        role=Role.User,
+        content=assert_user_prompt(messages),
+        tool_call_id="",
+        tool_calls=[],
+      ),
+    ]
+    response_text = await request(
       context=context,
       llm=llm,
       skills=skills,
@@ -45,6 +54,8 @@ async def main(params: Inputs, context: Context) -> Outputs:
       max_tokens=max_tokens,
       stream=stream,
     )
+    return decode_json_response(response_text)
+
   else:
     messages = inject_json_schema_into_messages(messages, json_schema)
     resp_message = llm.request(
@@ -56,8 +67,7 @@ async def main(params: Inputs, context: Context) -> Outputs:
       temperature=temperature,
       top_p=top_p,
     )
-
-  return _parse_object(resp_message, json_schema)
+    return _parse_object(resp_message, json_schema)
 
 def _parse_object(resp_message: Message, json_schema: dict[str, Any]) -> dict[str, Any]:
   try:

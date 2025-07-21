@@ -1,4 +1,5 @@
-from json import dumps
+from typing import Any
+from json import loads, dumps, JSONDecodeError
 from oocana import Context
 from ..message import Role, Message
 from ..schema import parse_json_schema
@@ -52,7 +53,7 @@ _SYSTEM_PROMPT2 = """
 ```
 """
 
-def create_system_message(context: Context) -> Message:
+def json_system_message(context: Context) -> Message:
   prompt = (
     _SYSTEM_PROMPT1.strip() +
     "\n" +
@@ -70,3 +71,29 @@ def create_system_message(context: Context) -> Message:
     tool_calls=[],
     tool_call_id="",
   )
+
+def decode_json_response(response_text: str) -> dict[str, Any]:
+  try:
+    response = loads(response_text)
+  except JSONDecodeError as error:
+    raise RuntimeError(f"LLM response wrong JSON: {response_text}") from error
+
+  if not isinstance(response, dict):
+    raise RuntimeError("LLM response invalid")
+
+  result = response.get("result")
+  if result != "ok":
+    message = response.get("message", None)
+    if not isinstance(message, str):
+      raise RuntimeError("LLM response invalid message")
+    if result == "error":
+      raise Exception(message)
+    elif result == "mission-precondition":
+      raise ValueError(message)
+    else:
+      raise RuntimeError("LLM response invalid result")
+
+  data = response.get("data", None)
+  if not isinstance(data, dict):
+    raise RuntimeError("LLM response invalid data")
+  return data

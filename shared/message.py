@@ -94,3 +94,10 @@ def render_messages(params: RenderParams, context: Context) -> Generator[Message
         tool_calls=[],
         tool_call_id="",
       )
+
+def assert_user_prompt(messages: list[Message]) -> str:
+  if len(messages) == 0:
+    raise ValueError("template cannot be empty")
+  if len(messages) > 1:
+    print("Warning: template has more than one message, only the first one will be used")
+  return messages[0].content

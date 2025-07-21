@@ -7,7 +7,7 @@ from ..message import Role, Message
 from ..llm_creation import create_llm
 
 from .invoker import Invoker
-from .system import create_system_message
+from .system import json_system_message
 
 
 async def request(
@@ -21,16 +21,8 @@ async def request(
       stream: bool,
     ):
 
-  if len(messages) == 0:
-    raise ValueError("template cannot be empty")
-
-  if len(messages) > 1:
-    print("Warning: template has more than one message, only the first one will be used")
-
   invoker = Invoker(skills, context)
-  messages = [create_system_message(context), messages[0]]
   tools = await invoker.query_tools()
-  response: Any
 
   while True:
     resp_message = llm.request(
@@ -43,11 +35,7 @@ async def request(
       tools=tools,
     )
     if not resp_message.tool_calls:
-      try:
-        response = loads(resp_message.content)
-        break
-      except JSONDecodeError as error:
-        raise RuntimeError("LLM response wrong JSON") from error
+      return resp_message.content
 
     messages.append(resp_message)
     for tool_call in resp_message.tool_calls:
@@ -68,23 +56,3 @@ async def request(
           obj=call_result,
         ),
       ))
-  if not isinstance(response, dict):
-    raise RuntimeError("LLM response invalid")
-
-  result = response.get("result")
-  if result == "ok":
-    data = response.get("data", None)
-    if not isinstance(data, dict):
-      raise RuntimeError("LLM response invalid data")
-    return data
-
-  message = response.get("message", None)
-  if not isinstance(message, str):
-    raise RuntimeError("LLM response invalid message")
-
-  if result == "error":
-    raise Exception(message)
-  elif result == "mission-precondition":
-    raise ValueError(message)
-  else:
-    raise RuntimeError("LLM response invalid result")

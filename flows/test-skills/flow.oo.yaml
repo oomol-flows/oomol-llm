@@ -22,13 +22,14 @@ nodes:
       - handle: template
         value:
           - role: user
-            content: "帮我把 {{source_path}} 这个地址转化为 pdf 文件的地址"
+            content: "帮我把 {{source_path}} 这个地址转化为 pdf 文件"
         schema_overrides:
           - schema:
               type: array
       - handle: skills
         value:
-          []
+          - package: manga-tools
+            blockName: transform
         schema_overrides:
           - schema:
               type: array
