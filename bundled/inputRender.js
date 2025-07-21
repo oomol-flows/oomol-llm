@@ -7891,7 +7891,7 @@ var openai_default = 'data:image/svg+xml,<svg width="40" height="40" viewBox="0 
 var claude_default = 'data:image/svg+xml,<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">%0A<path d="M0 8C0 3.58172 3.58172 0 8 0H32C36.4183 0 40 3.58172 40 8V32C40 36.4183 36.4183 40 32 40H8C3.58172 40 0 36.4183 0 32V8Z" fill="%23D77655"/>%0A<path d="M11.1147 24.8503L16.869 21.6068L16.9657 21.3251L16.869 21.1684L16.5886 21.1683L15.6269 21.1088L12.339 21.0194L9.48764 20.9005L6.72506 20.7516L6.02998 20.6029L5.37842 19.7399L5.44553 19.3095L6.03006 18.9147L6.86732 18.9881L8.71756 19.115L11.4939 19.3075L13.5081 19.4266L16.4919 19.738H16.9657L17.0329 19.5456L16.8709 19.4266L16.7445 19.3075L13.8714 17.3514L10.7612 15.2843L9.13217 14.0939L8.25146 13.4909L7.80717 12.9255L7.61568 11.6916L8.41545 10.8068L9.48967 10.8802L9.76412 10.9537L10.8522 11.7947L13.1764 13.602L16.2114 15.8477L16.6557 16.2187L16.8334 16.0918L16.8551 16.0025L16.6557 15.6673L15.0049 12.6696L13.2435 9.62057L12.4595 8.35685L12.2522 7.59907C12.1791 7.28763 12.1258 7.0258 12.1258 6.70636L13.0362 5.46446L13.5397 5.30176L14.7541 5.46446L15.2656 5.91081L16.0199 7.64474L17.2422 10.3745L19.1379 14.0862L19.6929 15.1872L19.989 16.2069L20.0997 16.5184L20.291 16.5183V16.3397L20.447 14.2488L20.7353 11.6817L21.0157 8.37867L21.1125 7.44829L21.5705 6.33331L22.4808 5.7303L23.1917 6.07156L23.7762 6.91262L23.6953 7.45622L23.3477 9.72566L22.6665 13.2806L22.2222 15.6612H22.481L22.7772 15.3637L23.9758 13.7648L25.9901 11.2354L26.8787 10.2316L27.9154 9.12265L28.5808 8.59491L29.8386 8.59483L30.7647 9.97753L30.3501 11.4059L29.0547 13.0564L27.9804 14.455L26.4401 16.538L25.4785 18.2044L25.5674 18.3373L25.7965 18.3155L29.2758 17.5715L31.1557 17.2303L33.399 16.8436L34.414 17.3197L34.5246 17.8037L34.1257 18.7936L31.7265 19.3888L28.9126 19.9542L24.7222 20.9501L24.6709 20.9878L24.7301 21.0612L26.6179 21.2398L27.4255 21.2834H29.4022L33.0829 21.5592L34.0446 22.198L34.6212 22.9796L34.5245 23.5748L33.0435 24.3326L31.0451 23.8565L26.3809 22.7416L24.7814 22.3408L24.5603 22.3408V22.4737L25.8932 23.783L28.3358 25.999L31.3946 28.8556L31.5506 29.5619L31.1576 30.1194L30.743 30.0599L28.0554 28.0284L27.0187 27.1139L24.6708 25.1281L24.5149 25.128V25.3363L25.056 26.1318L27.9133 30.4466L28.0614 31.7699L27.8541 32.2004L27.1136 32.4602L26.3 32.3115L24.6275 29.9526L22.9015 27.2963L21.5094 24.9158L21.3397 25.0129L20.5182 33.9024L20.1331 34.3567L19.2445 34.698L18.504 34.1325L18.1111 33.218L18.504 31.4107L18.9779 29.052L19.363 27.1773L19.7105 24.8483L19.9179 24.0745L19.904 24.023L19.7343 24.0448L17.9866 26.4551L15.3287 30.0637L13.2257 32.3253L12.7222 32.5257L11.8493 32.0713L11.9303 31.26L12.418 30.5379L15.3287 26.8183L17.0842 24.513L18.2176 23.1818L18.2097 22.9895H18.1426L10.4119 28.0323L9.03545 28.2109L8.44303 27.6534L8.51615 26.7388L8.79654 26.4413L11.1207 24.8344L11.1128 24.8424L11.1147 24.8503Z" fill="%23FCF2EE"/>%0A</svg>%0A';
 
 // src/style.css
-var style_default = ".llm-container .react-select-container {\n  flex: 1;\n}\n\n.llm-container .react-select__control {\n  min-height: 24px;\n}\n\n.llm-container mark {\n  color: var(--vscode-chat-slashCommandForeground);\n  background: none transparent !important;\n}\n\n.llm-message-container {\n  margin-bottom: 4px;\n}\n\n.llm-message-head {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  margin-bottom: 4px;\n}\n\n.llm-message-head select {\n  border-color: transparent;\n}\n\n.llm-btn-add-message {\n}\n\n.llm-message-content {\n  border: 1px solid transparent;\n  background: var(--widget-background);\n  border-radius: var(--widget-radius);\n}\n\n.llm-message-content:hover {\n  background: var(--widget-background-highlight-color);\n}\n\n.llm-message-content:focus-within {\n  border-color: var(--brand-highlight-color);\n  background: var(--widget-input-background);\n}\n\n.llm-message-content ::selection {\n  background: #2b4f7760;\n}\n\n.llm-custom-label {\n  flex: 1;\n  display: flex;\n  gap: 12px;\n  align-items: center;\n  overflow: hidden;\n  padding: 8px 12px;\n}\n\n.llm-custom-label-content {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  gap: 9px;\n  overflow: hidden;\n\n  .llm-tags {\n    display: flex;\n    flex-wrap: wrap;\n    gap: 4px;\n  }\n}\n\n.llm-custom-label-header {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n\n  .llm-title-box {\n    display: flex;\n    gap: 4px;\n    align-items: center;\n    overflow: hidden;\n  }\n\n   .llm-title {\n    font-size: 13px;\n    font-weight: 500;\n    color: var(--text-4);\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n  }\n\n  .llm-ratio {\n    white-space: nowrap;\n    font-size: 12px;\n    color: var(--text-2);\n    font-weight: 500;\n  }\n}\n\n.llm-tag {\n  width: fit-content;\n  display: flex;\n  align-items: center;\n  padding: 2px 6px;\n  border-radius: 4px;\n  background-color: var(--fill-6);\n  font-size: 11px;\n  color: var(--text-4);\n  white-space: nowrap;\n}\n\n.llm-tag-highlight {\n  background-color: var(--brand-5);\n  color: #ffffff;\n\n  .oomol-theme-dark & {\n    color: var(--text-4);\n  }\n}\n\n.llm-tag-AlibabaCloud {\n  color: #ffffff;\n  background-color: #E4630B;\n}\n\n.llm-tag-DeepSeek {\n  color: #ffffff;\n  background-color: #4D6BFF;\n}\n\n.llm-tag-VolcEngine {\n  color: #ffffff;\n  background-color: #2FC6C6;\n}\n\n.llm-tag-OpenRouter {\n  color: #ffffff;\n  background-color: #7C8B9D;\n}\n\n.llm-format-option-container {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  overflow: hidden;\n\n  .llm-format-option-label {\n    font-size: 11px;\n    color: var(--text-4);\n    font-weight: 500;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n  }\n}\n\n.llm-tags {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 4px;\n  margin-bottom: 4px;\n}\n\n.llm-tag-btn {\n  width: auto;\n  display: inline-flex;\n  align-items: center;\n  gap: 4px;\n  padding: 2px 6px;\n  overflow: hidden;\n  justify-content: flex-start;\n}\n\n.llm-tag-content {\n  font-size: 11px;\n  color: var(--text-4);\n  font-weight: 500;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n\n.llm-blocks-group {\n  padding: 5px 7px;\n  min-height: 22px;\n  display: flex !important;\n  align-items: center;\n  color: var(--vscode-breadcrumb-foreground);\n  font-weight: 500;\n}\n\n.llm-select-skills {\n  .react-select__value-container {\n    padding-left: 8px;\n  }\n  .react-select__option {\n    align-items: baseline;\n    padding: 5px 8px;\n  }\n}\n";
+var style_default = ".llm-container .react-select-container {\n  flex: 1;\n}\n\n.llm-container .react-select__control {\n  min-height: 24px;\n}\n\n.llm-container mark {\n  color: var(--vscode-chat-slashCommandForeground);\n  background: none transparent !important;\n}\n\n.llm-message-container {\n  margin-bottom: 4px;\n}\n\n.llm-message-head {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  margin-bottom: 4px;\n}\n\n.llm-message-head select {\n  border-color: transparent;\n}\n\n.llm-btn-add-message {\n}\n\n.llm-message-content {\n  border: 1px solid transparent;\n  background: var(--widget-background);\n  border-radius: var(--widget-radius);\n}\n\n.llm-message-content:hover {\n  background: var(--widget-background-highlight-color);\n}\n\n.llm-message-content:focus-within {\n  border-color: var(--brand-highlight-color);\n  background: var(--widget-input-background);\n}\n\n.llm-message-content ::selection {\n  background: #2b4f7760;\n}\n\n.llm-custom-label {\n  flex: 1;\n  display: flex;\n  gap: 12px;\n  align-items: center;\n  overflow: hidden;\n  padding: 8px 12px;\n}\n\n.llm-custom-label-content {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  gap: 9px;\n  overflow: hidden;\n\n  .llm-tags {\n    display: flex;\n    flex-wrap: wrap;\n    gap: 4px;\n  }\n}\n\n.llm-custom-label-header {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n\n  .llm-title-box {\n    display: flex;\n    gap: 4px;\n    align-items: center;\n    overflow: hidden;\n  }\n\n   .llm-title {\n    font-size: 13px;\n    font-weight: 500;\n    color: var(--text-4);\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n  }\n\n  .llm-ratio {\n    white-space: nowrap;\n    font-size: 12px;\n    color: var(--text-2);\n    font-weight: 500;\n  }\n}\n\n.llm-tag {\n  width: fit-content;\n  display: flex;\n  align-items: center;\n  padding: 2px 6px;\n  border-radius: 4px;\n  background-color: var(--fill-6);\n  font-size: 11px;\n  color: var(--text-4);\n  white-space: nowrap;\n}\n\n.llm-tag-highlight {\n  background-color: var(--brand-5);\n  color: #ffffff;\n\n  .oomol-theme-dark & {\n    color: var(--text-4);\n  }\n}\n\n.llm-tag-AlibabaCloud {\n  color: #ffffff;\n  background-color: #E4630B;\n}\n\n.llm-tag-DeepSeek {\n  color: #ffffff;\n  background-color: #4D6BFF;\n}\n\n.llm-tag-VolcEngine {\n  color: #ffffff;\n  background-color: #2FC6C6;\n}\n\n.llm-tag-OpenRouter {\n  color: #ffffff;\n  background-color: #7C8B9D;\n}\n\n.llm-format-option-container {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  overflow: hidden;\n\n  .llm-format-option-label {\n    font-size: 11px;\n    color: var(--text-4);\n    font-weight: 500;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n  }\n}\n\n.llm-tags {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 4px;\n  margin-bottom: 4px;\n}\n\n.llm-tag-btn {\n  width: auto;\n  display: inline-flex;\n  align-items: center;\n  gap: 4px;\n  padding: 2px 6px;\n  overflow: hidden;\n  justify-content: flex-start;\n\n  &:has(.codicon-close) {\n    padding-right: 2px;\n  }\n}\n\n.llm-tag-content {\n  font-size: 11px;\n  color: var(--text-4);\n  font-weight: 500;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n\n.llm-blocks-group {\n  padding: 5px 7px;\n  min-height: 22px;\n  display: flex !important;\n  align-items: center;\n  color: var(--vscode-breadcrumb-foreground);\n  font-weight: 500;\n}\n\n.llm-select-skills {\n  .react-select__value-container {\n    padding-left: 8px;\n  }\n  .react-select__option {\n    align-items: baseline;\n    padding: 5px 8px;\n  }\n}\n";
 
 // src/index.tsx
 var import_react10 = __toESM(require_react());
@@ -13400,9 +13400,13 @@ function messages(dom, context) {
   }));
   const initialMessages = parseMessages(context.store.value$?.value);
   function MessagesComponent() {
+    const schema = useVal(context.store.context.schema$);
+    const singleMessage = isSingleMessageMode(schema);
     const [messages2, setMessages] = (0, import_react10.useState)(initialMessages);
     const allHandleNames = useVal(context.allHandleNames);
     const readonly = !context.store.context.canEditValue;
+    const allowAdd = !readonly && (!singleMessage || messages2.length < 1);
+    const allowDelete = !readonly && (!singleMessage || messages2.length > 1);
     const doHighlight = (0, import_react10.useCallback)((text) => {
       return doHighlight_(text, allHandleNames.map((v) => `{{${v}}}`));
     }, [allHandleNames]);
@@ -13422,12 +13426,12 @@ function messages(dom, context) {
     }, [messages2]);
     const addMessage = (0, import_react10.useCallback)(() => setMessages((m) => {
       if (!m.length) {
-        return [{ role: "system", content: "" }];
+        return [{ role: singleMessage ? "user" : "system", content: "" }];
       } else {
         const newRole = m[m.length - 1].role === "user" ? "assistant" : "user";
         return [...m, { role: newRole, content: "" }];
       }
-    }), []);
+    }), [singleMessage]);
     const deleteMessage = (0, import_react10.useCallback)((index2) => setMessages((m) => m.toSpliced(index2, 1)), []);
     (0, import_react10.useEffect)(() => {
       context.store.value$?.set(messages2);
@@ -13439,9 +13443,9 @@ function messages(dom, context) {
         options: RoleOptions,
         onChange: (e) => updateRole(i, e?.value ?? "user"),
         components: customComponentsWithDefaultSingleValue,
-        isDisabled: readonly
+        isDisabled: readonly || singleMessage
       }
-    ), readonly ? null : /* @__PURE__ */ import_react10.default.createElement("button", { onClick: () => deleteMessage(i) }, /* @__PURE__ */ import_react10.default.createElement("i", { className: "codicon codicon-trash" }))), /* @__PURE__ */ import_react10.default.createElement(
+    ), allowDelete && /* @__PURE__ */ import_react10.default.createElement("button", { onClick: () => deleteMessage(i) }, /* @__PURE__ */ import_react10.default.createElement("i", { className: "codicon codicon-trash" }))), /* @__PURE__ */ import_react10.default.createElement(
       import_react_simple_code_editor.default,
       {
         value: a.content,
@@ -13453,11 +13457,20 @@ function messages(dom, context) {
         placeholder: context.store.description$.value,
         style: { minHeight: 100, resize: "vertical" }
       }
-    ))), readonly ? null : /* @__PURE__ */ import_react10.default.createElement("button", { className: "llm-btn-add-message", onClick: addMessage }, "Add message"));
+    ))), allowAdd && /* @__PURE__ */ import_react10.default.createElement("button", { className: "llm-btn-add-message", onClick: addMessage }, "Add message"));
   }
   const root = (0, import_client.createRoot)(dom);
   root.render(/* @__PURE__ */ import_react10.default.createElement(MessagesComponent, null));
   return () => root.unmount();
+}
+function isSingleMessageMode(schema) {
+  if (schema && typeof schema === "object" && !Array.isArray(schema)) {
+    const s = schema;
+    if (s.type === "array" && !s.uniqueItems) {
+      return s.maxItems === 1 && s.minItems === 1;
+    }
+  }
+  return false;
 }
 function doHighlight_(content, keys) {
   content = content.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -13713,11 +13726,12 @@ function skills(dom, context) {
           className: "llm-tag-btn",
           key: `${skill.package}::${skill.blockName}`,
           disabled: readonly,
-          title: getBlockDetails(block) + " (click to delete)",
+          title: getBlockDetails(block),
           onClick: () => deleteSkill(skill)
         },
         block.icon && /* @__PURE__ */ import_react10.default.createElement(BlockIcon, { icon: block.icon, alt: getBlockLabel(block), dark }),
-        /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-tag-content" }, block.title || block.blockName)
+        /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-tag-content" }, block.title || block.blockName),
+        /* @__PURE__ */ import_react10.default.createElement("span", { className: "codicon codicon-close" })
       );
     }).filter((x) => !!x)), readonly ? null : menuOpen ? /* @__PURE__ */ import_react10.default.createElement(
       TheSelect,
