@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any
 from oocana import Context
-from shared.tool import FunctionTool, FunctionToolCall
+from ..tool import FunctionTool, FunctionToolCall
 
 
 @dataclass

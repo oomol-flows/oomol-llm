@@ -36,6 +36,12 @@ nodes:
         schema_overrides:
           - schema:
               type: array
+      - handle: skills
+        value:
+          []
+        schema_overrides:
+          - schema:
+              type: array
     task: self::llm-chat
     inputs_def:
       []

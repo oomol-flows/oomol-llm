@@ -83,6 +83,17 @@ inputs_def:
     schema_overrides:
       - schema:
           type: array
+  - handle: skills
+    json_schema:
+      type: array
+      ui:options:
+        title: Skills
+      ui:widget: self::skills
+    value:
+      []
+    schema_overrides:
+      - schema:
+          type: array
 outputs_def:
   - handle: output
     json_schema:

@@ -63,6 +63,12 @@ nodes:
               type: array
         from_node:
           []
+      - handle: skills
+        value:
+          []
+        schema_overrides:
+          - schema:
+              type: array
     task: self::llm
     inputs_def:
       []
@@ -107,6 +113,12 @@ nodes:
         from_node:
           - node_id: llm#1
             output_handle: output
+      - handle: skills
+        value:
+          []
+        schema_overrides:
+          - schema:
+              type: array
     task: self::llm-chat
     inputs_def:
       - handle: answer
