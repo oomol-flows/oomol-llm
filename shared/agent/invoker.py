@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Any
-from oocana import Context
+from oocana import Context, BlockExecuteException
 from ..tool import FunctionTool, FunctionToolCall
 
 
@@ -65,17 +65,18 @@ class Invoker:
       raise ValueError(f"cannot find function name {func_call.name}")
 
     outputs: dict[str, Any] = {}
-    def on_add_output(key: str, value: Any):
-      outputs[key] = value
+    def on_add_output(added: dict[str, Any]):
+      for key, value in added.items():
+        outputs[key] = value
     response = self._context.run_block(
       block=str(node),
       inputs=func_call.arguments,
     )
     response.add_output_callback(on_add_output)
-    payload = await response.finish()
-    error = payload.get("error", None)
-    if error:
-      raise ValueError(error)
+    try:
+      await response.finish()
+    except BlockExecuteException as error:
+      raise ValueError(f"run {str(node)} failed") from error
 
     for key, value in list(outputs.items()):
       if value is None:
