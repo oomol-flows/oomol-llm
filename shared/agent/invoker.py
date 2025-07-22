@@ -1,55 +1,28 @@
 from dataclasses import dataclass
-from typing import Any
-from oocana import Context
+from typing import Any, Iterable
+from oocana import Context, BlockExecuteException
 from ..tool import FunctionTool, FunctionToolCall
+from .block import Block
 
-
-@dataclass
-class _Node:
-  package: str
-  block: str
-  func_name: str
-
-  def __str__(self) -> str:
-    return f"{self.package}::{self.block}"
 
 class Invoker:
-  def __init__(self, skills: Any, context: Context) -> None:
+  def __init__(self, context: Context, blocks: Iterable[Block]) -> None:
     self._context: Context = context
-    self._nodes: list[_Node] = [
-      _Node(
-        package=item["package"],
-        block=item["blockName"],
-        func_name=item["blockName"], # TODO: 考虑可能重名导致的无法辨识问题
-      )
-      for item in skills
-    ]
+    self._blocks: list[Block] = list(blocks)
 
   async def query_tools(self) -> list[FunctionTool]:
     tools: list[FunctionTool] = []
-    for node in self._nodes:
-      response = await self._context.query_block(str(node))
-      inputs_def = response.get("inputs_def", None)
+    for block in self._blocks:
       required: list[str] = []
       properties: dict[str, Any] = {}
-      if inputs_def:
-        for handle_def in inputs_def.values():
-          handle = handle_def["handle"]
-          if not handle_def.get("nullable", False):
-            required.append(handle)
-          handle_schema = handle_def.get("json_schema", None)
-          if handle_schema is None:
-            handle_schema = {}
-          else:
-            handle_schema = {**handle_schema}
-          properties[handle] = handle_schema
-          handle_description = handle_def.get("description", None)
-          if handle_description:
-            handle_schema["description"] = handle_description
+      for input in block.inputs:
+        if not input.optional:
+          required.append(input.name)
+        properties[input.name] = input.schema
 
       tools.append(FunctionTool(
-        name=node.func_name,
-        description=response.get("description", None),
+        name=block.func_name,
+        description=block.description,
         struct=True,
         parameters={
           "type": "object",
@@ -60,22 +33,23 @@ class Invoker:
     return tools
 
   async def call(self, func_call: FunctionToolCall) -> dict[str, Any]:
-    node = next((n for n in self._nodes if n.func_name == func_call.name.strip()), None)
-    if node is None:
+    block = next((b for b in self._blocks if b.func_name == func_call.name.strip()), None)
+    if block is None:
       raise ValueError(f"cannot find function name {func_call.name}")
 
     outputs: dict[str, Any] = {}
-    def on_add_output(key: str, value: Any):
-      outputs[key] = value
+    def on_add_output(added: dict[str, Any]):
+      for key, value in added.items():
+        outputs[key] = value
     response = self._context.run_block(
-      block=str(node),
+      block=str(block),
       inputs=func_call.arguments,
     )
     response.add_output_callback(on_add_output)
-    payload = await response.finish()
-    error = payload.get("error", None)
-    if error:
-      raise ValueError(error)
+    try:
+      await response.finish()
+    except BlockExecuteException as error:
+      raise ValueError(f"run {str(block)} failed") from error
 
     for key, value in list(outputs.items()):
       if value is None:

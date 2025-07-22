@@ -8,7 +8,7 @@ from typing import Any
 @dataclass
 class FunctionTool:
   name: str
-  description: str | None
+  description: str
   struct: bool
   parameters: dict[str, Any]
 
@@ -17,7 +17,7 @@ def encode_tool(tool: FunctionTool) -> dict[str, Any]:
     "type": "function",
     "function": {
       "name": tool.name,
-      "description": tool.description if tool.description else "unknown",
+      "description": tool.description,
       "parameters": tool.parameters,
       "struct": tool.struct,
     },

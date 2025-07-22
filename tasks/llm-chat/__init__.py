@@ -10,11 +10,11 @@ class Inputs(typing.TypedDict):
   messages: list[dict] | None
   timeout: float
   retry_times: int
-  retry_sleep: float
-  stream: bool
   model: typing.Any
   template: typing.Any
+  retry_sleep: float
   skills: typing.Any
+  stream: bool
 class Outputs(typing.TypedDict):
   output: str
 #endregion

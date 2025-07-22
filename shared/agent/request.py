@@ -4,6 +4,7 @@ from oocana import Context
 
 from ..llm import LLM
 from ..message import Role, Message
+from .block import parse_skill, Block
 from .invoker import Invoker
 
 
@@ -19,7 +20,19 @@ async def request(
       response_format_type: str | None,
     ):
 
-  invoker = Invoker(skills, context)
+  blocks: list[Block] = []
+  for skill in skills:
+    block = await parse_skill(context, skill)
+    if block is None:
+      skill_id = skill["package"] + "::" + skill["blockName"]
+      print(f"Warning: skill {skill_id} is disabled, it cannot be call by LLMs.")
+      continue
+    blocks.append(block)
+
+  if not blocks:
+    raise ValueError("No enabled blocks found in skills")
+
+  invoker = Invoker(context, blocks)
   tools = await invoker.query_tools()
 
   while True:
