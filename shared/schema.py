@@ -57,7 +57,7 @@ def parse_json_schema(context: Context) -> dict[str, Any]:
         **json_schema,
         "description": description,
       }
-    properties[handle] = _clear_invalid_key(json_schema)
+    properties[handle] = clear_invalid_key(json_schema)
 
   return {
     "type": "object",
@@ -66,7 +66,7 @@ def parse_json_schema(context: Context) -> dict[str, Any]:
     "additionalProperties": False,
   }
 
-def _clear_invalid_key(value: Any) -> Any:
+def clear_invalid_key(value: Any) -> Any:
   if isinstance(value, dict):
     for key in list(cast(dict[str, Any], value).keys()):
       if key.startswith("ui:"):
@@ -78,5 +78,5 @@ def _clear_invalid_key(value: Any) -> Any:
           value.pop(key, None)
   elif isinstance(value, list):
     for child in value:
-      _clear_invalid_key(child)
+      clear_invalid_key(child)
   return value
