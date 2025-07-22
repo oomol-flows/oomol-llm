@@ -36,7 +36,7 @@ async def parse_skill(context: Context, skill: Any) -> Block | None:
   return Block(
     package=package,
     block=block,
-    func_name=block, # TODO: 考虑可能重名导致的无法辨识问题
+    func_name=block,
     inputs=inputs,
     description=_generate_description(response)
   )

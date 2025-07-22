@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Generator
 from json import dumps
 from oocana import Context
 
@@ -20,18 +20,7 @@ async def request(
       response_format_type: str | None,
     ):
 
-  blocks: list[Block] = []
-  for skill in skills:
-    block = await parse_skill(context, skill)
-    if block is None:
-      skill_id = skill["package"] + "::" + skill["blockName"]
-      print(f"Warning: skill {skill_id} is disabled, it cannot be call by LLMs.")
-      continue
-    blocks.append(block)
-
-  if not blocks:
-    raise ValueError("No enabled blocks found in skills")
-
+  blocks = await _create_blocks(context, skills)
   invoker = Invoker(context, blocks)
   tools = await invoker.query_tools()
 
@@ -67,3 +56,45 @@ async def request(
           obj=call_result,
         ),
       ))
+
+async def _create_blocks(context: Context, skills: list[Any]):
+  blocks: list[Block] = []
+  for skill in skills:
+    block = await parse_skill(context, skill)
+    if block is None:
+      skill_id = skill["package"] + "::" + skill["blockName"]
+      print(f"Warning: skill {skill_id} is disabled, it cannot be call by LLMs.")
+      continue
+    blocks.append(block)
+
+  if not blocks:
+    raise ValueError("No enabled blocks found in skills")
+
+  for same_name_blocks in _find_same_name_blocks(blocks):
+    for block in same_name_blocks:
+      block.func_name = block.package + "_" + block.func_name
+
+  used_names: set[str] = set(b.func_name for b in blocks)
+  for same_name_blocks in _find_same_name_blocks(blocks):
+    for i, block in enumerate(same_name_blocks):
+      if i == 0:
+        continue
+      new_name = block.func_name + f"_{i}"
+      while new_name in used_names:
+        new_name += f"_{i}"
+      used_names.add(new_name)
+      block.func_name = new_name
+
+  return blocks
+
+def _find_same_name_blocks(blocks: list[Block]) -> Generator[list[Block], None, None]:
+  name2blocks: dict[str, list[Block]] = {}
+  for block in blocks:
+    same_name_blocks = name2blocks.get(block.func_name, None)
+    if same_name_blocks is None:
+      same_name_blocks = []
+      name2blocks[block.func_name] = same_name_blocks
+    same_name_blocks.append(block)
+  for same_name_blocks in name2blocks.values():
+    if len(same_name_blocks) > 1:
+      yield same_name_blocks
