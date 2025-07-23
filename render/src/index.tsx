@@ -10,6 +10,7 @@ import DefaultSVG from "../icons/default.svg";
 import GrokSVG from "../icons/grok.svg";
 import OpenAISVG from "../icons/openai.svg";
 import ClaudeSVG from "../icons/claude.svg";
+import KimiSVG from "../icons/kimi.svg";
 
 import STYLE from './style.css';
 
@@ -455,6 +456,7 @@ const modelIconMap = {
   grok: GrokSVG,
   openai: OpenAISVG,
   claude: ClaudeSVG,
+  kimi: KimiSVG,
 };
 
 function getModelIcon(model: string) {
