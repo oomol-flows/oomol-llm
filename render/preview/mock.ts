@@ -2,6 +2,7 @@ import { HandleRowStore, InputRenderContext } from '@oomol/types/inputRender';
 import { ReadonlyVal, val } from 'value-enhancer';
 import { faker } from '@faker-js/faker';
 import { CallableBlock, Model } from '../src/types';
+import { mockModels } from './mock-models';
 
 function mockValue(name: string) {
   if (name === 'messages') {
@@ -46,18 +47,7 @@ function mockHandleRowStore(name: string, value: unknown, schema: unknown): Hand
 
 function mockPostMessage(message: unknown, ...args: unknown[]) {
   if (message === 'getLLMModels') {
-    (args[0] as Function)(<Model[]>[{
-      model_name: 'mock-model',
-      model_display_name: 'Mock Model',
-      temperature: 0.5,
-      top_p: 0.9,
-      max_tokens: 1000,
-      tags: ['mock', 'example'],
-      ratio: 1.0,
-      channel_name: 'mock-channel',
-      input_ratio: 1.0,
-      output_ratio: 1.0,
-    }])
+    (args[0] as Function)(mockModels)
   }
   if (message === 'getCallableBlocks') {
     const fakePackages = expand(faker.helpers.uniqueArray(faker.lorem.word, 10));
