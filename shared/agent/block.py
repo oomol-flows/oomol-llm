@@ -52,23 +52,45 @@ async def _parse_handle_defs(handle_defs: Iterable[HandleDefDict]) -> list[Input
       optional = True
 
     handle_schema = handle_def.get("json_schema", None)
+    handle_widget: str | None = None
+
     if handle_schema is None:
       handle_schema = {}
     else:
-      handle_schema = {**handle_schema}
+      if _is_no_json_handle(handle_schema):
+        if optional:
+          continue
+        else:
+          return None # this block cannobe be called by LLM
+
+      handle_widget = handle_schema.get("ui:widget", None)
+      if handle_widget in ("llm::model", "self::model", "llm::skills", "self::skills"):
+        continue
+      elif handle_widget in ("llm::messages", "self::messages"):
+        handle_schema = { "type": "string" }
+      else:
+        handle_schema = clear_invalid_key(handle_schema)
 
     handle_description = handle_def.get("description", None)
+    if handle_widget is not None:
+      widget_description = _widget_description(handle_widget)
+      if widget_description is not None:
+        if handle_description is None:
+          handle_description = ""
+        if "\n" in handle_description:
+          handle_description += f"\n\n({widget_description})"
+        else:
+          handle_description += f" ({widget_description})"
+
     if handle_description:
       handle_schema["description"] = handle_description
-
-    if not optional and _is_variable(handle_schema):
-      return None
 
     inputs.append(Input(
       name=handle,
       optional=optional,
-      schema=clear_invalid_key(handle_schema),
+      schema=handle_schema,
     ))
+
   return inputs
 
 def _generate_description(response: QueryBlockResponse):
@@ -78,18 +100,17 @@ def _generate_description(response: QueryBlockResponse):
 
   for output_def in outputs_def.values():
     handle_schema = output_def.get("json_schema") or {}
-    if _is_variable(handle_schema):
+    if _is_no_json_handle(handle_schema):
       continue
 
-    handle_type = handle_schema.get("type", None)
     handle = output_def["handle"]
-    optional = bool(output_def.get("nullable", False))
+    line: str = f"  - {handle}"
 
-    if not isinstance(handle_type, str):
-      handle_type = "any"
-    elif optional:
-      handle_type = f"{handle_type} optional"
-    line: str = f"  - {handle} ({handle_type})"
+    optional = bool(output_def.get("nullable", False))
+    handle_type = _find_handle_type(handle_schema, optional)
+    if handle_type is not None:
+      line = f"{line} ({handle_type})"
+
     line_description = _normalize_description(output_def.get("description"))
     if line_description:
       line = f"{line}: {line_description}"
@@ -114,9 +135,40 @@ def _generate_description(response: QueryBlockResponse):
 
   return "\n".join(descriptions)
 
-def _is_variable(handle_schema: dict[str, Any]) -> bool:
+def _find_handle_type(handle_schema: dict[str, Any], optional: bool) -> str | None:
+  handle_widget: str | None = handle_schema.get("ui:widget", None)
+  handle_type: str | None = None
+
+  if handle_widget is not None:
+    widget_description = _widget_description(handle_widget)
+    if widget_description is not None:
+      handle_type = widget_description
+
+  if handle_type is None:
+    handle_type = handle_schema.get("type", None)
+
+  if optional and handle_type is not None:
+    handle_type = f"{handle_type} optional"
+
+  return handle_type
+
+def _widget_description(widget: str) -> str | None:
+  if widget == "file":
+    return "existing file path"
+  elif widget == "save":
+    return "file save path"
+  elif widget == "dir":
+    return "directory path"
+  else:
+    return None
+
+def _is_no_json_handle(handle_schema: dict[str, Any]) -> bool:
   media_type = handle_schema.get("contentMediaType", None)
-  return media_type == "oomol/var"
+  return media_type in (
+    "oomol/var",
+    "oomol/bin",
+    "oomol/secret",
+  )
 
 _WHITESPACE_REGEX = re.compile(r"\s+")
 
