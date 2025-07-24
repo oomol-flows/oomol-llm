@@ -28,4 +28,4 @@ contributes:
           type: array
           ui:options:
             title: Skills
-releaseNotes: support agent for LLMs.
+releaseNotes: Update styles and model icons.
