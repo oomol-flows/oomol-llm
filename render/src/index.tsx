@@ -33,6 +33,8 @@ export interface IBasicOption {
   readonly isDisabled?: boolean;
   // Derived from group label automatically.
   readonly group?: { label?: string; value?: string };
+  // For model.
+  readonly channel?: string;
 }
 
 export function model(dom: HTMLElement, context: InputRenderContext) {
@@ -66,7 +68,7 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
 
     const customSelectLabel = ({ value }: { value: Model }) => (
       <div className="llm-custom-label">
-        <ModelIcon modelName={value.model_name} />
+        <ModelIcon modelName={value.model_name} channelName={value.channel_name} />
         <div className="llm-custom-label-content">
           <div className="llm-custom-label-header">
             <div className="llm-title-box">
@@ -90,7 +92,7 @@ export function model(dom: HTMLElement, context: InputRenderContext) {
       <div className="llm-container">
         <div style={{ display: "flex", gap: "5px", alignItems: "center" }}>
           <TheSelect
-            value={{ value: selectedModel, label: labelOfModel(selectedModel) }}
+            value={{ value: selectedModel, label: labelOfModel(selectedModel), channel: models.find(m => m.model_name === selectedModel)?.channel_name }}
             options={models.map((model) => ({
               value: model.model_name,
               label: customSelectLabel({ value: model }),
@@ -307,10 +309,10 @@ function doHighlight_(content: string, keys: Iterable<string>): string {
 function customSingleValue<Option extends IBasicOption = IBasicOption>(
   option: Option
 ) {
-  const { label, value } = option;
+  const { label, value, channel } = option;
   return (
     <div className="llm-format-option-container" title={filterString(label) || value}>
-      {value && <ModelIcon modelName={value} size={16} />}
+      {value && <ModelIcon modelName={value} channelName={channel} size={16} />}
       <span className="llm-format-option-label">{label || value}</span>
     </div>
   );
@@ -459,21 +461,25 @@ const modelIconMap = {
   kimi: KimiSVG,
 };
 
-function getModelIcon(model: string) {
+function getModelIcon(model: string, channel?: string) {
   if (model === "oomol-chat" || model === "Default") return "oomol";
   const parsedLabel = model
     .replace(/\W/g, " ")
     .replace(/\s+/g, " ")
     .toLowerCase();
 
-  return (
-    Object.keys(modelIconMap).find((key) => parsedLabel.includes(key)) || "fallback-icon"
-  );
+  let icon = Object.keys(modelIconMap).find((key) => parsedLabel.includes(key)) as keyof typeof modelIconMap | undefined;
+  if (!icon && channel) {
+    if (channel === 'Kimi') icon = 'kimi';
+    if (channel === 'SiliconFlow') icon = 'silicon-flow';
+  }
+
+  return icon || "fallback-icon";
 }
 
-function ModelIcon({ modelName, size }: { modelName: string; size?: number }) {
+function ModelIcon({ modelName, channelName, size }: { modelName: string; channelName?: string; size?: number }) {
   const iconSize = size || 40;
-  const iconSrc = getModelIcon(modelName);
+  const iconSrc = getModelIcon(modelName, channelName);
   return iconSrc ? (
     <img
       src={modelIconMap[iconSrc]}

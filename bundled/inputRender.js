@@ -13315,11 +13315,11 @@ function model(dom, context) {
         max_tokens: maxTokens
       });
     }, [selectedModel, temperature, topP, maxTokens]);
-    const customSelectLabel = ({ value: value2 }) => /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-custom-label" }, /* @__PURE__ */ import_react10.default.createElement(ModelIcon, { modelName: value2.model_name }), /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-custom-label-content" }, /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-custom-label-header" }, /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-title-box" }, /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-title", title: labelOfModel(value2.model_name) }, labelOfModel(value2.model_name))), /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-ratio" }, "Input: ", value2.input_ratio, " / Output: ", value2.output_ratio)), /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-tags" }, /* @__PURE__ */ import_react10.default.createElement(ModelTag, { channelName: value2.channel_name, highlight: true }), value2.tags.map((tag) => /* @__PURE__ */ import_react10.default.createElement(ModelTag, { key: tag, channelName: tag })))));
+    const customSelectLabel = ({ value: value2 }) => /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-custom-label" }, /* @__PURE__ */ import_react10.default.createElement(ModelIcon, { modelName: value2.model_name, channelName: value2.channel_name }), /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-custom-label-content" }, /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-custom-label-header" }, /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-title-box" }, /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-title", title: labelOfModel(value2.model_name) }, labelOfModel(value2.model_name))), /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-ratio" }, "Input: ", value2.input_ratio, " / Output: ", value2.output_ratio)), /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-tags" }, /* @__PURE__ */ import_react10.default.createElement(ModelTag, { channelName: value2.channel_name, highlight: true }), value2.tags.map((tag) => /* @__PURE__ */ import_react10.default.createElement(ModelTag, { key: tag, channelName: tag })))));
     return /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-container" }, /* @__PURE__ */ import_react10.default.createElement("div", { style: { display: "flex", gap: "5px", alignItems: "center" } }, /* @__PURE__ */ import_react10.default.createElement(
       TheSelect,
       {
-        value: { value: selectedModel, label: labelOfModel(selectedModel) },
+        value: { value: selectedModel, label: labelOfModel(selectedModel), channel: models.find((m) => m.model_name === selectedModel)?.channel_name },
         options: models.map((model2) => ({
           value: model2.model_name,
           label: customSelectLabel({ value: model2 })
@@ -13483,8 +13483,8 @@ function doHighlight_(content, keys) {
   return content;
 }
 function customSingleValue(option) {
-  const { label, value } = option;
-  return /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-format-option-container", title: filterString(label) || value }, value && /* @__PURE__ */ import_react10.default.createElement(ModelIcon, { modelName: value, size: 16 }), /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-format-option-label" }, label || value));
+  const { label, value, channel } = option;
+  return /* @__PURE__ */ import_react10.default.createElement("div", { className: "llm-format-option-container", title: filterString(label) || value }, value && /* @__PURE__ */ import_react10.default.createElement(ModelIcon, { modelName: value, channelName: channel, size: 16 }), /* @__PURE__ */ import_react10.default.createElement("span", { className: "llm-format-option-label" }, label || value));
 }
 function filterString(str) {
   if (typeof str === "string") return str;
@@ -13585,14 +13585,19 @@ var modelIconMap = {
   claude: claude_default,
   kimi: kimi_default
 };
-function getModelIcon(model2) {
+function getModelIcon(model2, channel) {
   if (model2 === "oomol-chat" || model2 === "Default") return "oomol";
   const parsedLabel = model2.replace(/\W/g, " ").replace(/\s+/g, " ").toLowerCase();
-  return Object.keys(modelIconMap).find((key) => parsedLabel.includes(key)) || "fallback-icon";
+  let icon = Object.keys(modelIconMap).find((key) => parsedLabel.includes(key));
+  if (!icon && channel) {
+    if (channel === "Kimi") icon = "kimi";
+    if (channel === "SiliconFlow") icon = "silicon-flow";
+  }
+  return icon || "fallback-icon";
 }
-function ModelIcon({ modelName, size: size2 }) {
+function ModelIcon({ modelName, channelName, size: size2 }) {
   const iconSize = size2 || 40;
-  const iconSrc = getModelIcon(modelName);
+  const iconSrc = getModelIcon(modelName, channelName);
   return iconSrc ? /* @__PURE__ */ import_react10.default.createElement(
     "img",
     {
