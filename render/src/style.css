@@ -33,6 +33,7 @@
   border: 1px solid transparent;
   background: var(--widget-background);
   border-radius: var(--widget-radius);
+  line-height: 1.2;
 }
 
 .llm-message-content:hover {
