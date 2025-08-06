@@ -13657,6 +13657,13 @@ var model = wrapReactComponent(function Model({ context }) {
       max_tokens: maxTokens
     });
   }, [selectedModel, temperature, topP, maxTokens]);
+  const selectModel = (0, import_react14.useCallback)((model2) => {
+    setSelectedModel(model2);
+    const info = models.find((m) => m.model_name === model2);
+    setTemperature((t) => info?.temperature ?? t);
+    setTopP((t) => info?.top_p ?? t);
+    setMaxTokens((t) => info?.max_tokens ?? t);
+  }, [models]);
   const customSelectLabel = ({ value: value2 }) => /* @__PURE__ */ import_react14.default.createElement("div", { className: "llm-custom-label" }, /* @__PURE__ */ import_react14.default.createElement(ModelIcon, { modelName: value2.model_name, channelName: value2.channel_name }), /* @__PURE__ */ import_react14.default.createElement("div", { className: "llm-custom-label-content" }, /* @__PURE__ */ import_react14.default.createElement("div", { className: "llm-custom-label-header" }, /* @__PURE__ */ import_react14.default.createElement("div", { className: "llm-title-box" }, /* @__PURE__ */ import_react14.default.createElement("span", { className: "llm-title", title: labelOf(value2.model_name) }, labelOf(value2.model_name))), /* @__PURE__ */ import_react14.default.createElement("span", { className: "llm-ratio" }, "Input: ", value2.input_ratio, " / Output: ", value2.output_ratio)), /* @__PURE__ */ import_react14.default.createElement("div", { className: "llm-tags" }, /* @__PURE__ */ import_react14.default.createElement(ModelTag, { channelName: value2.channel_name, highlight: true }), value2.tags.map((tag) => /* @__PURE__ */ import_react14.default.createElement(ModelTag, { key: tag, channelName: tag })))));
   return /* @__PURE__ */ import_react14.default.createElement("div", { className: "llm-container" }, /* @__PURE__ */ import_react14.default.createElement("div", { style: { display: "flex", gap: "5px", alignItems: "center" } }, /* @__PURE__ */ import_react14.default.createElement(
     Select2,
@@ -13668,7 +13675,7 @@ var model = wrapReactComponent(function Model({ context }) {
         label: customSelectLabel({ value: model2 })
       })),
       onChange: (selectedOption) => {
-        setSelectedModel(selectedOption?.value || "");
+        selectModel(selectedOption?.value || "");
       },
       isLoading: models.length === 0,
       isDisabled: readonly

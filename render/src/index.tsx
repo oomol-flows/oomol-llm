@@ -35,6 +35,14 @@ export const model = wrapReactComponent(function Model({ context }) {
     } satisfies IModelOptions);
   }, [selectedModel, temperature, topP, maxTokens]);
 
+  const selectModel = useCallback((model: string) => {
+    setSelectedModel(model);
+    const info = models.find(m => m.model_name === model);
+    setTemperature(t => info?.temperature ?? t);
+    setTopP(t => info?.top_p ?? t);
+    setMaxTokens(t => info?.max_tokens ?? t);
+  }, [models]);
+
   const customSelectLabel = ({ value }: { value: Model }) => (
     <div className="llm-custom-label">
       <ModelIcon modelName={value.model_name} channelName={value.channel_name} />
@@ -68,7 +76,7 @@ export const model = wrapReactComponent(function Model({ context }) {
             label: customSelectLabel({ value: model }),
           }))}
           onChange={(selectedOption: IBasicOption | null) => {
-            setSelectedModel(selectedOption?.value || '');
+            selectModel(selectedOption?.value || '');
           }}
           isLoading={models.length === 0}
           isDisabled={readonly}
