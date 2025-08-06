@@ -49,3 +49,15 @@ interface OutputHandleDef {
 interface InputHandleDef extends OutputHandleDef {
   value?: any; // default value
 }
+
+// See https://github.com/JedWatson/react-select/blob/-/packages/react-select/src/builtins.ts
+export interface IBasicOption<Value extends string = string> {
+  readonly icon?: string | React.ReactNode;
+  readonly label?: string | React.ReactNode;
+  readonly value?: Value;
+  readonly isDisabled?: boolean;
+  // Derived from group label automatically.
+  readonly group?: { label?: string; value?: string };
+  // For model.
+  readonly channel?: string;
+}

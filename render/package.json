@@ -10,17 +10,17 @@
     "@faker-js/faker": "^9.9.0",
     "@hyrious/configs": "^0.1.4",
     "@hyrious/rimraf": "^0.1.0",
-    "@oomol/types": "^0.0.16",
+    "@oomol/types": "^0.0.26",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.5",
     "clsx": "^2.1.1",
-    "esbuild": "^0.25.5",
+    "esbuild": "^0.25.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-select": "^5.10.1",
+    "react-select": "^5.10.2",
     "react-simple-code-editor": "^0.14.1",
     "use-value-enhancer": "^5.0.6",
-    "value-enhancer": "^5.5.3"
+    "value-enhancer": "^5.6.1"
   },
-  "packageManager": "pnpm@10.12.4"
+  "packageManager": "pnpm@10.14.0"
 }
