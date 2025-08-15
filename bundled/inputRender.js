@@ -8154,6 +8154,34 @@ function matchSubstring(option, input) {
   input = input.trim().toLowerCase();
   return (option.data.group?.label || "").toLowerCase().includes(input) || (option.data.group?.value || "").toLowerCase().includes(input) || (option.label || "").toLowerCase().includes(input) || (option.value || "").toLowerCase().includes(input);
 }
+var returnsTrue = () => true;
+function toStringArray(value) {
+  if (typeof value === "string") {
+    return value.split(",").map((x) => x.trim()).filter((x) => !!x);
+  }
+  if (Array.isArray(value)) {
+    return value.map((x) => typeof x === "string" ? x.trim() : "").filter((x) => !!x);
+  }
+  return void 0;
+}
+var ui_options = "ui:options";
+var tags = "tags";
+function getFilterByTag(schema) {
+  if (schema && typeof schema === "object") {
+    const options2 = schema[ui_options];
+    if (options2 && typeof options2 === "object") {
+      const filter = toStringArray(options2[tags])?.map((x) => x.toLowerCase());
+      if (filter && filter.length > 0) {
+        return (model2) => {
+          if (!model2.tags || !model2.tags.length) return false;
+          const tags2 = model2.tags.map((x) => x.toLowerCase());
+          return filter.some((tag) => tags2.includes(tag));
+        };
+      }
+    }
+  }
+  return returnsTrue;
+}
 
 // src/base/RangeInput.tsx
 var import_react3 = __toESM(require_react());
@@ -13573,6 +13601,7 @@ function withModelIcon(option) {
   return /* @__PURE__ */ import_react13.default.createElement("div", { className: "llm-format-option-container", title: filterString(label) || value }, value && /* @__PURE__ */ import_react13.default.createElement(ModelIcon, { modelName: value, channelName: channel, size: 16 }), /* @__PURE__ */ import_react13.default.createElement("span", { className: "llm-format-option-label" }, label || value));
 }
 var withCustomSingleValue = {
+  ...defaultComponents3,
   SingleValue: (props) => /* @__PURE__ */ import_react13.default.createElement(components.SingleValue, { ...props }, withModelIcon(props.data))
 };
 function Select2(props) {
@@ -13638,6 +13667,8 @@ var model = wrapReactComponent(function Model({ context }) {
   const [expanded, setExpanded] = (0, import_react14.useState)(false);
   const readonly = !context.store.context.canEditValue;
   const value = context.store.value$?.value;
+  const schema = useVal(context.store.context.schema$);
+  const filterByTag = (0, import_react14.useMemo)(() => getFilterByTag(schema), [schema]);
   const [selectedModel, setSelectedModel] = (0, import_react14.useState)(value?.model || "oomol-chat");
   const [temperature, setTemperature] = (0, import_react14.useState)(value?.temperature || 0);
   const [topP, setTopP] = (0, import_react14.useState)(value?.top_p ?? 0.5);
@@ -13675,7 +13706,7 @@ var model = wrapReactComponent(function Model({ context }) {
     {
       variant: "models",
       value: { value: selectedModel, label: labelOf(selectedModel), channel: models.find((m) => m.model_name === selectedModel)?.channel_name },
-      options: models.map((model2) => ({
+      options: models.filter(filterByTag).map((model2) => ({
         value: model2.model_name,
         label: customSelectLabel({ value: model2 })
       })),

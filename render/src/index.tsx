@@ -3,7 +3,7 @@ import { GroupBase } from 'react-select';
 import Editor from 'react-simple-code-editor';
 import { useVal } from 'use-value-enhancer';
 import { ReadonlyVal } from 'value-enhancer';
-import { BlockIcon, blocksToMap, filterString, findBlock, firstMessageContent, getBlockDetails, getBlockLabel, highlightText, isSingleMessageMode, labelOf, mapBlocksToOptions, mapBlockToOption, matchSubstring, ModelIcon, ModelTag, parseMessages, parseSkills, Role, RoleOptions } from './base/base';
+import { BlockIcon, blocksToMap, filterString, findBlock, firstMessageContent, getBlockDetails, getBlockLabel, getFilterByTag, highlightText, isSingleMessageMode, labelOf, mapBlocksToOptions, mapBlockToOption, matchSubstring, ModelIcon, ModelTag, parseMessages, parseSkills, Role, RoleOptions } from './base/base';
 import { RangeInput } from './base/RangeInput';
 import { wrapReactComponent } from './base/react';
 import { Select } from './base/Select';
@@ -15,6 +15,8 @@ export const model = wrapReactComponent(function Model({ context }) {
 
   const readonly = !context.store.context.canEditValue;
   const value = context.store.value$?.value as IModelOptions | undefined;
+  const schema = useVal(context.store.context.schema$);
+  const filterByTag = useMemo(() => getFilterByTag(schema), [schema]);
   const [selectedModel, setSelectedModel] = useState(value?.model || "oomol-chat");
   const [temperature, setTemperature] = useState<number>(value?.temperature || 0);
   const [topP, setTopP] = useState<number>(value?.top_p ?? 0.5);
@@ -77,7 +79,7 @@ export const model = wrapReactComponent(function Model({ context }) {
         <Select
           variant='models'
           value={{ value: selectedModel, label: labelOf(selectedModel), channel: models.find(m => m.model_name === selectedModel)?.channel_name }}
-          options={models.map((model) => ({
+          options={models.filter(filterByTag).map((model) => ({
             value: model.model_name,
             label: customSelectLabel({ value: model }),
           }))}

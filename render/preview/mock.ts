@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { HandleRowStore, InputRenderContext } from '@oomol/types/inputRender';
 import { ReadonlyVal, val } from 'value-enhancer';
-import { CallableBlock } from '../src/lib/types';
+import { CallableBlock } from '../src/base/types';
 import { mockModels } from './mock-models';
 
 function mockValue(name: string) {
@@ -11,6 +11,9 @@ function mockValue(name: string) {
 }
 
 function mockSchema(name: string) {
+  if (name === 'model') {
+    return { ['ui:options']: { tags: ['text'] } }
+  }
   if (name === 'messages') {
     return new URL(location.href).searchParams.has('agent') ? { type: 'string' } : { anyOf: [] };
   }

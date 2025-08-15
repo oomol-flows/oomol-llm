@@ -22,9 +22,6 @@
             "messages": {
               "[]": true
             }
-          },
-          "groupCollapsed": {
-            "Connection": true
           }
         }
       }

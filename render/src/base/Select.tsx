@@ -32,6 +32,7 @@ function withModelIcon<Option extends IBasicOption = IBasicOption>(option: Optio
 }
 
 const withCustomSingleValue = {
+  ...defaultComponents,
   SingleValue: (props: any) => (
     <components.SingleValue {...props}>
       {withModelIcon(props.data)}

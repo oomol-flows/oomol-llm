@@ -16,7 +16,7 @@ import { clsx } from 'clsx';
 import React from 'react';
 import { FilterOptionOption, GroupBase, OptionsOrGroups } from 'react-select';
 
-import { CallableBlock, IBasicOption, Message, Skill } from './types';
+import { CallableBlock, IBasicOption, Message, Model, Skill } from './types';
 
 const map = {
   "default": DefaultSVG,
@@ -261,4 +261,38 @@ export function matchSubstring<Option extends IBasicOption = IBasicOption>(
     (option.label || "").toLowerCase().includes(input) ||
     (option.value || "").toLowerCase().includes(input)
   );
+}
+
+export type FilterByTagFn = (model: Model) => boolean;
+
+export const returnsTrue = () => true;
+
+function toStringArray(value: unknown): string[] | undefined {
+  if (typeof value === 'string') {
+    return value.split(',').map(x => x.trim()).filter(x => !!x);
+  }
+  if (Array.isArray(value)) {
+    return value.map(x => typeof x === 'string' ? x.trim() : '').filter(x => !!x);
+  }
+  return undefined;
+}
+
+const ui_options = 'ui:options';
+const tags = 'tags';
+
+export function getFilterByTag(schema: any): FilterByTagFn {
+  if (schema && typeof schema === 'object') {
+    const options = schema[ui_options];
+    if (options && typeof options === 'object') {
+      const filter = toStringArray(options[tags])?.map(x => x.toLowerCase());
+      if (filter && filter.length > 0) {
+        return (model: Model) => {
+          if (!model.tags || !model.tags.length) return false;
+          const tags = model.tags.map(x => x.toLowerCase());
+          return filter.some(tag => tags.includes(tag));
+        };
+      }
+    }
+  }
+  return returnsTrue;
 }
