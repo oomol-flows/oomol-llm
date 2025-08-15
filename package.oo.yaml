@@ -1,6 +1,6 @@
 name: llm
 displayName: LLM
-version: 0.3.3
+version: 0.3.4
 description: LLM
 scripts:
   {}
@@ -28,4 +28,4 @@ contributes:
           type: array
           ui:options:
             title: Skills
-releaseNotes: Update styles and model icons.
+releaseNotes: update LLM models filter & fileds
