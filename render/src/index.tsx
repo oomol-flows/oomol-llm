@@ -19,12 +19,18 @@ export const model = wrapReactComponent(function Model({ context }) {
   const [temperature, setTemperature] = useState<number>(value?.temperature || 0);
   const [topP, setTopP] = useState<number>(value?.top_p ?? 0.5);
   const [maxTokens, setMaxTokens] = useState<number>(value?.max_tokens || 4096);
+  const [realMaxTokens, setRealMaxTokens] = useState<number>(4096);
 
   useEffect(() => {
     context.postMessage("getLLMModels", (models: Model[]) => {
       if (models?.length) { setModels(models); }
     });
   }, []);
+
+  useEffect(() => {
+    const info = models.find(m => m.model_name === selectedModel);
+    setRealMaxTokens(info?.max_tokens || 4096);
+  }, [models, selectedModel])
 
   useEffect(() => {
     context.store.value$?.set({
@@ -115,7 +121,7 @@ export const model = wrapReactComponent(function Model({ context }) {
               label: "Max Tokens",
               value: maxTokens,
               min: 1,
-              max: 4096,
+              max: realMaxTokens,
               step: 1,
               onChange: (value: any) => setMaxTokens(Number(value)),
             },

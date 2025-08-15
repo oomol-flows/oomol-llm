@@ -13642,6 +13642,7 @@ var model = wrapReactComponent(function Model({ context }) {
   const [temperature, setTemperature] = (0, import_react14.useState)(value?.temperature || 0);
   const [topP, setTopP] = (0, import_react14.useState)(value?.top_p ?? 0.5);
   const [maxTokens, setMaxTokens] = (0, import_react14.useState)(value?.max_tokens || 4096);
+  const [realMaxTokens, setRealMaxTokens] = (0, import_react14.useState)(4096);
   (0, import_react14.useEffect)(() => {
     context.postMessage("getLLMModels", (models2) => {
       if (models2?.length) {
@@ -13649,6 +13650,10 @@ var model = wrapReactComponent(function Model({ context }) {
       }
     });
   }, []);
+  (0, import_react14.useEffect)(() => {
+    const info = models.find((m) => m.model_name === selectedModel);
+    setRealMaxTokens(info?.max_tokens || 4096);
+  }, [models, selectedModel]);
   (0, import_react14.useEffect)(() => {
     context.store.value$?.set({
       model: selectedModel,
@@ -13711,7 +13716,7 @@ var model = wrapReactComponent(function Model({ context }) {
         label: "Max Tokens",
         value: maxTokens,
         min: 1,
-        max: 4096,
+        max: realMaxTokens,
         step: 1,
         onChange: (value2) => setMaxTokens(Number(value2))
       }
