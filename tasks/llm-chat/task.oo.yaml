@@ -42,6 +42,8 @@ inputs_def:
         title: Model
         tags:
           - text
+        excludeTags:
+          - thinking
       ui:widget: self::model
     value:
       model: deepseek-chat
