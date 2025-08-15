@@ -29,7 +29,7 @@ inputs_def:
       ui:widget: self::messages
     value:
       - role: user
-        content: "\n"
+        content: "{{input}}"
     schema_overrides:
       - schema:
           type: array
@@ -77,4 +77,8 @@ outputs_def:
 title: Generate Messages
 additional_inputs: true
 additional_inputs_def:
-  []
+  - handle: input
+    json_schema:
+      type: string
+      ui:widget: text
+    value: hello!

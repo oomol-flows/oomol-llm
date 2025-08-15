@@ -6,9 +6,9 @@ nodes:
       - handle: model
         value:
           model: deepseek-chat
-          temperature: 0
-          top_p: 0.5
-          max_tokens: 4096
+          temperature: 0.5
+          top_p: 1
+          max_tokens: 8192
       - handle: template
         value:
           - role: system
@@ -21,9 +21,8 @@ nodes:
       - handle: stream
         value: true
       - handle: skills
-        value: |-
-          白日依山尽，黄河入海流。
-          欲穷千里目，更上一层楼。
+        value:
+          []
       - handle: timeout
         value: 30
       - handle: retry_times
@@ -32,6 +31,10 @@ nodes:
         value: 3.5
       - handle: messages
         value:
+      - handle: input
+        value: |-
+          白日依山尽，黄河入海流。
+          欲穷千里目，更上一层楼。
     task: self::llm
     inputs_def:
       - handle: input
