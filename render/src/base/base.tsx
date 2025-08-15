@@ -279,17 +279,29 @@ function toStringArray(value: unknown): string[] | undefined {
 
 const ui_options = 'ui:options';
 const tags = 'tags';
+const excludeTags = 'excludeTags';
 
 export function getFilterByTag(schema: any): FilterByTagFn {
   if (schema && typeof schema === 'object') {
     const options = schema[ui_options];
     if (options && typeof options === 'object') {
-      const filter = toStringArray(options[tags])?.map(x => x.toLowerCase());
-      if (filter && filter.length > 0) {
+      const include = toStringArray(options[tags])?.map(x => x.toLowerCase());
+      const exclude = toStringArray(options[excludeTags])?.map(x => x.toLowerCase());
+      if (include && include.length > 0 || exclude && exclude.length > 0) {
         return (model: Model) => {
-          if (!model.tags || !model.tags.length) return false;
           const tags = model.tags.map(x => x.toLowerCase());
-          return filter.some(tag => tags.includes(tag));
+          let result = true;
+          if (include && include.length > 0) {
+            if (!tags.length) {
+              result = false;
+            } else {
+              result = include.some(tag => tags.includes(tag));
+            }
+          }
+          if (result && exclude && exclude.length > 0) {
+            result = !exclude.some(tag => tags.includes(tag));
+          }
+          return result;
         };
       }
     }

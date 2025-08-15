@@ -8166,16 +8166,28 @@ function toStringArray(value) {
 }
 var ui_options = "ui:options";
 var tags = "tags";
+var excludeTags = "excludeTags";
 function getFilterByTag(schema) {
   if (schema && typeof schema === "object") {
     const options2 = schema[ui_options];
     if (options2 && typeof options2 === "object") {
-      const filter = toStringArray(options2[tags])?.map((x) => x.toLowerCase());
-      if (filter && filter.length > 0) {
+      const include = toStringArray(options2[tags])?.map((x) => x.toLowerCase());
+      const exclude = toStringArray(options2[excludeTags])?.map((x) => x.toLowerCase());
+      if (include && include.length > 0 || exclude && exclude.length > 0) {
         return (model2) => {
-          if (!model2.tags || !model2.tags.length) return false;
           const tags2 = model2.tags.map((x) => x.toLowerCase());
-          return filter.some((tag) => tags2.includes(tag));
+          let result = true;
+          if (include && include.length > 0) {
+            if (!tags2.length) {
+              result = false;
+            } else {
+              result = include.some((tag) => tags2.includes(tag));
+            }
+          }
+          if (result && exclude && exclude.length > 0) {
+            result = !exclude.some((tag) => tags2.includes(tag));
+          }
+          return result;
         };
       }
     }
