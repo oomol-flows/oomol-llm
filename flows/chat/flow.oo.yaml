@@ -30,7 +30,8 @@ nodes:
       - handle: template
         value:
           - role: system
-            content: "请友好地与用户交流，不要啰里八嗦。"
+            content: "Please communicate with users in a friendly manner and don't be
+              verbose."
           - role: user
             content: "{{input}}"
         schema_overrides:
@@ -43,7 +44,7 @@ nodes:
           - schema:
               type: array
       - handle: input
-        value: 你好，你是谁？
+        value: Hello, who are you?
     task: self::llm-chat
     inputs_def:
       - handle: input

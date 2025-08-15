@@ -12,7 +12,7 @@ nodes:
       - handle: template
         value:
           - role: system
-            content: "将用户发言信达雅地翻译。"
+            content: "Translate user speech accurately and elegantly."
           - role: user
             content: "{{input}}"
         schema_overrides:
