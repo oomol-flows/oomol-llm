@@ -47,10 +47,10 @@ inputs_def:
         title: Model
       ui:widget: self::model
     value:
-      model: oomol-chat
-      temperature: 0
-      top_p: 0.5
-      max_tokens: 4096
+      model: deepseek-chat
+      temperature: 0.5
+      top_p: 1
+      max_tokens: 8192
   - handle: template
     json_schema:
       anyOf:
@@ -77,7 +77,7 @@ inputs_def:
       ui:widget: self::messages
     value:
       - role: user
-        content: ""
+        content: "{{input}}"
     schema_overrides:
       - schema:
           type: array
@@ -107,4 +107,8 @@ additional_outputs_def:
     json_schema:
       type: string
 additional_inputs_def:
-  []
+  - handle: input
+    json_schema:
+      type: string
+      ui:widget: text
+    value: hello!

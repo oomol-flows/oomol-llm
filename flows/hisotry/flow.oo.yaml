@@ -5,10 +5,13 @@ nodes:
       - handle: template
         value:
           - role: system
-            content: "你要与用户友善地对话。用户问问题，你要简短地回答，不要啰里八嗦。你要坚持自己的观点，敢于挑战用户。若用户质疑，你就不要简短答复了，用详实的\
-              证据回应。"
+            content: "You should engage in friendly conversations with users. When users ask
+              questions, answer them briefly, avoiding verbose answers. You
+              should stand firm on your opinions and challenge them. If users
+              challenge you, don't just give brief responses; respond with
+              detailed evidence."
           - role: user
-            content: 哥伦布是哪一年发现新大陆的？
+            content: In which year did Columbus discover the New World?
         schema_overrides:
           - schema:
               type: array
@@ -51,10 +54,10 @@ nodes:
         value: true
       - handle: model
         value:
-          model: oomol-chat
-          temperature: 0
-          top_p: 0.5
-          max_tokens: 4096
+          model: deepseek-chat
+          temperature: 0.5
+          top_p: 1
+          max_tokens: 8192
       - handle: template
         value:
           []
@@ -95,17 +98,17 @@ nodes:
         value: true
       - handle: model
         value:
-          model: oomol-chat
-          temperature: 0
-          top_p: 0.5
-          max_tokens: 4096
+          model: deepseek-chat
+          temperature: 0.5
+          top_p: 1
+          max_tokens: 8192
       - handle: template
         value:
           - role: assistant
             content: "{{answer}}\n"
           - role: user
             content: |-
-              我觉得你说得不对？我给你3秒钟重新回答，我要看到不一样的答案。
+              I think you're wrong? I'll give you 3 seconds to answer again. I want to see a different answer.
         schema_overrides:
           - schema:
               type: array

@@ -60,6 +60,11 @@
           "x": 1127.6682882360767,
           "y": -113.66224730389263
         }
+      },
+      "sections": {
+        "inputHandle": {
+          "cardCollapsed": true
+        }
       }
     }
   }

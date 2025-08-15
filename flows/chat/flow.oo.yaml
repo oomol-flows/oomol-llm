@@ -23,16 +23,17 @@ nodes:
         value: true
       - handle: model
         value:
-          model: oomol-chat
-          temperature: 0
-          top_p: 0.5
-          max_tokens: 4096
+          model: deepseek-chat
+          temperature: 0.5
+          top_p: 1
+          max_tokens: 8192
       - handle: template
         value:
           - role: system
-            content: "请友好地与用户交流，不要啰里八嗦。"
+            content: "Please communicate with users in a friendly manner and don't be
+              verbose."
           - role: user
-            content: 你好，你是谁？
+            content: "{{input}}"
         schema_overrides:
           - schema:
               type: array
@@ -42,6 +43,11 @@ nodes:
         schema_overrides:
           - schema:
               type: array
+      - handle: input
+        value: Hello, who are you?
     task: self::llm-chat
     inputs_def:
-      []
+      - handle: input
+        json_schema:
+          type: string
+          ui:widget: text
