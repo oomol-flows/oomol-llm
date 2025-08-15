@@ -45,6 +45,8 @@ inputs_def:
     json_schema:
       ui:options:
         title: Model
+        tags:
+          - text
       ui:widget: self::model
     value:
       model: deepseek-chat
