@@ -8243,7 +8243,7 @@ function RangeInput({ label, value, min: min2, max: max2, step, onChange: onChan
           onChange2(finalValue);
         }
       },
-      style: { width: "60px", margin: 0 }
+      style: { width: "72px", margin: 0 }
     }
   )));
 }

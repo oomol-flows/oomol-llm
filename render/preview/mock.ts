@@ -11,9 +11,9 @@ function mockValue(name: string) {
 }
 
 function mockSchema(name: string) {
-  if (name === 'model') {
-    return { ['ui:options']: { tags: ['text'], excludeTags: 'function call' } }
-  }
+  // if (name === 'model') {
+  //   return { ['ui:options']: { tags: ['text'], excludeTags: 'function call' } }
+  // }
   if (name === 'messages') {
     return new URL(location.href).searchParams.has('agent') ? { type: 'string' } : { anyOf: [] };
   }

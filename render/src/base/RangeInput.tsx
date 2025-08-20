@@ -60,7 +60,7 @@ export function RangeInput({ label, value, min, max, step, onChange, defaultValu
               onChange(finalValue);
             }
           }}
-          style={{ width: "60px", margin: 0 }} />
+          style={{ width: "72px", margin: 0 }} />
       </div>
     </div>
   );
