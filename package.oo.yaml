@@ -1,13 +1,13 @@
 name: llm
 displayName: LLM
-version: 0.3.4
+version: 0.3.5
 description: LLM
 scripts:
   {}
 icon: "./icon.png"
 repository: https://github.com/oomol-flows/oomol-llm
 dependencies:
-  oomol-preview: 0.1.0
+  oomol-preview: 0.1.7
 contributes:
   input_widgets:
     render: ./bundled/inputRender.js
@@ -28,4 +28,4 @@ contributes:
           type: array
           ui:options:
             title: Skills
-releaseNotes: update LLM models filter & fileds
+releaseNotes: add layer
