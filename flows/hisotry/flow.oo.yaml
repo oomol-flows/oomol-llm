@@ -77,7 +77,7 @@ nodes:
       []
     outputs_def:
       - handle: output
-        description: write your answer here
+        description: AI's first response to the user's question
         json_schema:
           type: string
   - node_id: llm-chat#1
@@ -125,5 +125,8 @@ nodes:
     task: self::llm-chat
     inputs_def:
       - handle: answer
-        description: write your answer here
+        description: AI's previous answer to be challenged in the follow-up conversation
 title: Chat with history
+description: A demonstration flow showing how AI maintains conversation context
+  and responds when challenged, illustrating multi-turn dialogue with message
+  history management.

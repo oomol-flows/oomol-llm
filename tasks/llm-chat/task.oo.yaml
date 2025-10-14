@@ -2,8 +2,13 @@ executor:
   name: python
   options:
     entry: __init__.py
+description: This block enables multi-turn conversations with AI by maintaining
+  message history and appending new responses. It handles context-aware chat
+  interactions with support for streaming output and automatic message history
+  management.
 inputs_def:
   - handle: messages
+    description: Conversation history in message format (system/user/assistant roles)
     json_schema:
       type: array
       items:
@@ -27,16 +32,19 @@ inputs_def:
   - group: Connection
     collapsed: true
   - handle: timeout
+    description: Maximum time in seconds to wait for AI response
     json_schema:
       type: number
       minimum: 0
     value: 30
   - handle: retry_times
+    description: Number of automatic retry attempts on connection failure
     json_schema:
       type: integer
       minimum: 0
     value: 0
   - handle: model
+    description: AI model configuration including model name, temperature, and token limits
     json_schema:
       ui:options:
         title: Model
@@ -51,6 +59,7 @@ inputs_def:
       top_p: 1
       max_tokens: 8192
   - handle: template
+    description: Prompt template to append to conversation history
     json_schema:
       anyOf:
         - type: string
@@ -81,11 +90,13 @@ inputs_def:
       - schema:
           type: array
   - handle: retry_sleep
+    description: Delay in seconds between retry attempts
     json_schema:
       type: number
       minimum: 0
     value: 3.5
   - handle: skills
+    description: Additional capabilities or tools the AI can use during conversation
     json_schema:
       type: array
       ui:options:
@@ -97,11 +108,13 @@ inputs_def:
       - schema:
           type: array
   - handle: stream
+    description: Enable real-time streaming of AI responses as they are generated
     json_schema:
       type: boolean
     value: true
 outputs_def:
   - handle: output
+    description: AI-generated response text from the chat interaction
     json_schema:
       type: string
 title: LLM chat
@@ -109,6 +122,7 @@ additional_inputs: true
 additional_outputs: false
 additional_inputs_def:
   - handle: input
+    description: User input text to be appended to the conversation
     json_schema:
       type: string
       ui:widget: text

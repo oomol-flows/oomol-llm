@@ -1,4 +1,7 @@
 title: Translate
+description: A translation flow that converts input text into multiple languages
+  using AI, demonstrating multi-output functionality with customizable target
+  languages.
 nodes:
   - node_id: llm#1
     title: "LLM #1"
@@ -38,17 +41,18 @@ nodes:
     task: self::llm
     inputs_def:
       - handle: input
+        description: Original text to be translated into multiple languages
         json_schema:
           type: string
           ui:widget: text
     outputs_def:
       - handle: en
-        description: 翻译成
+        description: English translation output
         json_schema:
           type: string
         nullable: false
       - handle: ja
-        description: 翻译成日语
+        description: Japanese translation output
         json_schema:
           {}
         nullable: false
