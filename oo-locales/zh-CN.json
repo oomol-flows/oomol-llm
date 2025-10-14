@@ -1,5 +1,5 @@
 {
-  "display-name": "大型语言模型",
+  "display-name": "大语言模型",
   "description": "一套即用型 AI 语言模型构建模块，专为 OOMOL 平台设计，帮助您无需编写代码即可创建智能对话工作流。",
   "chat": "聊天",
   "a-simple-chatbot-flow-that-demonstrates-conversational-ai-with-c": "一个简单的聊天机器人流程，演示了带有自定义系统指令的会话式人工智能，实现友好的互动。",
