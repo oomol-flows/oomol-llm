@@ -1,9 +1,8 @@
-title: Chat
-description: A simple chatbot flow that demonstrates conversational AI with
-  custom system instructions for friendly interaction.
+title: "%chat%"
+description: "%a-simple-chatbot-flow-that-demonstrates-conversational-ai-with-c%"
 nodes:
   - node_id: markdown_text_preview#1
-    title: "Markdown preview #1"
+    title: "%markdown-preview-1%"
     inputs_from:
       - handle: text
         from_node:
@@ -11,7 +10,7 @@ nodes:
             output_handle: output
     task: oomol-preview::markdown_text_preview
   - node_id: llm-chat#3
-    title: "LLM chat #3"
+    title: "%llm-chat-3%"
     inputs_from:
       - handle: messages
         value: null

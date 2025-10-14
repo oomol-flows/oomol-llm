@@ -1,6 +1,6 @@
 nodes:
   - node_id: llm-template#3
-    title: "LLM generate messages #1"
+    title: "%llm-generate-messages-1%"
     inputs_from:
       - handle: template
         value:
@@ -21,7 +21,7 @@ nodes:
     inputs_def:
       []
   - node_id: markdown_text_preview#6
-    title: "Markdown preview #5"
+    title: "%markdown-preview-5%"
     inputs_from:
       - handle: text
         from_node:
@@ -29,7 +29,7 @@ nodes:
             output_handle: output
     task: oomol-preview::markdown_text_preview
   - node_id: markdown_text_preview#7
-    title: "Markdown preview #6"
+    title: "%markdown-preview-6%"
     inputs_from:
       - handle: text
         from_node:
@@ -37,7 +37,7 @@ nodes:
             output_handle: output
     task: oomol-preview::markdown_text_preview
   - node_id: llm#1
-    title: "LLM #1"
+    title: "%llm-1%"
     inputs_from:
       - handle: messages
         value: null
@@ -81,7 +81,7 @@ nodes:
         json_schema:
           type: string
   - node_id: llm-chat#1
-    title: "LLM chat #1"
+    title: "%llm-chat-1%"
     inputs_from:
       - handle: messages
         value: null
@@ -126,7 +126,5 @@ nodes:
     inputs_def:
       - handle: answer
         description: AI's previous answer to be challenged in the follow-up conversation
-title: Chat with history
-description: A demonstration flow showing how AI maintains conversation context
-  and responds when challenged, illustrating multi-turn dialogue with message
-  history management.
+title: "%chat-with-history%"
+description: "%a-demonstration-flow-showing-how-ai-maintains-conversation-conte%"

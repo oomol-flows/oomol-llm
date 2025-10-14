@@ -1,10 +1,8 @@
-title: Translate
-description: A translation flow that converts input text into multiple languages
-  using AI, demonstrating multi-output functionality with customizable target
-  languages.
+title: "%translate%"
+description: "%a-translation-flow-that-converts-input-text-into-multiple-langua%"
 nodes:
   - node_id: llm#1
-    title: "LLM #1"
+    title: "%llm-12%"
     inputs_from:
       - handle: model
         value:
@@ -57,7 +55,7 @@ nodes:
           {}
         nullable: false
   - node_id: markdown_text_preview#1
-    title: "Markdown preview #1"
+    title: "%markdown-preview-12%"
     inputs_from:
       - handle: text
         from_node:
@@ -65,7 +63,7 @@ nodes:
             output_handle: en
     task: oomol-preview::markdown_text_preview
   - node_id: markdown_text_preview#2
-    title: "Markdown preview #2"
+    title: "%markdown-preview-2%"
     inputs_from:
       - handle: text
         from_node:

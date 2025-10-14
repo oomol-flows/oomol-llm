@@ -1,7 +1,7 @@
 name: llm
-displayName: LLM
+displayName: "%display-name%"
 version: 0.3.5
-description: LLM
+description: "%description%"
 scripts:
   {}
 icon: "./icon.png"

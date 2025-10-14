@@ -2,12 +2,10 @@ executor:
   name: python
   options:
     entry: __init__.py
-description: This block converts prompt templates into structured message arrays
-  for AI conversation. It processes template variables and merges with existing
-  message history to prepare formatted input for language models.
+description: "%this-block-converts-prompt-templates-into-structured-message-arr%"
 inputs_def:
   - handle: template
-    description: Prompt template defining conversation structure with roles and content
+    description: "%prompt-template-defining-conversation-structure-with-roles-and-c%"
     json_schema:
       anyOf:
         - type: string
@@ -38,7 +36,7 @@ inputs_def:
       - schema:
           type: array
   - handle: messages
-    description: Existing conversation history to merge with the template
+    description: "%existing-conversation-history-to-merge-with-the-template%"
     json_schema:
       type: array
       items:
@@ -80,7 +78,7 @@ outputs_def:
                 - Assistant
           content:
             type: string
-title: Generate Messages
+title: "%generate-messages%"
 additional_inputs: true
 additional_inputs_def:
   - handle: input
