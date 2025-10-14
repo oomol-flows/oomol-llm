@@ -1,4 +1,6 @@
 title: Chat
+description: A simple chatbot flow that demonstrates conversational AI with
+  custom system instructions for friendly interaction.
 nodes:
   - node_id: markdown_text_preview#1
     title: "Markdown preview #1"

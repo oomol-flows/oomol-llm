@@ -2,8 +2,12 @@ executor:
   name: python
   options:
     entry: __init__.py
+description: This block communicates with AI language models to generate
+  intelligent responses. It supports customizable prompts, multiple conversation
+  roles, and flexible output generation for various AI tasks.
 inputs_def:
   - handle: messages
+    description: Conversation history in message format (system/user/assistant roles)
     json_schema:
       type: array
       items:
@@ -27,21 +31,25 @@ inputs_def:
   - group: Connection
     collapsed: true
   - handle: timeout
+    description: Maximum time in seconds to wait for AI response
     json_schema:
       type: number
       minimum: 0
     value: 30
   - handle: retry_times
+    description: Number of automatic retry attempts on connection failure
     json_schema:
       type: integer
       minimum: 0
     value: 0
   - handle: retry_sleep
+    description: Delay in seconds between retry attempts
     json_schema:
       type: number
       minimum: 0
     value: 3.5
   - handle: model
+    description: AI model configuration including model name, temperature, and token limits
     json_schema:
       ui:options:
         title: Model
@@ -56,6 +64,7 @@ inputs_def:
       top_p: 1
       max_tokens: 8192
   - handle: template
+    description: Prompt template that defines how AI should respond, supports variable substitution
     json_schema:
       anyOf:
         - type: string
@@ -86,6 +95,7 @@ inputs_def:
       - schema:
           type: array
   - handle: skills
+    description: Additional capabilities or tools the AI can use during response generation
     json_schema:
       type: array
       ui:options:
@@ -97,6 +107,7 @@ inputs_def:
       - schema:
           type: array
   - handle: stream
+    description: Enable real-time streaming of AI responses as they are generated
     json_schema:
       type: boolean
     value: true
@@ -107,11 +118,12 @@ additional_inputs: true
 additional_outputs: true
 additional_outputs_def:
   - handle: output
-    description: write your answer here
+    description: AI-generated response text
     json_schema:
       type: string
 additional_inputs_def:
   - handle: input
+    description: Input text or data to be processed by the AI
     json_schema:
       type: string
       ui:widget: text

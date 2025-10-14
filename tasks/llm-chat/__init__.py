@@ -16,7 +16,7 @@ class Inputs(typing.TypedDict):
   skills: typing.Any
   stream: bool
 class Outputs(typing.TypedDict):
-  output: str
+  output: typing.NotRequired[str]
 #endregion
 
 

@@ -7,7 +7,7 @@ class Inputs(typing.TypedDict):
   template: typing.Any
   messages: list[dict] | None
 class Outputs(typing.TypedDict):
-  messages: list[dict]
+  messages: typing.NotRequired[list[dict]]
 #endregion
 
 
