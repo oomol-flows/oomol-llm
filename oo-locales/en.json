@@ -1,6 +1,6 @@
 {
   "display-name": "LLM",
-  "description": "LLM",
+  "description": "A ready-to-use AI language model building module, specifically designed for the OOMOL platform, helps you create intelligent conversational workflows without writing any code.",
   "chat": "Chat",
   "a-simple-chatbot-flow-that-demonstrates-conversational-ai-with-c": "A simple chatbot flow that demonstrates conversational AI with custom system instructions for friendly interaction.",
   "markdown-preview-1": "Markdown preview #1",

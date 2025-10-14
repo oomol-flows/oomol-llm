@@ -1,13 +1,13 @@
 name: llm
 displayName: "%display-name%"
-version: 0.3.5
+version: 0.3.6
 description: "%description%"
 scripts:
   {}
 icon: "./icon.png"
 repository: https://github.com/oomol-flows/oomol-llm
 dependencies:
-  oomol-preview: 0.1.7
+  oomol-preview: 0.2.0
 contributes:
   input_widgets:
     render: ./bundled/inputRender.js
