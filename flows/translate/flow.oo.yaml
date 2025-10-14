@@ -36,7 +36,7 @@ nodes:
         value: |-
           白日依山尽，黄河入海流。
           欲穷千里目，更上一层楼。
-    task: self::llm
+    task: self::llm-json
     inputs_def:
       - handle: input
         description: Original text to be translated into multiple languages

@@ -17,7 +17,7 @@
   "llm-12": "大语言模型 #1",
   "markdown-preview-12": "Markdown 预览 #1",
   "markdown-preview-2": "Markdown 预览 #2",
-  "llm": "大语言模型",
+  "llm": "大语言模型输出 JSON",
   "this-block-communicates-with-ai-language-models-to-generate-inte": "该模块与AI语言模型进行通信，以生成智能响应。它支持自定义提示、多种对话角色以及灵活的输出生成，适用于各种AI任务。",
   "conversation-history-in-message-format-system-user-assistant-rol": "消息格式的对话历史（系统/用户/助手角色）",
   "maximum-time-in-seconds-to-wait-for-ai-response": "等待AI响应的最长时间（以秒为单位）",
