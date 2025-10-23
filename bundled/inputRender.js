@@ -13687,11 +13687,21 @@ var model = wrapReactComponent(function Model({ context }) {
   const [maxTokens, setMaxTokens] = (0, import_react14.useState)(value?.max_tokens || 4096);
   const [realMaxTokens, setRealMaxTokens] = (0, import_react14.useState)(4096);
   (0, import_react14.useEffect)(() => {
+    let isMounted = true;
     context.postMessage("getLLMModels", (models2) => {
-      if (models2?.length) {
+      if (models2?.length && isMounted) {
         setModels(models2);
+        const value2 = context.store.value$?.value;
+        const model2 = value2?.model || "oomol-chat";
+        const info = models2.find((m) => m.model_name === model2);
+        setTemperature((t) => info?.temperature ?? t);
+        setTopP((t) => info?.top_p ?? t);
+        setMaxTokens((t) => info?.max_tokens ?? t);
       }
     });
+    return () => {
+      isMounted = false;
+    };
   }, []);
   (0, import_react14.useEffect)(() => {
     const info = models.find((m) => m.model_name === selectedModel);

@@ -24,9 +24,21 @@ export const model = wrapReactComponent(function Model({ context }) {
   const [realMaxTokens, setRealMaxTokens] = useState<number>(4096);
 
   useEffect(() => {
+    let isMounted = true;
     context.postMessage("getLLMModels", (models: Model[]) => {
-      if (models?.length) { setModels(models); }
+      if (models?.length && isMounted) {
+        setModels(models);
+        const value = context.store.value$?.value as IModelOptions | undefined;
+        const model = value?.model || "oomol-chat";
+        const info = models.find(m => m.model_name === model);
+        setTemperature(t => info?.temperature ?? t);
+        setTopP(t => info?.top_p ?? t);
+        setMaxTokens(t => info?.max_tokens ?? t);
+      }
     });
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   useEffect(() => {
