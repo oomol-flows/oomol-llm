@@ -13692,11 +13692,13 @@ var model = wrapReactComponent(function Model({ context }) {
       if (models2?.length && isMounted) {
         setModels(models2);
         const value2 = context.store.value$?.value;
-        const model2 = value2?.model || "oomol-chat";
-        const info = models2.find((m) => m.model_name === model2);
-        setTemperature((t) => info?.temperature ?? t);
-        setTopP((t) => info?.top_p ?? t);
-        setMaxTokens((t) => info?.max_tokens ?? t);
+        if (!value2?.model) {
+          const model2 = value2?.model || "oomol-chat";
+          const info = models2.find((m) => m.model_name === model2);
+          setTemperature((t) => info?.temperature ?? t);
+          setTopP((t) => info?.top_p ?? t);
+          setMaxTokens((t) => info?.max_tokens ?? t);
+        }
       }
     });
     return () => {
