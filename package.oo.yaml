@@ -1,6 +1,6 @@
 name: llm
 displayName: "%display-name%"
-version: 0.3.9
+version: 0.3.10
 description: "%description%"
 scripts:
   {}
@@ -28,4 +28,4 @@ contributes:
           type: array
           ui:options:
             title: Skills
-releaseNotes: fix model input render should not set model params on init
+releaseNotes: fix user agent
