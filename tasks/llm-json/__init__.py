@@ -18,7 +18,7 @@ class Inputs(typing.TypedDict):
   template: typing.Any
   skills: typing.Any
   stream: bool
-Outputs = typing.Dict[str, typing.Any]
+Outputs = dict[str, typing.Any]
 #endregion
 
 
