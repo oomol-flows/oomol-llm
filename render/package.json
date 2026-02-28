@@ -10,7 +10,7 @@
     "@faker-js/faker": "^9.9.0",
     "@hyrious/configs": "^0.1.4",
     "@hyrious/rimraf": "^0.1.0",
-    "@oomol/types": "^0.0.26",
+    "@oomol/types": "^0.0.34",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.5",
     "clsx": "^2.1.1",

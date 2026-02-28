@@ -13829,7 +13829,7 @@ var messages = wrapReactComponent(function Messages({ context }) {
       highlight: doHighlight,
       padding: 5,
       className: "llm-message-content",
-      placeholder: context.store.description$.value,
+      placeholder: context.store.displayDescription$?.value ?? context.store.description$.value,
       style: { minHeight: 100, resize: "vertical" }
     }
   ) : /* @__PURE__ */ import_react14.default.createElement(import_react14.default.Fragment, null, messages2.map((a, i) => /* @__PURE__ */ import_react14.default.createElement("div", { key: i, "data-message-index": i, className: "llm-message-container" }, /* @__PURE__ */ import_react14.default.createElement("div", { className: "llm-message-head" }, /* @__PURE__ */ import_react14.default.createElement(
@@ -13850,7 +13850,7 @@ var messages = wrapReactComponent(function Messages({ context }) {
       highlight: doHighlight,
       padding: 5,
       className: "llm-message-content",
-      placeholder: context.store.description$.value,
+      placeholder: context.store.displayDescription$?.value ?? context.store.description$.value,
       style: { minHeight: 100, resize: "vertical" }
     }
   ))), allowAdd && /* @__PURE__ */ import_react14.default.createElement("button", { className: "llm-btn-add-message", onClick: addMessage }, "Add message")));

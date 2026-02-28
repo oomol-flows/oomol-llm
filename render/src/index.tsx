@@ -211,7 +211,7 @@ export const messages = wrapReactComponent(function Messages({ context }) {
           highlight={doHighlight}
           padding={5}
           className="llm-message-content"
-          placeholder={context.store.description$.value}
+          placeholder={context.store.displayDescription$?.value ?? context.store.description$.value}
           style={{ minHeight: 100, resize: "vertical" }}
         />
       ) : <>
@@ -238,7 +238,7 @@ export const messages = wrapReactComponent(function Messages({ context }) {
               highlight={doHighlight}
               padding={5}
               className="llm-message-content"
-              placeholder={context.store.description$.value}
+              placeholder={context.store.displayDescription$?.value ?? context.store.description$.value}
               style={{ minHeight: 100, resize: "vertical" }}
             />
           </div>
