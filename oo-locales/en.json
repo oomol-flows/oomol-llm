@@ -38,6 +38,11 @@
   "additional-capabilities-or-tools-the-ai-can-use-during-conversat": "Additional capabilities or tools the AI can use during conversation",
   "enable-real-time-streaming-of-ai-responses-as-they-are-generated2": "Enable real-time streaming of AI responses as they are generated",
   "generate-messages": "Generate Messages",
+  "prompt-editor": "Prompt",
+  "prompt-editor-description": "Synthesize prompts based on templates and variables",
+  "prompt-template": "Prompt Template",
+  "prompt-var": "Prompt template variable, referenced in prompt templates using {{variable_name}} format",
+  "prompt-result": "Prompt result synthesized from template and variables",
   "this-block-converts-prompt-templates-into-structured-message-arr": "This block converts prompt templates into structured message arrays for AI conversation. It processes template variables and merges with existing message history to prepare formatted input for language models.",
   "prompt-template-defining-conversation-structure-with-roles-and-c": "Prompt template defining conversation structure with roles and content",
   "existing-conversation-history-to-merge-with-the-template": "Existing conversation history to merge with the template"

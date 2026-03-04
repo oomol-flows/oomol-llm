@@ -82,7 +82,7 @@ title: "%generate-messages%"
 additional_inputs: true
 additional_inputs_def:
   - handle: input
-    description: Dynamic input values to substitute into template variables
+    description: "%prompt-var%"
     json_schema:
       type: string
       ui:widget: text

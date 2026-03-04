@@ -38,6 +38,11 @@
   "additional-capabilities-or-tools-the-ai-can-use-during-conversat": "在对话过程中，AI可以使用的其他功能或工具",
   "enable-real-time-streaming-of-ai-responses-as-they-are-generated2": "启用AI响应的实时流式传输",
   "generate-messages": "生成消息",
+  "prompt-editor": "提示词",
+  "prompt-editor-description": "根据模板和变量合成提示词",
+  "prompt-template": "提示词模板",
+  "prompt-var": "提示词模板变量，在提示模板中使用 {{variable_name}} 格式进行引用",
+  "prompt-result": "根据模板和变量合成的提示词",
   "this-block-converts-prompt-templates-into-structured-message-arr": "该模块将提示模板转换为用于 AI 对话的结构化消息数组。它处理模板变量，并与现有消息历史合并，以为语言模型准备格式化输入。",
   "prompt-template-defining-conversation-structure-with-roles-and-c": "定义对话结构的提示模板，包括角色和内容",
   "existing-conversation-history-to-merge-with-the-template": "现有的对话历史将与模板合并"

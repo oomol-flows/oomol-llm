@@ -1,0 +1,28 @@
+executor:
+  name: python
+  options:
+    entry: __init__.py
+description: "%prompt-editor-description%"
+inputs_def:
+  - handle: template
+    description: "%prompt-template%"
+    json_schema:
+      type: string
+      ui:options:
+        title: Prompt Template
+      ui:widget: self::messages
+    value: "{{input}}"
+outputs_def:
+  - handle: prompt
+    description: "%prompt-result%"
+    json_schema:
+      type: string
+title: "%prompt-editor%"
+additional_inputs: true
+additional_inputs_def:
+  - handle: input
+    description: "%prompt-var%"
+    json_schema:
+      type: string
+      ui:widget: text
+    value: hello!
