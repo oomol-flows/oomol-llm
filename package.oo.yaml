@@ -1,6 +1,6 @@
 name: llm
 displayName: "%display-name%"
-version: 0.3.10
+version: 0.3.11
 description: "%description%"
 scripts:
   {}
@@ -28,4 +28,4 @@ contributes:
           type: array
           ui:options:
             title: Skills
-releaseNotes: fix user agent
+releaseNotes: add prompt-editor
