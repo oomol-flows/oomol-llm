@@ -54,6 +54,20 @@ class RenderParams(TypedDict):
   messages: list[dict] | None
   template: list[dict[str, Any]] | str
 
+def render_prompt(content: str, params: RenderParams, context: Context) -> str:
+  def repl(match: re.Match):
+    key = match.group(1).strip()
+    input_def = context.inputs_def.get(key, None)
+    if input_def is None:
+      return match.group()
+    if not input_def["is_additional"]:
+      return match.group()
+    value = params.get(key, None)
+    if value is None:
+      return match.group()
+    return str(value)
+  return _KEY_PATTERN.sub(repl, content)
+
 def render_messages(params: RenderParams, context: Context) -> Generator[Message, None, None]:
   param_messages = params.get("messages", None)
   param_template = params["template"]
@@ -67,22 +81,10 @@ def render_messages(params: RenderParams, context: Context) -> Generator[Message
         tool_call_id="",
       )
 
-  def repl(match: re.Match):
-    key = match.group(1).strip()
-    input_def = context.inputs_def.get(key, None)
-    if input_def is None:
-      return match.group()
-    if not input_def["is_additional"]:
-      return match.group()
-    value = params.get(key, None)
-    if value is None:
-      return match.group()
-    return str(value)
-
   if isinstance(param_template, str):
     yield Message(
       role=Role.System,
-      content=_KEY_PATTERN.sub(repl, param_template),
+      content=render_prompt(param_template, params, context),
       tool_calls=[],
       tool_call_id="",
     )
@@ -90,7 +92,7 @@ def render_messages(params: RenderParams, context: Context) -> Generator[Message
     for message in param_template:
       yield Message(
         role=decode_role(message["role"]),
-        content=_KEY_PATTERN.sub(repl, message["content"]),
+        content=render_prompt(message["content"], params, context),
         tool_calls=[],
         tool_call_id="",
       )

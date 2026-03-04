@@ -9,7 +9,7 @@ inputs_def:
     json_schema:
       type: string
       ui:options:
-        title: Prompt Template
+        title: Prompt
       ui:widget: self::messages
     value: "{{input}}"
 outputs_def:
